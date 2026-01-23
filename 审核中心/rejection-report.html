@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>駁回分析報表 - 審核中心</title>
     <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 日期範圍選擇器 */
+        .date-range-picker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .date-range-picker .date-input {
+            flex: 1;
+            min-width: 130px;
+        }
+        .date-range-picker .date-separator {
+            color: #909399;
+            font-size: 14px;
+        }
+        .form-group.wide {
+            min-width: 280px;
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -36,9 +55,13 @@
                     <div class="card-header"><span class="card-title">搜索條件</span></div>
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group">
+                            <div class="form-group wide">
                                 <label class="form-label">日期範圍</label>
-                                <input type="text" class="form-control" placeholder="2024-01-01 - 2024-01-21">
+                                <div class="date-range-picker">
+                                    <input type="date" class="form-control date-input" id="startDate" value="2024-01-01" onchange="validateDateRange()">
+                                    <span class="date-separator">~</span>
+                                    <input type="date" class="form-control date-input" id="endDate" value="2024-01-21" onchange="validateDateRange()">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">審核人員</label>
@@ -52,11 +75,11 @@
                                 </select>
                             </div>
                             <div class="action-buttons">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" onclick="handleSearch()">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
                                     查詢
                                 </button>
-                                <button class="btn btn-default">
+                                <button class="btn btn-default" onclick="handleExport()">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                     導出報表
                                 </button>
@@ -180,6 +203,66 @@
             </div>
         </main>
     </div>
-    <script>document.querySelectorAll('.menu-item > .menu-title').forEach(t=>{if(t.querySelector('.menu-arrow'))t.addEventListener('click',e=>{e.preventDefault();t.parentElement.classList.toggle('open')})});</script>
+    <script>
+        // 菜單展開/收起
+        document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
+            if (t.querySelector('.menu-arrow')) {
+                t.addEventListener('click', e => {
+                    e.preventDefault();
+                    t.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 日期範圍驗證
+        function validateDateRange() {
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            if (startDate.value && endDate.value) {
+                if (new Date(endDate.value) < new Date(startDate.value)) {
+                    alert('結束日期不能早於開始日期，請重新選擇');
+                    endDate.value = '';
+                }
+            }
+
+            // 設置最小/最大日期限制
+            if (startDate.value) {
+                endDate.min = startDate.value;
+            }
+            if (endDate.value) {
+                startDate.max = endDate.value;
+            }
+        }
+
+        // 查詢按鈕
+        function handleSearch() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            if (!startDate || !endDate) {
+                alert('請選擇完整的日期範圍');
+                return;
+            }
+            alert('正在查詢 ' + startDate + ' 至 ' + endDate + ' 的駁回記錄...');
+        }
+
+        // 導出按鈕
+        function handleExport() {
+            alert('正在導出駁回分析報表，請稍候...');
+        }
+
+        // 分頁按鈕
+        document.querySelectorAll('.pagination .btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent.includes('上一頁')) {
+                    alert('切換至上一頁');
+                } else if (this.textContent.includes('下一頁')) {
+                    alert('切換至下一頁');
+                } else {
+                    alert('跳轉至第 ' + this.textContent + ' 頁');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

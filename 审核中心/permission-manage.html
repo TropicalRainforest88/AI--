@@ -6,140 +6,7 @@
     <title>權限管理 - 審核中心</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        /* 頁面標題區域 */
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-lighter);
-        }
-        .card-header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        /* 建立權限按鈕 */
-        .btn-create {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            font-size: 14px;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-create:hover {
-            background: var(--primary-hover);
-            border-color: var(--primary-hover);
-        }
-
-        /* 顯示欄位下拉框 */
-        .column-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .column-dropdown-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 14px;
-            color: var(--text-regular);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .column-dropdown-btn:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-        .column-dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 4px;
-            background: #fff;
-            border: 1px solid var(--border-lighter);
-            border-radius: 4px;
-            box-shadow: var(--shadow-md);
-            padding: 8px 0;
-            min-width: 150px;
-            z-index: 100;
-        }
-        .column-dropdown.open .column-dropdown-menu {
-            display: block;
-        }
-        .column-dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .column-dropdown-item:hover {
-            background: var(--bg-color);
-        }
-        .column-dropdown-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary-color);
-            cursor: pointer;
-        }
-        .column-dropdown-item span {
-            font-size: 14px;
-            color: var(--text-regular);
-        }
-
-        /* 權限列表表格 */
-        .permission-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .permission-table th {
-            text-align: left;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #909399;
-            border-bottom: 1px solid #ebeef5;
-        }
-        .permission-table td {
-            padding: 16px 20px;
-            font-size: 14px;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-lighter);
-        }
-        .permission-table tr:last-child td {
-            border-bottom: none;
-        }
-        .permission-table .col-name {
-            width: 25%;
-        }
-        .permission-table .col-desc {
-            width: 30%;
-            color: var(--text-regular);
-        }
-        .permission-table .col-date {
-            width: 25%;
-            color: var(--text-secondary);
-        }
-        .permission-table .col-action {
-            width: 20%;
-            text-align: right;
-        }
-
-
-        /* 彈窗樣式 */
+        /* 彈窗樣式 - 與帳號管理一致 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -158,51 +25,51 @@
         .modal {
             background: #fff;
             border-radius: 8px;
-            width: 500px;
+            width: 480px;
             max-width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-lighter);
+            padding: 20px 24px;
+            border-bottom: 1px solid #ebeef5;
         }
         .modal-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #303133;
         }
         .modal-close {
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
-            color: var(--text-secondary);
+            color: #909399;
             font-size: 20px;
             line-height: 1;
             transition: color 0.2s;
         }
         .modal-close:hover {
-            color: var(--text-primary);
+            color: #303133;
         }
         .modal-body {
-            padding: 20px;
+            padding: 24px;
         }
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 12px;
-            padding: 16px 20px;
-            border-top: 1px solid var(--border-lighter);
+            padding: 16px 24px;
+            border-top: 1px solid #ebeef5;
         }
 
-        /* 表單項樣式 */
+        /* 表單項樣式 - 與帳號管理一致 */
         .form-item {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         .form-item:last-child {
             margin-bottom: 0;
@@ -211,68 +78,88 @@
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
-            color: var(--text-regular);
-            font-weight: 500;
+            color: #303133;
         }
         .form-item .form-label .required {
-            color: var(--danger-color);
+            color: #f56c6c;
             margin-left: 2px;
         }
         .form-item .form-input {
             width: 100%;
-            height: 36px;
+            height: 44px;
             padding: 0 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
             font-size: 14px;
-            color: var(--text-primary);
+            color: #303133;
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
         .form-item .form-input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #409eff;
+        }
+        .form-item .form-input::placeholder {
+            color: #c0c4cc;
         }
         .form-item .form-textarea {
             width: 100%;
-            min-height: 80px;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            min-height: 88px;
+            padding: 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
             font-size: 14px;
-            color: var(--text-primary);
+            color: #303133;
             box-sizing: border-box;
             resize: vertical;
             transition: border-color 0.2s;
         }
         .form-item .form-textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #409eff;
         }
 
-        /* 保存按鈕 */
+        /* 下拉選擇框 - 與帳號管理一致 */
+        .form-item .form-select {
+            width: 100%;
+            height: 44px;
+            padding: 0 32px 0 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #303133;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+            appearance: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .form-item .form-select:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+
+        /* 保存按鈕 - 黑色風格與帳號管理一致 */
         .btn-save {
-            background: var(--primary-color);
+            background: #1a1a1a;
             color: #fff;
-            border: 1px solid var(--primary-color);
-            padding: 8px 20px;
-            border-radius: 4px;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
         .btn-save:hover {
-            background: var(--primary-hover);
-            border-color: var(--primary-hover);
+            background: #333;
         }
 
         /* 取消按鈕 */
         .btn-cancel {
             background: #fff;
-            color: var(--text-regular);
-            border: 1px solid var(--border-color);
-            padding: 8px 20px;
-            border-radius: 4px;
+            color: #606266;
+            border: 1px solid #dcdfe6;
+            padding: 10px 24px;
+            border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
@@ -288,24 +175,115 @@
             max-width: 90%;
         }
 
-        /* 下拉選擇框樣式 */
-        .form-select {
-            width: 100%;
-            height: 40px;
-            padding: 0 32px 0 12px;
+        /* 顯示欄位下拉框 */
+        .column-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .column-dropdown-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #fff;
             border: 1px solid #dcdfe6;
             border-radius: 4px;
             font-size: 14px;
-            color: #303133;
-            box-sizing: border-box;
-            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
-            appearance: none;
+            color: #606266;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
-        .form-select:focus {
-            outline: none;
+        .column-dropdown-btn:hover {
             border-color: #409eff;
+            color: #409eff;
+        }
+        .column-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: #fff;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 150px;
+            z-index: 100;
+        }
+        .column-dropdown.open .column-dropdown-menu {
+            display: block;
+        }
+        .column-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .column-dropdown-item:hover {
+            background: #f5f7fa;
+        }
+        .column-dropdown-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .column-dropdown-item span {
+            font-size: 14px;
+            color: #606266;
+        }
+
+        /* 頁面頭部操作區 */
+        .page-header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* 權限列表表格 */
+        .permission-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .permission-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #909399;
+            background: #fafafa;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .permission-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #303133;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .permission-table tr:hover {
+            background: #fafafa;
+        }
+        .permission-table tr:last-child td {
+            border-bottom: none;
+        }
+        .permission-table .col-name {
+            width: 25%;
+            font-weight: 500;
+        }
+        .permission-table .col-desc {
+            width: 30%;
+            color: #606266;
+        }
+        .permission-table .col-date {
+            width: 25%;
+            color: #909399;
+        }
+        .permission-table .col-action {
+            width: 20%;
+            text-align: right;
         }
 
         /* 表單行樣式 */
@@ -321,13 +299,13 @@
         .permission-config-table {
             width: 100%;
             border: 1px solid #ebeef5;
-            border-radius: 4px;
+            border-radius: 6px;
             border-collapse: collapse;
             margin-top: 8px;
         }
         .permission-config-table th {
             background: #f5f7fa;
-            padding: 12px 16px;
+            padding: 14px 16px;
             font-size: 14px;
             font-weight: 500;
             color: #303133;
@@ -338,7 +316,7 @@
             text-align: center;
         }
         .permission-config-table td {
-            padding: 12px 16px;
+            padding: 14px 16px;
             font-size: 14px;
             color: #303133;
             border-bottom: 1px solid #ebeef5;
@@ -399,48 +377,52 @@
             </header>
 
             <div class="content">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">權限列表</span>
-                        <div class="card-header-actions">
-                            <button class="btn-create" onclick="openCreateModal()">建立權限</button>
-                            <!-- 顯示欄位下拉 -->
-                            <div class="column-dropdown" id="columnDropdown">
-                                <button class="column-dropdown-btn" onclick="toggleColumnDropdown()">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <line x1="4" y1="21" x2="4" y2="14"></line>
-                                        <line x1="4" y1="10" x2="4" y2="3"></line>
-                                        <line x1="12" y1="21" x2="12" y2="12"></line>
-                                        <line x1="12" y1="8" x2="12" y2="3"></line>
-                                        <line x1="20" y1="21" x2="20" y2="16"></line>
-                                        <line x1="20" y1="12" x2="20" y2="3"></line>
-                                        <line x1="1" y1="14" x2="7" y2="14"></line>
-                                        <line x1="9" y1="8" x2="15" y2="8"></line>
-                                        <line x1="17" y1="16" x2="23" y2="16"></line>
-                                    </svg>
-                                    顯示欄位
-                                </button>
-                                <div class="column-dropdown-menu">
-                                    <label class="column-dropdown-item">
-                                        <input type="checkbox" checked data-column="name">
-                                        <span>權限名稱</span>
-                                    </label>
-                                    <label class="column-dropdown-item">
-                                        <input type="checkbox" checked data-column="desc">
-                                        <span>描述</span>
-                                    </label>
-                                    <label class="column-dropdown-item">
-                                        <input type="checkbox" checked data-column="date">
-                                        <span>最後更新日期</span>
-                                    </label>
-                                    <label class="column-dropdown-item">
-                                        <input type="checkbox" checked data-column="action">
-                                        <span>操作</span>
-                                    </label>
-                                </div>
+                <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 class="page-title">權限管理</h1>
+                        <p class="page-desc">管理系統權限與角色設定</p>
+                    </div>
+                    <div class="page-header-actions">
+                        <!-- 顯示欄位下拉 -->
+                        <div class="column-dropdown" id="columnDropdown">
+                            <button class="column-dropdown-btn" onclick="toggleColumnDropdown()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                顯示欄位
+                            </button>
+                            <div class="column-dropdown-menu">
+                                <label class="column-dropdown-item">
+                                    <input type="checkbox" checked data-column="name">
+                                    <span>權限名稱</span>
+                                </label>
+                                <label class="column-dropdown-item">
+                                    <input type="checkbox" checked data-column="desc">
+                                    <span>描述</span>
+                                </label>
+                                <label class="column-dropdown-item">
+                                    <input type="checkbox" checked data-column="date">
+                                    <span>最後更新日期</span>
+                                </label>
+                                <label class="column-dropdown-item">
+                                    <input type="checkbox" checked data-column="action">
+                                    <span>操作</span>
+                                </label>
                             </div>
                         </div>
+                        <!-- 建立權限按鈕 -->
+                        <button class="btn btn-primary" onclick="openCreateModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            建立權限
+                        </button>
                     </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">權限列表</span></div>
                     <div class="card-body" style="padding: 0;">
                         <table class="permission-table" id="permissionTable">
                         <thead>

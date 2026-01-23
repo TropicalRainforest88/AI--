@@ -98,6 +98,21 @@
             flex: 0 0 calc(25% - 12px);
         }
 
+        /* 日期範圍選擇器 */
+        .date-range-picker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .date-range-picker .date-input {
+            flex: 1;
+            min-width: 130px;
+        }
+        .date-range-picker .date-separator {
+            color: #909399;
+            font-size: 14px;
+        }
+
         /* 按鈕組 */
         .action-buttons {
             display: flex;
@@ -499,11 +514,19 @@
                                 </div>
                                 <div class="form-group wide">
                                     <label class="form-label">提交時間</label>
-                                    <input type="text" class="form-control" placeholder="開始日期 ~ 結束日期">
+                                    <div class="date-range-picker">
+                                        <input type="date" class="form-control date-input" id="submitStartDate" onchange="validateDateRange('submitStartDate', 'submitEndDate')">
+                                        <span class="date-separator">~</span>
+                                        <input type="date" class="form-control date-input" id="submitEndDate" onchange="validateDateRange('submitStartDate', 'submitEndDate')">
+                                    </div>
                                 </div>
                                 <div class="form-group wide">
                                     <label class="form-label">審核日期</label>
-                                    <input type="text" class="form-control" placeholder="開始日期 ~ 結束日期">
+                                    <div class="date-range-picker">
+                                        <input type="date" class="form-control date-input" id="auditStartDate" onchange="validateDateRange('auditStartDate', 'auditEndDate')">
+                                        <span class="date-separator">~</span>
+                                        <input type="date" class="form-control date-input" id="auditEndDate" onchange="validateDateRange('auditStartDate', 'auditEndDate')">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">額外參數</label>
@@ -524,7 +547,7 @@
                                 </div>
                             </div>
                             <div class="action-buttons">
-                                <button type="button" class="btn btn-primary">
+                                <button type="button" class="btn btn-primary" onclick="handleRefresh()">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M23 4v6h-6"></path>
                                         <path d="M1 20v-6h6"></path>
@@ -532,14 +555,14 @@
                                     </svg>
                                     刷新
                                 </button>
-                                <button type="reset" class="btn btn-default">
+                                <button type="button" class="btn btn-default" onclick="handleReset()">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                                         <path d="M3 3v5h5"></path>
                                     </svg>
                                     重置
                                 </button>
-                                <button type="button" class="btn btn-success">
+                                <button type="button" class="btn btn-success" onclick="handleExport()">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -976,6 +999,74 @@
                     this.classList.add('active');
                 }
             });
+        });
+
+        // 日期範圍驗證
+        function validateDateRange(startId, endId) {
+            const startDate = document.getElementById(startId);
+            const endDate = document.getElementById(endId);
+
+            if (startDate.value && endDate.value) {
+                if (new Date(endDate.value) < new Date(startDate.value)) {
+                    alert('結束日期不能早於開始日期，請重新選擇');
+                    endDate.value = '';
+                }
+            }
+
+            // 設置最小/最大日期限制
+            if (startDate.value) {
+                endDate.min = startDate.value;
+            }
+            if (endDate.value) {
+                startDate.max = endDate.value;
+            }
+        }
+
+        // 刷新按鈕
+        function handleRefresh() {
+            alert('正在刷新數據...');
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        }
+
+        // 重置按鈕
+        function handleReset() {
+            document.querySelectorAll('.search-form input').forEach(input => {
+                if (input.type === 'date') {
+                    input.value = '';
+                    input.min = '';
+                    input.max = '';
+                } else if (input.type === 'text') {
+                    input.value = '';
+                }
+            });
+            document.querySelectorAll('.search-form select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            alert('搜索條件已重置');
+        }
+
+        // 導出按鈕
+        function handleExport() {
+            alert('正在導出數據，請稍候...');
+        }
+
+        // 分頁跳轉
+        document.querySelector('.page-jump input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const page = parseInt(this.value);
+                if (page >= 1 && page <= 349) {
+                    alert('跳轉至第 ' + page + ' 頁');
+                } else {
+                    alert('請輸入有效的頁碼（1-349）');
+                }
+            }
+        });
+
+        // 每頁條數變更
+        document.querySelector('.page-size select').addEventListener('change', function() {
+            alert('每頁顯示 ' + this.value + ' 條，正在重新加載...');
         });
     </script>
 </body>
