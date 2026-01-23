@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商戶群組設定 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心</div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item active"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">商戶管理</a></span><span class="breadcrumb-item active">商戶群組設定</span></div></div>
+                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 class="page-title">商戶群組設定</h1>
+                        <p class="page-desc">管理商戶分組，統一配置審核規則</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('addGroupModal').classList.add('show')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> 新增群組</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">群組列表</span></div>
+                    <div class="card-body" style="padding: 0;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 200px;">名稱</th>
+                                    <th style="width: 200px;">包含商戶</th>
+                                    <th style="width: 180px;">最後更新日期</th>
+                                    <th style="width: 150px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>GS_GE</td>
+                                    <td>GS, GE</td>
+                                    <td>2024-01-20 15:30:25</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditGroupModal('GS_GE', ['GS', 'GE'])">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">刪除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MY_MN</td>
+                                    <td>MY, MN</td>
+                                    <td>2024-01-18 10:22:18</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditGroupModal('MY_MN', ['MY', 'MN'])">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">刪除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GS_MY_MJ</td>
+                                    <td>GS, MY, MJ</td>
+                                    <td>2024-01-15 14:15:33</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditGroupModal('GS_MY_MJ', ['GS', 'MY', 'MJ'])">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">刪除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>GE_MN_MJ</td>
+                                    <td>GE, MN, MJ</td>
+                                    <td>2024-01-12 09:45:12</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditGroupModal('GE_MN_MJ', ['GE', 'MN', 'MJ'])">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">刪除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- 編輯群組彈出框 -->
+    <div class="modal-overlay" id="editGroupModal">
+        <div class="modal" style="width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">編輯群組</h3>
+                <button class="modal-close" onclick="document.getElementById('editGroupModal').classList.remove('show')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">商戶群組名稱</label>
+                    <input type="text" class="form-input" id="editGroupName" placeholder="請輸入群組名稱">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">商戶</label>
+                    <div class="multi-select" id="editMerchantSelect">
+                        <div class="multi-select-trigger" onclick="toggleEditMultiSelect()">
+                            <span class="multi-select-placeholder">請選擇商戶（可多選）</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="multi-select-dropdown">
+                            <label class="multi-select-option"><input type="checkbox" value="GS" onchange="updateEditSelectedMerchants()"> GS</label>
+                            <label class="multi-select-option"><input type="checkbox" value="GE" onchange="updateEditSelectedMerchants()"> GE</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MY" onchange="updateEditSelectedMerchants()"> MY</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MN" onchange="updateEditSelectedMerchants()"> MN</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MJ" onchange="updateEditSelectedMerchants()"> MJ</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="document.getElementById('editGroupModal').classList.remove('show')">取消</button>
+                <button class="btn btn-primary" onclick="submitEditGroup()">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增群組彈出框 -->
+    <div class="modal-overlay" id="addGroupModal">
+        <div class="modal" style="width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">新增群組</h3>
+                <button class="modal-close" onclick="document.getElementById('addGroupModal').classList.remove('show')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">商戶群組名稱</label>
+                    <input type="text" class="form-input" id="groupName" placeholder="請輸入群組名稱">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">商戶</label>
+                    <div class="multi-select" id="merchantSelect">
+                        <div class="multi-select-trigger" onclick="toggleMultiSelect()">
+                            <span class="multi-select-placeholder">請選擇商戶（可多選）</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="multi-select-dropdown">
+                            <label class="multi-select-option"><input type="checkbox" value="GS" onchange="updateSelectedMerchants()"> GS</label>
+                            <label class="multi-select-option"><input type="checkbox" value="GE" onchange="updateSelectedMerchants()"> GE</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MY" onchange="updateSelectedMerchants()"> MY</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MN" onchange="updateSelectedMerchants()"> MN</label>
+                            <label class="multi-select-option"><input type="checkbox" value="MJ" onchange="updateSelectedMerchants()"> MJ</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="document.getElementById('addGroupModal').classList.remove('show')">取消</button>
+                <button class="btn btn-primary">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }
+        .modal-title { font-size: 16px; font-weight: 600; margin: 0; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1; }
+        .modal-close:hover { color: #333; }
+        .modal-body { padding: 20px; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid #eee; }
+        .form-group { margin-bottom: 16px; }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #333; }
+        .form-input { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .form-input:focus { outline: none; border-color: var(--primary-color); }
+
+        /* 多選下拉框樣式 */
+        .multi-select { position: relative; }
+        .multi-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; min-height: 38px; }
+        .multi-select-trigger:hover { border-color: #bbb; }
+        .multi-select-placeholder { color: #999; font-size: 14px; }
+        .multi-select-value { font-size: 14px; color: #333; }
+        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; max-height: 200px; overflow-y: auto; }
+        .multi-select.open .multi-select-dropdown { display: block; }
+        .multi-select-option { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; font-size: 14px; }
+        .multi-select-option:hover { background: #f5f5f5; }
+        .multi-select-option input { margin-right: 8px; }
+    </style>
+
+    <script>
+        document.querySelectorAll('.menu-item > .menu-title').forEach(t=>{if(t.querySelector('.menu-arrow'))t.addEventListener('click',e=>{e.preventDefault();t.parentElement.classList.toggle('open')})});
+
+        function toggleMultiSelect() {
+            document.getElementById('merchantSelect').classList.toggle('open');
+        }
+
+        function updateSelectedMerchants() {
+            const checkboxes = document.querySelectorAll('#merchantSelect input[type="checkbox"]:checked');
+            const trigger = document.querySelector('.multi-select-trigger');
+            if (checkboxes.length > 0) {
+                const values = Array.from(checkboxes).map(cb => cb.value).join(', ');
+                trigger.innerHTML = '<span class="multi-select-value">' + values + '</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            } else {
+                trigger.innerHTML = '<span class="multi-select-placeholder">請選擇商戶（可多選）</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            }
+        }
+
+        // 點擊外部關閉下拉框
+        document.addEventListener('click', function(e) {
+            const multiSelect = document.getElementById('merchantSelect');
+            const editMultiSelect = document.getElementById('editMerchantSelect');
+            if (multiSelect && !multiSelect.contains(e.target)) {
+                multiSelect.classList.remove('open');
+            }
+            if (editMultiSelect && !editMultiSelect.contains(e.target)) {
+                editMultiSelect.classList.remove('open');
+            }
+        });
+
+        // 編輯群組功能
+        function toggleEditMultiSelect() {
+            document.getElementById('editMerchantSelect').classList.toggle('open');
+        }
+
+        function updateEditSelectedMerchants() {
+            const checkboxes = document.querySelectorAll('#editMerchantSelect input[type="checkbox"]:checked');
+            const trigger = document.querySelector('#editMerchantSelect .multi-select-trigger');
+            if (checkboxes.length > 0) {
+                const values = Array.from(checkboxes).map(cb => cb.value).join(', ');
+                trigger.innerHTML = '<span class="multi-select-value">' + values + '</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            } else {
+                trigger.innerHTML = '<span class="multi-select-placeholder">請選擇商戶（可多選）</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            }
+        }
+
+        function openEditGroupModal(groupName, merchants) {
+            // 設置群組名稱
+            document.getElementById('editGroupName').value = groupName;
+
+            // 重置所有checkbox
+            document.querySelectorAll('#editMerchantSelect input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // 勾選對應的商戶
+            merchants.forEach(m => {
+                const checkbox = document.querySelector('#editMerchantSelect input[value="' + m + '"]');
+                if (checkbox) checkbox.checked = true;
+            });
+
+            // 更新顯示
+            updateEditSelectedMerchants();
+
+            // 顯示彈窗
+            document.getElementById('editGroupModal').classList.add('show');
+        }
+
+        function submitEditGroup() {
+            alert('群組編輯成功！');
+            document.getElementById('editGroupModal').classList.remove('show');
+        }
+
+        // 點擊遮罩關閉彈窗
+        document.getElementById('editGroupModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        document.getElementById('addGroupModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

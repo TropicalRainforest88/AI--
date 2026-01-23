@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限管理 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 頁面標題區域 */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-lighter);
+        }
+        .card-header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* 建立權限按鈕 */
+        .btn-create {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-create:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 顯示欄位下拉框 */
+        .column-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .column-dropdown-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-regular);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .column-dropdown-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .column-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: #fff;
+            border: 1px solid var(--border-lighter);
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            padding: 8px 0;
+            min-width: 150px;
+            z-index: 100;
+        }
+        .column-dropdown.open .column-dropdown-menu {
+            display: block;
+        }
+        .column-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .column-dropdown-item:hover {
+            background: var(--bg-color);
+        }
+        .column-dropdown-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+        .column-dropdown-item span {
+            font-size: 14px;
+            color: var(--text-regular);
+        }
+
+        /* 權限列表表格 */
+        .permission-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .permission-table th {
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #909399;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .permission-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-lighter);
+        }
+        .permission-table tr:last-child td {
+            border-bottom: none;
+        }
+        .permission-table .col-name {
+            width: 25%;
+        }
+        .permission-table .col-desc {
+            width: 30%;
+            color: var(--text-regular);
+        }
+        .permission-table .col-date {
+            width: 25%;
+            color: var(--text-secondary);
+        }
+        .permission-table .col-action {
+            width: 20%;
+            text-align: right;
+        }
+
+
+        /* 彈窗樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #fff;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-lighter);
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--text-secondary);
+            font-size: 20px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-lighter);
+        }
+
+        /* 表單項樣式 */
+        .form-item {
+            margin-bottom: 16px;
+        }
+        .form-item:last-child {
+            margin-bottom: 0;
+        }
+        .form-item .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-regular);
+            font-weight: 500;
+        }
+        .form-item .form-label .required {
+            color: var(--danger-color);
+            margin-left: 2px;
+        }
+        .form-item .form-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-primary);
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .form-item .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-item .form-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-primary);
+            box-sizing: border-box;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+        .form-item .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* 保存按鈕 */
+        .btn-save {
+            background: var(--primary-color);
+            color: #fff;
+            border: 1px solid var(--primary-color);
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-save:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 取消按鈕 */
+        .btn-cancel {
+            background: #fff;
+            color: var(--text-regular);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover {
+            border-color: #c0c4cc;
+            color: #303133;
+        }
+
+        /* 大型彈窗 */
+        .modal-large {
+            width: 700px;
+            max-width: 90%;
+        }
+
+        /* 下拉選擇框樣式 */
+        .form-select {
+            width: 100%;
+            height: 40px;
+            padding: 0 32px 0 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #303133;
+            box-sizing: border-box;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+            appearance: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+
+        /* 表單行樣式 */
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+        .form-row .form-item {
+            flex: 1;
+        }
+
+        /* 權限配置表格 */
+        .permission-config-table {
+            width: 100%;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        .permission-config-table th {
+            background: #f5f7fa;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #303133;
+            text-align: left;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .permission-config-table th:last-child {
+            text-align: center;
+        }
+        .permission-config-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #303133;
+            border-bottom: 1px solid #ebeef5;
+            vertical-align: middle;
+        }
+        .permission-config-table tr:last-child td {
+            border-bottom: none;
+        }
+        .permission-config-table .main-func {
+            background: #fafafa;
+            font-weight: 500;
+        }
+        .permission-config-table .sub-func {
+            padding-left: 32px;
+            color: #606266;
+        }
+        .permission-type-group {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+        .permission-type-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .permission-type-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .permission-type-item span {
+            font-size: 14px;
+            color: #606266;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心</div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item active"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">後台權限設定</a></span><span class="breadcrumb-item active">權限管理</span></div></div>
+                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">權限列表</span>
+                        <div class="card-header-actions">
+                            <button class="btn-create" onclick="openCreateModal()">建立權限</button>
+                            <!-- 顯示欄位下拉 -->
+                            <div class="column-dropdown" id="columnDropdown">
+                                <button class="column-dropdown-btn" onclick="toggleColumnDropdown()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                                    </svg>
+                                    顯示欄位
+                                </button>
+                                <div class="column-dropdown-menu">
+                                    <label class="column-dropdown-item">
+                                        <input type="checkbox" checked data-column="name">
+                                        <span>權限名稱</span>
+                                    </label>
+                                    <label class="column-dropdown-item">
+                                        <input type="checkbox" checked data-column="desc">
+                                        <span>描述</span>
+                                    </label>
+                                    <label class="column-dropdown-item">
+                                        <input type="checkbox" checked data-column="date">
+                                        <span>最後更新日期</span>
+                                    </label>
+                                    <label class="column-dropdown-item">
+                                        <input type="checkbox" checked data-column="action">
+                                        <span>操作</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <table class="permission-table" id="permissionTable">
+                        <thead>
+                            <tr>
+                                <th class="col-name">權限名稱</th>
+                                <th class="col-desc">描述</th>
+                                <th class="col-date">最後更新日期</th>
+                                <th class="col-action">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-name">最高管理組</td>
+                                <td class="col-desc">super user</td>
+                                <td class="col-date">2025-08-08 16:02:32</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('最高管理組', 'super user')">編輯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-name">QA</td>
+                                <td class="col-desc">QAtest</td>
+                                <td class="col-date">2025-07-08 06:05:44</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('QA', 'QAtest')">編輯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-name">OP运营INC及M1</td>
+                                <td class="col-desc">OP运营INC及M1</td>
+                                <td class="col-date">2025-11-12 11:02:30</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('OP运营INC及M1', 'OP运营INC及M1')">編輯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-name">上分审核专员</td>
+                                <td class="col-desc">上分审核专员</td>
+                                <td class="col-date">2026-01-06 16:21:34</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('上分审核专员', '上分审核专员')">編輯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-name">上分QA审核</td>
+                                <td class="col-desc">上分QA审核</td>
+                                <td class="col-date">2026-01-06 16:21:18</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('上分QA审核', '上分QA审核')">編輯</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-name">审计</td>
+                                <td class="col-desc">审计权限读取</td>
+                                <td class="col-date">2025-12-17 14:25:15</td>
+                                <td class="col-action">
+                                    <button class="btn btn-text" onclick="openEditModal('审计', '审计权限读取')">編輯</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 建立權限彈窗 -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <span class="modal-title">建立權限</span>
+                <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item">
+                    <label class="form-label">權限名稱 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="createName" placeholder="請輸入權限名稱">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">權限描述</label>
+                    <input type="text" class="form-input" id="createDesc" placeholder="請輸入權限描述">
+                </div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <label class="form-label">選擇商戶</label>
+                        <select class="form-select" id="createMerchant">
+                            <option value="">請選擇商戶</option>
+                            <option value="GS">GS</option>
+                            <option value="GE">GE</option>
+                            <option value="MY">MY</option>
+                            <option value="MN">MN</option>
+                            <option value="MJ">MJ</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">選擇審核類型</label>
+                        <select class="form-select" id="createAuditType">
+                            <option value="">請選擇審核類型</option>
+                            <option value="1">資金審核</option>
+                            <option value="2">賬戶安全審核</option>
+                            <option value="3">人工充值</option>
+                            <option value="4">人工提現</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">選擇審核等級</label>
+                        <select class="form-select" id="createAuditLevel">
+                            <option value="">請選擇審核等級</option>
+                            <option value="level1">一級審核</option>
+                            <option value="level2">二級審核</option>
+                            <option value="level3">三級審核</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 權限配置表格 -->
+                <div class="form-item">
+                    <label class="form-label">權限配置</label>
+                    <table class="permission-config-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">主功能</th>
+                                <th style="width: 35%;">子功能</th>
+                                <th style="width: 40%;">權限類型</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 後台權限設定 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">後台權限設定</td>
+                                <td class="sub-func">權限管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">帳號管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">二階段驗證管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_1_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 審核管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">審核管理</td>
+                                <td class="sub-func">待審核列表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">已審核列表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">審核詳細</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_2_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 配置管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="2">配置管理</td>
+                                <td class="sub-func">審核中心配置</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_3_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_3_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">自動通知審核結果</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_3_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_3_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 商戶管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="2">商戶管理</td>
+                                <td class="sub-func">商戶設定</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_4_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_4_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">商戶群組設定</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_4_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_4_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 數據報表 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">數據報表</td>
+                                <td class="sub-func">日報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">週報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">駁回分析報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="perm_5_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeCreateModal()">取消</button>
+                <button class="btn-save" onclick="submitCreate()">新增</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編輯權限彈窗 -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <span class="modal-title">編輯權限</span>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item">
+                    <label class="form-label">權限名稱 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="editName" placeholder="請輸入權限名稱">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">權限描述</label>
+                    <input type="text" class="form-input" id="editDesc" placeholder="請輸入權限描述">
+                </div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <label class="form-label">選擇商戶</label>
+                        <select class="form-select" id="editMerchant">
+                            <option value="">請選擇商戶</option>
+                            <option value="GS">GS</option>
+                            <option value="GE">GE</option>
+                            <option value="MY">MY</option>
+                            <option value="MN">MN</option>
+                            <option value="MJ">MJ</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">選擇審核類型</label>
+                        <select class="form-select" id="editAuditType">
+                            <option value="">請選擇審核類型</option>
+                            <option value="1">資金審核</option>
+                            <option value="2">賬戶安全審核</option>
+                            <option value="3">人工充值</option>
+                            <option value="4">人工提現</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label">選擇審核等級</label>
+                        <select class="form-select" id="editAuditLevel">
+                            <option value="">請選擇審核等級</option>
+                            <option value="level1">一級審核</option>
+                            <option value="level2">二級審核</option>
+                            <option value="level3">三級審核</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 權限配置表格 -->
+                <div class="form-item">
+                    <label class="form-label">權限配置</label>
+                    <table class="permission-config-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">主功能</th>
+                                <th style="width: 35%;">子功能</th>
+                                <th style="width: 40%;">權限類型</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 後台權限設定 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">後台權限設定</td>
+                                <td class="sub-func">權限管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">帳號管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">二階段驗證管理</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_1_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 審核管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">審核管理</td>
+                                <td class="sub-func">待審核列表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">已審核列表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">審核詳細</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_2_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 配置管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="2">配置管理</td>
+                                <td class="sub-func">審核中心配置</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_3_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_3_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">自動通知審核結果</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_3_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_3_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 商戶管理 -->
+                            <tr>
+                                <td class="main-func" rowspan="2">商戶管理</td>
+                                <td class="sub-func">商戶設定</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_4_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_4_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">商戶群組設定</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_4_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_4_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- 數據報表 -->
+                            <tr>
+                                <td class="main-func" rowspan="3">數據報表</td>
+                                <td class="sub-func">日報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_1_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_1_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">週報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_2_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_2_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-func">駁回分析報表</td>
+                                <td>
+                                    <div class="permission-type-group">
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_3_edit">
+                                            <span>編輯</span>
+                                        </label>
+                                        <label class="permission-type-item">
+                                            <input type="checkbox" name="edit_perm_5_3_read">
+                                            <span>讀取</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeEditModal()">取消</button>
+                <button class="btn-save" onclick="submitEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 菜單交互
+        document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
+            if (t.querySelector('.menu-arrow')) {
+                t.addEventListener('click', e => {
+                    e.preventDefault();
+                    t.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 顯示欄位下拉框
+        function toggleColumnDropdown() {
+            document.getElementById('columnDropdown').classList.toggle('open');
+        }
+
+        // 點擊外部關閉下拉框
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('columnDropdown');
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // 欄位顯示/隱藏
+        document.querySelectorAll('.column-dropdown-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const column = this.dataset.column;
+                const cells = document.querySelectorAll('.col-' + column);
+                cells.forEach(cell => {
+                    cell.style.display = this.checked ? '' : 'none';
+                });
+            });
+        });
+
+        // 建立權限彈窗
+        function openCreateModal() {
+            document.getElementById('createName').value = '';
+            document.getElementById('createDesc').value = '';
+            document.getElementById('createMerchant').value = '';
+            document.getElementById('createAuditType').value = '';
+            document.getElementById('createAuditLevel').value = '';
+            // 清除所有權限勾選
+            document.querySelectorAll('#createModal .permission-config-table input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('createModal').classList.add('show');
+        }
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('show');
+        }
+        function submitCreate() {
+            alert('權限建立成功！');
+            closeCreateModal();
+        }
+
+        // 編輯權限彈窗
+        function openEditModal(name, desc) {
+            document.getElementById('editName').value = name;
+            document.getElementById('editDesc').value = desc;
+            // 重置下拉選單（實際使用時可根據數據設定）
+            document.getElementById('editMerchant').value = '';
+            document.getElementById('editAuditType').value = '';
+            document.getElementById('editAuditLevel').value = '';
+            // 清除所有權限勾選（實際使用時可根據數據設定）
+            document.querySelectorAll('#editModal .permission-config-table input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('editModal').classList.add('show');
+        }
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+        function submitEdit() {
+            alert('權限編輯成功！');
+            closeEditModal();
+        }
+
+        // 點擊遮罩關閉彈窗
+        document.getElementById('createModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCreateModal();
+        });
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>待審核訂單列表 - 業務後台</title>
+    <title>系統原型導航</title>
     <style>
         * {
             margin: 0;
@@ -13,1080 +13,224 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-            font-size: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
         .container {
-            padding: 20px;
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* 页面标题 */
-        .page-header {
-            margin-bottom: 20px;
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
         }
 
-        .page-title {
-            font-size: 20px;
+        .header h1 {
+            font-size: 36px;
             font-weight: 600;
-            color: #1a1a1a;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* 搜索区域 */
-        .search-panel {
-            background: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: flex-end;
-        }
-
-        .search-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            width: 100%;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 180px;
-        }
-
-        .form-group.small {
-            min-width: 140px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select {
-            height: 36px;
-            padding: 0 12px;
-            border: 1px solid #dcdfe6;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #333;
-            background: #fff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #409eff;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
-        }
-
-        .form-group input::placeholder {
-            color: #c0c4cc;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-left: auto;
-        }
-
-        .btn {
-            height: 36px;
-            padding: 0 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: #409eff;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #66b1ff;
-        }
-
-        .btn-default {
-            background: #fff;
-            color: #606266;
-            border: 1px solid #dcdfe6;
-        }
-
-        .btn-default:hover {
-            color: #409eff;
-            border-color: #c6e2ff;
-            background: #ecf5ff;
-        }
-
-        .btn-success {
-            background: #67c23a;
-            color: #fff;
-        }
-
-        .btn-success:hover {
-            background: #85ce61;
-        }
-
-        .btn-warning {
-            background: #e6a23c;
-            color: #fff;
-        }
-
-        .btn-warning:hover {
-            background: #ebb563;
-        }
-
-        /* 表格区域 */
-        .table-panel {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid #ebeef5;
-        }
-
-        .table-header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .table-title {
+        .header p {
             font-size: 16px;
-            font-weight: 600;
-            color: #1a1a1a;
+            opacity: 0.9;
         }
 
-        .table-info {
-            color: #909399;
-            font-size: 13px;
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
         }
 
-        /* 批量审核按钮 */
-        .batch-audit-btn {
-            display: none;
-            height: 32px;
-            padding: 0 16px;
-            background: #e6a23c;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
+        .system-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
             cursor: pointer;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .batch-audit-btn:hover {
-            background: #ebb563;
-        }
-
-        .batch-audit-btn.show {
-            display: inline-flex;
-        }
-
-        .selected-count {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1100px;
-        }
-
-        th {
-            background: #fafafa;
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #606266;
-            font-size: 13px;
-            border-bottom: 1px solid #ebeef5;
-            white-space: nowrap;
-        }
-
-        th.checkbox-col {
-            width: 50px;
-            text-align: center;
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #ebeef5;
-            color: #333;
-            vertical-align: top;
-        }
-
-        td.checkbox-col {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        tr:hover {
-            background: #f5f7fa;
-        }
-
-        tr.selected {
-            background: #ecf5ff;
-        }
-
-        /* 复选框样式 */
-        .checkbox-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: #409eff;
-        }
-
-        /* 额外参数展示 */
-        .extra-params {
-            background: #f8f9fa;
-            border-radius: 6px;
-            padding: 12px;
-            min-width: 280px;
-            max-width: 350px;
-        }
-
-        .param-item {
-            display: flex;
-            margin-bottom: 8px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .param-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .param-label {
-            color: #909399;
-            min-width: 80px;
-            flex-shrink: 0;
-        }
-
-        .param-value {
-            color: #333;
-            word-break: break-all;
-        }
-
-        .param-value.highlight {
-            color: #e6a23c;
-            font-weight: 500;
-        }
-
-        .param-value.success {
-            color: #67c23a;
-        }
-
-        .param-value.link {
-            color: #409eff;
-            cursor: pointer;
-        }
-
-        .param-value.link:hover {
-            text-decoration: underline;
-        }
-
-        .no-image {
-            color: #c0c4cc;
-            font-style: italic;
-        }
-
-        /* 状态标签 */
-        .status-tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-pending {
-            background: #fdf6ec;
-            color: #e6a23c;
-        }
-
-        .status-finance {
-            background: #fef0f0;
-            color: #f56c6c;
-        }
-
-        .status-security {
-            background: #f0f9eb;
-            color: #67c23a;
-        }
-
-        /* 分页 */
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-top: 1px solid #ebeef5;
-        }
-
-        .pagination-info {
-            color: #606266;
-            font-size: 13px;
-        }
-
-        .pagination-info span {
-            color: #409eff;
-            font-weight: 500;
-        }
-
-        .pagination-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .page-btn {
-            min-width: 32px;
-            height: 32px;
-            padding: 0 8px;
-            border: 1px solid #dcdfe6;
-            background: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #606266;
-            transition: all 0.2s;
-        }
-
-        .page-btn:hover:not(:disabled) {
-            color: #409eff;
-            border-color: #409eff;
-        }
-
-        .page-btn:disabled {
-            cursor: not-allowed;
-            color: #c0c4cc;
-            background: #f5f7fa;
-        }
-
-        .page-btn.active {
-            background: #409eff;
-            border-color: #409eff;
-            color: #fff;
-        }
-
-        .page-ellipsis {
-            color: #909399;
-            padding: 0 4px;
-        }
-
-        .page-size-select {
-            margin-left: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #606266;
-            font-size: 13px;
-        }
-
-        .page-size-select select {
-            height: 32px;
-            padding: 0 24px 0 10px;
-            border: 1px solid #dcdfe6;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            background: #fff;
-        }
-
-        .page-jumper {
-            margin-left: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #606266;
-            font-size: 13px;
-        }
-
-        .page-jumper input {
-            width: 50px;
-            height: 32px;
-            padding: 0 8px;
-            border: 1px solid #dcdfe6;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        /* 图标样式 */
-        .icon {
-            width: 16px;
-            height: 16px;
-            display: inline-block;
-        }
-
-        /* Tooltip 样式 */
-        .label-with-tooltip {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .tooltip-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 14px;
-            height: 14px;
-            background: #909399;
-            color: #fff;
-            border-radius: 50%;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: help;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .tooltip-icon:hover {
-            background: #409eff;
-        }
-
-        .tooltip-icon .tooltip-content {
-            display: none;
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #303133;
-            color: #fff;
-            padding: 10px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: normal;
-            line-height: 1.6;
-            white-space: nowrap;
-            z-index: 1000;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .tooltip-icon .tooltip-content::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: #303133;
-        }
-
-        .tooltip-icon:hover .tooltip-content {
+            text-decoration: none;
+            color: inherit;
             display: block;
         }
 
-        /* 多行tooltip */
-        .tooltip-content.multiline {
-            white-space: normal;
-            width: 280px;
-            text-align: left;
+        .system-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
 
-        .tooltip-content .tip-title {
-            font-weight: 600;
-            margin-bottom: 6px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .tooltip-content .tip-item {
+        .system-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
-            margin-bottom: 4px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
         }
 
-        .tooltip-content .tip-item:last-child {
-            margin-bottom: 0;
+        .system-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 10px;
         }
 
-        .tooltip-content .tip-label {
-            color: #a0a0a0;
-            margin-right: 8px;
-            flex-shrink: 0;
+        .system-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
         }
 
-        .tooltip-content .tip-value {
-            color: #fff;
+        .system-card .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #666;
         }
 
-        /* 响应式 */
-        @media (max-width: 1200px) {
-            .search-form {
-                gap: 12px;
-            }
+        .system-card .status.active {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
 
-            .form-group {
-                min-width: 160px;
-            }
+        .system-card .status.progress {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
 
-            .btn-group {
-                width: 100%;
-                margin-left: 0;
-                margin-top: 8px;
-            }
+        .system-card .status.planned {
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Different colors for different systems */
+        .icon-audit { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .icon-user { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .icon-order { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .icon-report { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .icon-payment { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .icon-setting { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+        .add-system {
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .add-system:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-5px);
+        }
+
+        .add-system .plus-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .add-system span {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 页面标题 -->
-        <div class="page-header">
-            <h1 class="page-title">待審核訂單列表</h1>
+        <div class="header">
+            <h1>系統原型導航</h1>
+            <p>點擊卡片進入對應系統的原型頁面</p>
         </div>
 
-        <!-- 搜索面板 -->
-        <div class="search-panel">
-            <form class="search-form">
-                <!-- 第一行搜索条件 -->
-                <div class="search-row">
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            審核單ID
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content">精確匹配，需輸入完整的審核單ID</span>
-                            </span>
-                        </label>
-                        <input type="text" placeholder="請輸入審核單ID">
-                    </div>
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            商戶名稱
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content">選擇對應的商戶代碼進行篩選</span>
-                            </span>
-                        </label>
-                        <select>
-                            <option value="">全部</option>
-                            <option value="GS">GS</option>
-                            <option value="GE">GE</option>
-                            <option value="MY">MY</option>
-                            <option value="MN">MN</option>
-                            <option value="MJ">MJ</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            審核項目
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content multiline">
-                                    <div class="tip-title">審核項目說明</div>
-                                    <div class="tip-item">
-                                        <span class="tip-label">資金審核:</span>
-                                        <span class="tip-value">大額轉賬、異常資金流動審核</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="tip-label">賬戶安全:</span>
-                                        <span class="tip-value">密碼重置、安全設置變更</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="tip-label">人工充值:</span>
-                                        <span class="tip-value">後台人工加款操作</span>
-                                    </div>
-                                    <div class="tip-item">
-                                        <span class="tip-label">人工提現:</span>
-                                        <span class="tip-value">後台人工出款操作</span>
-                                    </div>
-                                </span>
-                            </span>
-                        </label>
-                        <select>
-                            <option value="">全部</option>
-                            <option value="1">資金審核</option>
-                            <option value="2">賬戶安全審核</option>
-                            <option value="3">人工充值</option>
-                            <option value="4">人工提現</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            提交人員
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content">支持模糊搜索，最多20個字符</span>
-                            </span>
-                        </label>
-                        <input type="text" placeholder="請輸入提交人員">
-                    </div>
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            提交時間
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content">選擇日期範圍，最大跨度90天</span>
-                            </span>
-                        </label>
-                        <input type="text" placeholder="開始日期 - 結束日期">
-                    </div>
+        <div class="systems-grid">
+            <!-- 審核中心 -->
+            <a href="审核中心/index.html" class="system-card">
+                <div class="system-icon icon-audit">
+                    <span style="color: white;">✓</span>
                 </div>
-                <!-- 第二行搜索条件 -->
-                <div class="search-row">
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            額外參數
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content multiline">
-                                    <div class="tip-title">額外參數說明</div>
-                                    <div class="tip-item">
-                                        <span class="tip-value">先選擇參數類型，再輸入對應的參數值進行搜索。不同審核類型包含不同的額外參數。</span>
-                                    </div>
-                                </span>
-                            </span>
-                        </label>
-                        <select id="extraParamType">
-                            <option value="">請選擇參數類型</option>
-                            <option value="username">用戶名</option>
-                            <option value="userId">用戶ID</option>
-                            <option value="realName">姓名</option>
-                            <option value="amount">金額</option>
-                            <option value="agentName">所屬總代</option>
-                            <option value="changeType">帳變類型</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="label-with-tooltip">
-                            額外參數值
-                            <span class="tooltip-icon">?
-                                <span class="tooltip-content">可輸入任意字符，最多30個字符，支持模糊搜索</span>
-                            </span>
-                        </label>
-                        <input type="text" placeholder="請輸入參數值">
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                            搜索
-                        </button>
-                        <button type="button" class="btn btn-default">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                                <path d="M3 3v5h5"></path>
-                            </svg>
-                            重置
-                        </button>
-                        <button type="button" class="btn btn-default">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7,10 12,15 17,10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            導出
-                        </button>
-                        <button type="button" class="btn btn-success">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 4v6h-6"></path>
-                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                            </svg>
-                            刷新
-                        </button>
-                    </div>
+                <h3>審核中心</h3>
+                <p>訂單審核、商戶管理、權限配置、自動通知等功能模塊的原型設計</p>
+                <span class="status active">
+                    <span class="status-dot"></span>
+                    已完成
+                </span>
+            </a>
+
+            <!-- 可以添加更多系统卡片，以下是示例 -->
+            <!--
+            <a href="用户中心/index.html" class="system-card">
+                <div class="system-icon icon-user">
+                    <span style="color: white;">👤</span>
                 </div>
-            </form>
+                <h3>用戶中心</h3>
+                <p>用戶管理、登錄註冊、個人資料等功能模塊</p>
+                <span class="status progress">
+                    <span class="status-dot"></span>
+                    進行中
+                </span>
+            </a>
+
+            <a href="订单系统/index.html" class="system-card">
+                <div class="system-icon icon-order">
+                    <span style="color: white;">📦</span>
+                </div>
+                <h3>訂單系統</h3>
+                <p>訂單管理、物流跟蹤、退款處理等功能模塊</p>
+                <span class="status planned">
+                    <span class="status-dot"></span>
+                    計劃中
+                </span>
+            </a>
+            -->
+
+            <!-- 添加新系统的占位卡片 -->
+            <div class="system-card add-system" onclick="alert('創建新的系統文件夾，然後在此處添加鏈接')">
+                <div class="plus-icon">+</div>
+                <span>添加新系統</span>
+            </div>
         </div>
 
-        <!-- 表格面板 -->
-        <div class="table-panel">
-            <div class="table-header">
-                <div class="table-header-left">
-                    <div class="table-title">審核列表</div>
-                    <button class="batch-audit-btn" id="batchAuditBtn">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 11l3 3L22 4"></path>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                        </svg>
-                        批量審核
-                        <span class="selected-count" id="selectedCount">0</span>
-                    </button>
-                </div>
-                <div class="table-info">共 <span>156</span> 條記錄</div>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" id="selectAll" title="全選">
-                                </div>
-                            </th>
-                            <th>審核單ID</th>
-                            <th>商戶名稱</th>
-                            <th>審核項目</th>
-                            <th>提交人員</th>
-                            <th>提交時間</th>
-                            <th>額外參數</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr>
-                            <td class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" class="row-checkbox">
-                                </div>
-                            </td>
-                            <td>AUD202401190001</td>
-                            <td>GS</td>
-                            <td><span class="status-tag status-pending">人工充值</span></td>
-                            <td>admin_zhang</td>
-                            <td>2024-01-19 10:23:45</td>
-                            <td>
-                                <div class="extra-params">
-                                    <div class="param-item">
-                                        <span class="param-label">用戶名:</span>
-                                        <span class="param-value">ucuser3@as</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">用戶ID:</span>
-                                        <span class="param-value">-</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">姓名:</span>
-                                        <span class="param-value">-</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">帳變類型:</span>
-                                        <span class="param-value">221</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">所屬總代:</span>
-                                        <span class="param-value">zfqd2001@as</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">充值金額:</span>
-                                        <span class="param-value highlight">55</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">批注:</span>
-                                        <span class="param-value">VIP2晋级礼金</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">相關截圖:</span>
-                                        <span class="param-value no-image">沒有上傳相關截圖</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" class="row-checkbox">
-                                </div>
-                            </td>
-                            <td>AUD202401190002</td>
-                            <td>GE</td>
-                            <td><span class="status-tag status-security">賬戶安全審核</span></td>
-                            <td>operator_li</td>
-                            <td>2024-01-19 09:45:12</td>
-                            <td>
-                                <div class="extra-params">
-                                    <div class="param-item">
-                                        <span class="param-label">用戶名:</span>
-                                        <span class="param-value">vipuser88@gs</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">用戶ID:</span>
-                                        <span class="param-value">100892</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">姓名:</span>
-                                        <span class="param-value">王小明</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">安全項目:</span>
-                                        <span class="param-value">密碼重置</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">申請原因:</span>
-                                        <span class="param-value">用戶遺忘密碼</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">驗證方式:</span>
-                                        <span class="param-value">身份證驗證</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">相關截圖:</span>
-                                        <span class="param-value link">查看截圖</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" class="row-checkbox">
-                                </div>
-                            </td>
-                            <td>AUD202401190003</td>
-                            <td>MY</td>
-                            <td><span class="status-tag status-finance">人工提現</span></td>
-                            <td>cs_wang</td>
-                            <td>2024-01-19 09:12:33</td>
-                            <td>
-                                <div class="extra-params">
-                                    <div class="param-item">
-                                        <span class="param-label">用戶名:</span>
-                                        <span class="param-value">player2024@hg</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">用戶ID:</span>
-                                        <span class="param-value">208745</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">姓名:</span>
-                                        <span class="param-value">李大華</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">提款金額:</span>
-                                        <span class="param-value highlight">8888</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">銀行名稱:</span>
-                                        <span class="param-value">中國工商銀行</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">銀行卡號:</span>
-                                        <span class="param-value">6222 **** **** 8899</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">備註:</span>
-                                        <span class="param-value">首次提款審核</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" class="row-checkbox">
-                                </div>
-                            </td>
-                            <td>AUD202401190004</td>
-                            <td>MN</td>
-                            <td><span class="status-tag status-finance">資金審核</span></td>
-                            <td>vip_service</td>
-                            <td>2024-01-19 08:56:21</td>
-                            <td>
-                                <div class="extra-params">
-                                    <div class="param-item">
-                                        <span class="param-label">用戶名:</span>
-                                        <span class="param-value">bigwhale@xh</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">用戶ID:</span>
-                                        <span class="param-value">50023</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">資金類型:</span>
-                                        <span class="param-value">大額轉賬</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">轉賬金額:</span>
-                                        <span class="param-value highlight">500000</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">轉入賬戶:</span>
-                                        <span class="param-value">主錢包</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">審核原因:</span>
-                                        <span class="param-value">超過單筆限額</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="checkbox-col">
-                                <div class="checkbox-wrapper">
-                                    <input type="checkbox" class="row-checkbox">
-                                </div>
-                            </td>
-                            <td>AUD202401190005</td>
-                            <td>MJ</td>
-                            <td><span class="status-tag status-pending">人工充值</span></td>
-                            <td>admin_chen</td>
-                            <td>2024-01-19 08:30:15</td>
-                            <td>
-                                <div class="extra-params">
-                                    <div class="param-item">
-                                        <span class="param-label">用戶名:</span>
-                                        <span class="param-value">newbie001@js</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">用戶ID:</span>
-                                        <span class="param-value">302156</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">姓名:</span>
-                                        <span class="param-value">張三豐</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">帳變類型:</span>
-                                        <span class="param-value">110</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">所屬總代:</span>
-                                        <span class="param-value">master@js</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">充值金額:</span>
-                                        <span class="param-value highlight">2000</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">批注:</span>
-                                        <span class="param-value">首充獎勵補發</span>
-                                    </div>
-                                    <div class="param-item">
-                                        <span class="param-label">相關截圖:</span>
-                                        <span class="param-value link">查看截圖</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 分页 -->
-            <div class="pagination">
-                <div class="pagination-info">
-                    顯示 <span>1</span> - <span>5</span> 條，共 <span>156</span> 條記錄
-                </div>
-                <div class="pagination-controls">
-                    <button class="page-btn" disabled>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="15,18 9,12 15,6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
-                    <span class="page-ellipsis">...</span>
-                    <button class="page-btn">32</button>
-                    <button class="page-btn">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9,18 15,12 9,6"></polyline>
-                        </svg>
-                    </button>
-
-                    <div class="page-size-select">
-                        <span>每頁</span>
-                        <select>
-                            <option value="5">5 條</option>
-                            <option value="10">10 條</option>
-                            <option value="20">20 條</option>
-                            <option value="50">50 條</option>
-                        </select>
-                    </div>
-
-                    <div class="page-jumper">
-                        <span>跳至</span>
-                        <input type="text" value="1">
-                        <span>頁</span>
-                    </div>
-                </div>
-            </div>
+        <div class="footer">
+            <p>AI 原型設計系統 · 使用 GitHub Pages 發布</p>
         </div>
     </div>
-
-    <script>
-        // 全选/取消全选功能
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
-        const batchAuditBtn = document.getElementById('batchAuditBtn');
-        const selectedCountSpan = document.getElementById('selectedCount');
-
-        function updateBatchButton() {
-            const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
-            selectedCountSpan.textContent = checkedCount;
-
-            if (checkedCount > 0) {
-                batchAuditBtn.classList.add('show');
-            } else {
-                batchAuditBtn.classList.remove('show');
-            }
-
-            // 更新行选中状态
-            rowCheckboxes.forEach(checkbox => {
-                const row = checkbox.closest('tr');
-                if (checkbox.checked) {
-                    row.classList.add('selected');
-                } else {
-                    row.classList.remove('selected');
-                }
-            });
-
-            // 更新全选框状态
-            const allChecked = checkedCount === rowCheckboxes.length;
-            const someChecked = checkedCount > 0 && checkedCount < rowCheckboxes.length;
-            selectAllCheckbox.checked = allChecked;
-            selectAllCheckbox.indeterminate = someChecked;
-        }
-
-        selectAllCheckbox.addEventListener('change', function() {
-            rowCheckboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-            updateBatchButton();
-        });
-
-        rowCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateBatchButton);
-        });
-
-        // 批量审核按钮点击
-        batchAuditBtn.addEventListener('click', function() {
-            const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
-            alert(`已選擇 ${checkedCount} 條記錄進行批量審核`);
-        });
-    </script>
 </body>
 </html>

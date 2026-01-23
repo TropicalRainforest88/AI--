@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商戶設定 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 彈窗樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #fff;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #303133;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #909399;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #303133;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 20px;
+            border-top: 1px solid #ebeef5;
+        }
+
+        /* 表單樣式 */
+        .form-item {
+            margin-bottom: 20px;
+        }
+        .form-item:last-child {
+            margin-bottom: 0;
+        }
+        .form-item .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #606266;
+        }
+        .form-item .form-control {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* 私鑰輸入框組 */
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .input-group .form-control {
+            flex: 1;
+        }
+        .input-group .btn {
+            flex-shrink: 0;
+        }
+
+        /* 開關樣式 */
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .switch-wrapper:last-child {
+            border-bottom: none;
+        }
+        .switch-label {
+            font-size: 14px;
+            color: #606266;
+        }
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 22px;
+            background: #dcdfe6;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .switch.active {
+            background: #409eff;
+        }
+        .switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .switch.active::after {
+            left: 24px;
+        }
+
+        /* 多選框組 */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .checkbox-item span {
+            font-size: 14px;
+            color: #606266;
+        }
+
+        /* 多選下拉框樣式 */
+        .multi-select {
+            position: relative;
+        }
+        .multi-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 36px;
+            padding: 6px 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .multi-select-trigger:hover {
+            border-color: #c0c4cc;
+        }
+        .multi-select.open .multi-select-trigger {
+            border-color: #409eff;
+        }
+        .multi-select-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
+        }
+        .multi-select-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: #f0f2f5;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #606266;
+        }
+        .multi-select-tag-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #c0c4cc;
+            color: #fff;
+            font-size: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .multi-select-tag-close:hover {
+            background: #909399;
+        }
+        .multi-select-placeholder {
+            color: #c0c4cc;
+            font-size: 14px;
+        }
+        .multi-select-arrow {
+            color: #c0c4cc;
+            transition: transform 0.2s;
+        }
+        .multi-select.open .multi-select-arrow {
+            transform: rotate(180deg);
+        }
+        .multi-select-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: #fff;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multi-select.open .multi-select-dropdown {
+            display: block;
+        }
+        .multi-select-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .multi-select-option:hover {
+            background: #f5f7fa;
+        }
+        .multi-select-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .multi-select-option span {
+            font-size: 14px;
+            color: #606266;
+        }
+
+        /* 大型彈窗 */
+        .modal-large {
+            width: 1100px;
+            max-width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* 參數配置區域 */
+        .param-config-section {
+            margin-top: 24px;
+            border-top: 1px solid #ebeef5;
+            padding-top: 20px;
+        }
+        .param-config-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #303133;
+            margin-bottom: 16px;
+        }
+
+        /* Tab 切換 */
+        .param-tabs {
+            display: flex;
+            border-bottom: 1px solid #e4e7ed;
+            margin-bottom: 0;
+        }
+        .param-tab {
+            padding: 12px 24px;
+            font-size: 14px;
+            color: #606266;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .param-tab:hover {
+            color: #409eff;
+        }
+        .param-tab.active {
+            color: #409eff;
+            border-bottom-color: #409eff;
+            font-weight: 500;
+        }
+
+        /* Tab 內容 */
+        .param-tab-content {
+            display: none;
+        }
+        .param-tab-content.active {
+            display: block;
+        }
+
+        /* 參數配置表格 */
+        .param-config-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ebeef5;
+        }
+        .param-config-table th {
+            background: #f5f7fa;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #606266;
+            text-align: left;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .param-config-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #303133;
+            border-bottom: 1px solid #ebeef5;
+            vertical-align: middle;
+        }
+        .param-config-table tr:last-child td {
+            border-bottom: none;
+        }
+        .param-config-table .param-name {
+            width: 120px;
+            color: #606266;
+        }
+        .param-config-table .param-input {
+            width: 200px;
+        }
+        .param-config-table .param-input input {
+            width: 100%;
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #303133;
+            box-sizing: border-box;
+        }
+        .param-config-table .param-input input:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+        .param-config-table .param-display {
+            display: flex;
+            gap: 32px;
+        }
+        .param-display-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .param-display-group-title {
+            font-size: 12px;
+            color: #909399;
+            margin-bottom: 4px;
+        }
+        .param-display-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .param-display-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .param-display-item span {
+            font-size: 14px;
+            color: #606266;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心</div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item active"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">商戶管理</a></span><span class="breadcrumb-item active">商戶設定</span></div></div>
+                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 class="page-title">商戶設定</h1>
+                        <p class="page-desc">管理系統中的商戶配置</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        新增商戶
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">商戶列表</span></div>
+                    <div class="card-body" style="padding: 0;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">商戶ID</th>
+                                    <th style="width: 100px;">商戶代碼</th>
+                                    <th style="width: 150px;">商戶名稱</th>
+                                    <th style="width: 100px;">商戶狀態</th>
+                                    <th style="width: 180px;">最後更新日期</th>
+                                    <th style="width: 150px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1001</td>
+                                    <td>GS</td>
+                                    <td>GS平台</td>
+                                    <td><span class="tag tag-success">啟用</span></td>
+                                    <td>2024-01-20 15:30:25</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditModal('GS', 'GS平台', true)">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">停用</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1002</td>
+                                    <td>GE</td>
+                                    <td>GE平台</td>
+                                    <td><span class="tag tag-success">啟用</span></td>
+                                    <td>2024-01-19 10:22:18</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditModal('GE', 'GE平台', true)">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">停用</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1003</td>
+                                    <td>MY</td>
+                                    <td>MY平台</td>
+                                    <td><span class="tag tag-success">啟用</span></td>
+                                    <td>2024-01-18 14:15:33</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditModal('MY', 'MY平台', true)">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">停用</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1004</td>
+                                    <td>MN</td>
+                                    <td>MN平台</td>
+                                    <td><span class="tag tag-success">啟用</span></td>
+                                    <td>2024-01-17 09:45:12</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditModal('MN', 'MN平台', true)">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--danger-color);">停用</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1005</td>
+                                    <td>MJ</td>
+                                    <td>MJ平台</td>
+                                    <td><span class="tag tag-info">停用</span></td>
+                                    <td>2024-01-15 16:28:45</td>
+                                    <td>
+                                        <button class="btn btn-text" onclick="openEditModal('MJ', 'MJ平台', false)">編輯</button>
+                                        <button class="btn btn-text" style="color: var(--success-color);">啟用</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 編輯商戶彈窗 -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <span class="modal-title">編輯商戶</span>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item">
+                    <label class="form-label">商戶代碼</label>
+                    <input type="text" class="form-control" id="editMerchantCode" readonly style="background-color: #f5f7fa;">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">商戶名稱</label>
+                    <input type="text" class="form-control" id="editMerchantName" placeholder="請輸入商戶名稱">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">審核類型</label>
+                    <div class="multi-select" id="editAuditTypeSelect">
+                        <div class="multi-select-trigger" onclick="toggleEditAuditTypeSelect()">
+                            <div class="multi-select-tags" id="editAuditTypeTags">
+                                <span class="multi-select-tag">人工充值 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '人工充值')">×</span></span>
+                                <span class="multi-select-tag">人工提現 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '人工提現')">×</span></span>
+                                <span class="multi-select-tag">人工轉帳 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '人工轉帳')">×</span></span>
+                                <span class="multi-select-tag">線下優惠活動 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '線下優惠活動')">×</span></span>
+                                <span class="multi-select-tag">修改帳戶訊息 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '修改帳戶訊息')">×</span></span>
+                                <span class="multi-select-tag">平台優惠活動 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '平台優惠活動')">×</span></span>
+                                <span class="multi-select-tag">帳戶安全審核 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '帳戶安全審核')">×</span></span>
+                                <span class="multi-select-tag">資金審核 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '資金審核')">×</span></span>
+                                <span class="multi-select-tag">修改資訊 <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '修改資訊')">×</span></span>
+                            </div>
+                            <svg class="multi-select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="multi-select-dropdown">
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工充值" checked onchange="updateEditAuditTypeTags()">
+                                <span>人工充值</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工提現" checked onchange="updateEditAuditTypeTags()">
+                                <span>人工提現</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工轉帳" checked onchange="updateEditAuditTypeTags()">
+                                <span>人工轉帳</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="線下優惠活動" checked onchange="updateEditAuditTypeTags()">
+                                <span>線下優惠活動</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="修改帳戶訊息" checked onchange="updateEditAuditTypeTags()">
+                                <span>修改帳戶訊息</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="平台優惠活動" checked onchange="updateEditAuditTypeTags()">
+                                <span>平台優惠活動</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="帳戶安全審核" checked onchange="updateEditAuditTypeTags()">
+                                <span>帳戶安全審核</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="資金審核" checked onchange="updateEditAuditTypeTags()">
+                                <span>資金審核</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="修改資訊" checked onchange="updateEditAuditTypeTags()">
+                                <span>修改資訊</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label class="form-label">接口私鑰</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="editPrivateKey" placeholder="請輸入或生成私鑰">
+                        <button class="btn btn-default" onclick="generateEditRandomKey()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M1 20v-6h6"></path>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            亂數生成
+                        </button>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="switch-wrapper">
+                        <span class="switch-label">審核完成通知限流</span>
+                        <div class="switch" id="editNotifyLimitSwitch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="switch-wrapper">
+                        <span class="switch-label">啟用狀態</span>
+                        <div class="switch" id="editEnableSwitch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <!-- 參數配置區域 -->
+                <div class="param-config-section">
+                    <div class="param-config-title">參數配置</div>
+                    <div class="param-tabs">
+                        <button class="param-tab active" data-tab="tab1" onclick="switchParamTab(this, 'tab1')">人工充值</button>
+                        <button class="param-tab" data-tab="tab2" onclick="switchParamTab(this, 'tab2')">人工提現</button>
+                        <button class="param-tab" data-tab="tab3" onclick="switchParamTab(this, 'tab3')">人工轉帳</button>
+                        <button class="param-tab" data-tab="tab4" onclick="switchParamTab(this, 'tab4')">線下優惠活動</button>
+                        <button class="param-tab" data-tab="tab5" onclick="switchParamTab(this, 'tab5')">修改帳戶訊息</button>
+                        <button class="param-tab" data-tab="tab6" onclick="switchParamTab(this, 'tab6')">平台優惠活動</button>
+                        <button class="param-tab" data-tab="tab7" onclick="switchParamTab(this, 'tab7')">帳戶安全審核</button>
+                        <button class="param-tab" data-tab="tab8" onclick="switchParamTab(this, 'tab8')">資金審核</button>
+                        <button class="param-tab" data-tab="tab9" onclick="switchParamTab(this, 'tab9')">修改資訊</button>
+                    </div>
+
+                    <!-- Tab 1: 人工充值 -->
+                    <div class="param-tab-content active" id="tab1">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">用戶名</td>
+                                    <td class="param-input"><input type="text" value="用戶名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">用戶ID</td>
+                                    <td class="param-input"><input type="text" value="用戶ID"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">姓名</td>
+                                    <td class="param-input"><input type="text" value="姓名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">帳變類型</td>
+                                    <td class="param-input"><input type="text" value="帳變類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">所屬總代</td>
+                                    <td class="param-input"><input type="text" value="所屬總代"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">充值金額</td>
+                                    <td class="param-input"><input type="text" value="充值金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab 2: 人工提現 -->
+                    <div class="param-tab-content" id="tab2">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">用戶名</td>
+                                    <td class="param-input"><input type="text" value="用戶名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">提現金額</td>
+                                    <td class="param-input"><input type="text" value="提現金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">銀行卡號</td>
+                                    <td class="param-input"><input type="text" value="銀行卡號"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab 3-9: 其他類型 (簡化示例) -->
+                    <div class="param-tab-content" id="tab3">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">轉帳金額</td>
+                                    <td class="param-input"><input type="text" value="轉帳金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab4">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">活動名稱</td>
+                                    <td class="param-input"><input type="text" value="活動名稱"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab5">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">修改類型</td>
+                                    <td class="param-input"><input type="text" value="修改類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab6">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">活動類型</td>
+                                    <td class="param-input"><input type="text" value="活動類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab7">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">安全項目</td>
+                                    <td class="param-input"><input type="text" value="安全項目"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab8">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">審核金額</td>
+                                    <td class="param-input"><input type="text" value="審核金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="tab9">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">資訊類型</td>
+                                    <td class="param-input"><input type="text" value="資訊類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" onclick="closeEditModal()">取消</button>
+                <button class="btn btn-primary" onclick="submitEdit()">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增商戶彈窗 -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <span class="modal-title">新增商戶</span>
+                <button class="modal-close" onclick="closeAddModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item">
+                    <label class="form-label">商戶代碼</label>
+                    <input type="text" class="form-control" id="addMerchantCode" placeholder="請輸入商戶代碼">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">商戶名稱</label>
+                    <input type="text" class="form-control" id="addMerchantName" placeholder="請輸入商戶名稱">
+                </div>
+                <div class="form-item">
+                    <label class="form-label">審核類型</label>
+                    <div class="multi-select" id="addAuditTypeSelect">
+                        <div class="multi-select-trigger" onclick="toggleAddAuditTypeSelect()">
+                            <div class="multi-select-tags" id="addAuditTypeTags">
+                                <span class="multi-select-placeholder">請選擇審核類型</span>
+                            </div>
+                            <svg class="multi-select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <div class="multi-select-dropdown">
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工充值" onchange="updateAddAuditTypeTags()">
+                                <span>人工充值</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工提現" onchange="updateAddAuditTypeTags()">
+                                <span>人工提現</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="人工轉帳" onchange="updateAddAuditTypeTags()">
+                                <span>人工轉帳</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="線下優惠活動" onchange="updateAddAuditTypeTags()">
+                                <span>線下優惠活動</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="修改帳戶訊息" onchange="updateAddAuditTypeTags()">
+                                <span>修改帳戶訊息</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="平台優惠活動" onchange="updateAddAuditTypeTags()">
+                                <span>平台優惠活動</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="帳戶安全審核" onchange="updateAddAuditTypeTags()">
+                                <span>帳戶安全審核</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="資金審核" onchange="updateAddAuditTypeTags()">
+                                <span>資金審核</span>
+                            </label>
+                            <label class="multi-select-option">
+                                <input type="checkbox" value="修改資訊" onchange="updateAddAuditTypeTags()">
+                                <span>修改資訊</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label class="form-label">接口私鑰</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="privateKey" placeholder="請輸入或生成私鑰">
+                        <button class="btn btn-default" onclick="generateRandomKey()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M1 20v-6h6"></path>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            亂數生成
+                        </button>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="switch-wrapper">
+                        <span class="switch-label">審核完成通知限流</span>
+                        <div class="switch" id="notifyLimitSwitch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="switch-wrapper">
+                        <span class="switch-label">啟用狀態</span>
+                        <div class="switch active" id="enableSwitch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <!-- 參數配置區域 -->
+                <div class="param-config-section" id="addParamConfigSection" style="display: none;">
+                    <div class="param-config-title">參數配置</div>
+                    <div class="param-tabs" id="addParamTabs">
+                        <button class="param-tab active" data-tab="addTab1" onclick="switchAddParamTab(this, 'addTab1')">人工充值</button>
+                        <button class="param-tab" data-tab="addTab2" onclick="switchAddParamTab(this, 'addTab2')">人工提現</button>
+                        <button class="param-tab" data-tab="addTab3" onclick="switchAddParamTab(this, 'addTab3')">人工轉帳</button>
+                        <button class="param-tab" data-tab="addTab4" onclick="switchAddParamTab(this, 'addTab4')">線下優惠活動</button>
+                        <button class="param-tab" data-tab="addTab5" onclick="switchAddParamTab(this, 'addTab5')">修改帳戶訊息</button>
+                        <button class="param-tab" data-tab="addTab6" onclick="switchAddParamTab(this, 'addTab6')">平台優惠活動</button>
+                        <button class="param-tab" data-tab="addTab7" onclick="switchAddParamTab(this, 'addTab7')">帳戶安全審核</button>
+                        <button class="param-tab" data-tab="addTab8" onclick="switchAddParamTab(this, 'addTab8')">資金審核</button>
+                        <button class="param-tab" data-tab="addTab9" onclick="switchAddParamTab(this, 'addTab9')">修改資訊</button>
+                    </div>
+
+                    <!-- Tab 1: 人工充值 -->
+                    <div class="param-tab-content active" id="addTab1">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">用戶名</td>
+                                    <td class="param-input"><input type="text" value="用戶名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">用戶ID</td>
+                                    <td class="param-input"><input type="text" value="用戶ID"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">姓名</td>
+                                    <td class="param-input"><input type="text" value="姓名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">帳變類型</td>
+                                    <td class="param-input"><input type="text" value="帳變類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">所屬總代</td>
+                                    <td class="param-input"><input type="text" value="所屬總代"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">充值金額</td>
+                                    <td class="param-input"><input type="text" value="充值金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab 2: 人工提現 -->
+                    <div class="param-tab-content" id="addTab2">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">用戶名</td>
+                                    <td class="param-input"><input type="text" value="用戶名"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">提現金額</td>
+                                    <td class="param-input"><input type="text" value="提現金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">銀行卡號</td>
+                                    <td class="param-input"><input type="text" value="銀行卡號"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab 3-9: 其他類型 -->
+                    <div class="param-tab-content" id="addTab3">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">轉帳金額</td>
+                                    <td class="param-input"><input type="text" value="轉帳金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab4">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">活動名稱</td>
+                                    <td class="param-input"><input type="text" value="活動名稱"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab5">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">修改類型</td>
+                                    <td class="param-input"><input type="text" value="修改類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab6">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">活動類型</td>
+                                    <td class="param-input"><input type="text" value="活動類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab7">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">安全項目</td>
+                                    <td class="param-input"><input type="text" value="安全項目"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab8">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">審核金額</td>
+                                    <td class="param-input"><input type="text" value="審核金額"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="param-tab-content" id="addTab9">
+                        <table class="param-config-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">參數</th>
+                                    <th style="width: 220px;">新命名</th>
+                                    <th>前台顯示</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">資訊類型</td>
+                                    <td class="param-input"><input type="text" value="資訊類型"></td>
+                                    <td class="param-display">
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>待審核詳細</span></label>
+                                        </div>
+                                        <div class="param-display-group">
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核列表</span></label>
+                                            <label class="param-display-item"><input type="checkbox" checked><span>已審核詳細</span></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" onclick="closeAddModal()">取消</button>
+                <button class="btn btn-primary" onclick="submitAdd()">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 菜單交互
+        document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
+            if (t.querySelector('.menu-arrow')) {
+                t.addEventListener('click', e => {
+                    e.preventDefault();
+                    t.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 打開新增彈窗
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('show');
+        }
+
+        // 關閉新增彈窗
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('show');
+        }
+
+        // 點擊遮罩關閉
+        document.getElementById('addModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddModal();
+            }
+        });
+
+        // 切換開關
+        function toggleSwitch(el) {
+            el.classList.toggle('active');
+        }
+
+        // 亂數生成私鑰
+        function generateRandomKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            for (let i = 0; i < 32; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('privateKey').value = key;
+        }
+
+        // 提交新增
+        function submitAdd() {
+            alert('商戶新增成功！');
+            closeAddModal();
+        }
+
+        // 新增商戶 - 審核類型多選下拉框
+        function toggleAddAuditTypeSelect() {
+            document.getElementById('addAuditTypeSelect').classList.toggle('open');
+        }
+
+        // 更新新增商戶審核類型標籤顯示
+        function updateAddAuditTypeTags() {
+            const checkboxes = document.querySelectorAll('#addAuditTypeSelect .multi-select-option input[type="checkbox"]');
+            const tagsContainer = document.getElementById('addAuditTypeTags');
+            const checkedValues = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    checkedValues.push(cb.value);
+                }
+            });
+
+            if (checkedValues.length === 0) {
+                tagsContainer.innerHTML = '<span class="multi-select-placeholder">請選擇審核類型</span>';
+                // 隱藏參數配置區域
+                document.getElementById('addParamConfigSection').style.display = 'none';
+            } else {
+                tagsContainer.innerHTML = checkedValues.map(v =>
+                    `<span class="multi-select-tag">${v} <span class="multi-select-tag-close" onclick="removeAddAuditType(event, '${v}')">×</span></span>`
+                ).join('');
+                // 顯示參數配置區域
+                document.getElementById('addParamConfigSection').style.display = 'block';
+            }
+
+            // 更新 Tab 顯示
+            updateAddParamTabs();
+        }
+
+        // 移除新增商戶審核類型標籤
+        function removeAddAuditType(event, value) {
+            event.stopPropagation();
+            const checkbox = document.querySelector(`#addAuditTypeSelect .multi-select-option input[value="${value}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+                updateAddAuditTypeTags();
+            }
+        }
+
+        // 新增商戶 Tab 切換
+        function switchAddParamTab(tabEl, tabId) {
+            // 移除所有 tab 的 active
+            document.querySelectorAll('#addParamTabs .param-tab').forEach(t => t.classList.remove('active'));
+            // 添加當前 tab 的 active
+            tabEl.classList.add('active');
+
+            // 隱藏所有 tab 內容
+            document.querySelectorAll('#addParamConfigSection .param-tab-content').forEach(c => c.classList.remove('active'));
+            // 顯示當前 tab 內容
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // 根據審核類型更新新增商戶 Tab 顯示
+        function updateAddParamTabs() {
+            const checkboxes = document.querySelectorAll('#addAuditTypeSelect .multi-select-option input[type="checkbox"]');
+            const tabMapping = {
+                '人工充值': 'addTab1',
+                '人工提現': 'addTab2',
+                '人工轉帳': 'addTab3',
+                '線下優惠活動': 'addTab4',
+                '修改帳戶訊息': 'addTab5',
+                '平台優惠活動': 'addTab6',
+                '帳戶安全審核': 'addTab7',
+                '資金審核': 'addTab8',
+                '修改資訊': 'addTab9'
+            };
+
+            const checkedTypes = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    checkedTypes.push(cb.value);
+                }
+            });
+
+            // 顯示/隱藏對應的 Tab
+            document.querySelectorAll('#addParamTabs .param-tab').forEach(tab => {
+                const tabId = tab.getAttribute('data-tab');
+                const typeName = Object.keys(tabMapping).find(key => tabMapping[key] === tabId);
+                if (checkedTypes.includes(typeName)) {
+                    tab.style.display = '';
+                } else {
+                    tab.style.display = 'none';
+                }
+            });
+
+            // 如果當前激活的 tab 被隱藏了，切換到第一個可見的 tab
+            const activeTab = document.querySelector('#addParamTabs .param-tab.active');
+            if (activeTab && activeTab.style.display === 'none') {
+                const firstVisibleTab = document.querySelector('#addParamTabs .param-tab:not([style*="display: none"])');
+                if (firstVisibleTab) {
+                    const tabId = firstVisibleTab.getAttribute('data-tab');
+                    switchAddParamTab(firstVisibleTab, tabId);
+                }
+            }
+        }
+
+        // 打開編輯彈窗
+        function openEditModal(code, name, isEnabled) {
+            document.getElementById('editMerchantCode').value = code;
+            document.getElementById('editMerchantName').value = name;
+            document.getElementById('editPrivateKey').value = 'sk_' + code.toLowerCase() + '_xxxxxxxxxxxxxxxxxxxxx';
+
+            // 設置啟用狀態
+            const enableSwitch = document.getElementById('editEnableSwitch');
+            if (isEnabled) {
+                enableSwitch.classList.add('active');
+            } else {
+                enableSwitch.classList.remove('active');
+            }
+
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        // 關閉編輯彈窗
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        // 點擊遮罩關閉編輯彈窗
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        // 編輯彈窗亂數生成私鑰
+        function generateEditRandomKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            for (let i = 0; i < 32; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('editPrivateKey').value = key;
+        }
+
+        // 提交編輯
+        function submitEdit() {
+            alert('商戶編輯成功！');
+            closeEditModal();
+        }
+
+        // 審核類型多選下拉框
+        function toggleEditAuditTypeSelect() {
+            document.getElementById('editAuditTypeSelect').classList.toggle('open');
+        }
+
+        // 更新審核類型標籤顯示
+        function updateEditAuditTypeTags() {
+            const checkboxes = document.querySelectorAll('#editAuditTypeSelect .multi-select-option input[type="checkbox"]');
+            const tagsContainer = document.getElementById('editAuditTypeTags');
+            const checkedValues = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    checkedValues.push(cb.value);
+                }
+            });
+
+            if (checkedValues.length === 0) {
+                tagsContainer.innerHTML = '<span class="multi-select-placeholder">請選擇審核類型</span>';
+            } else {
+                tagsContainer.innerHTML = checkedValues.map(v =>
+                    `<span class="multi-select-tag">${v} <span class="multi-select-tag-close" onclick="removeEditAuditType(event, '${v}')">×</span></span>`
+                ).join('');
+            }
+
+            // 更新 Tab 顯示
+            updateParamTabs();
+        }
+
+        // 移除審核類型標籤
+        function removeEditAuditType(event, value) {
+            event.stopPropagation();
+            const checkbox = document.querySelector(`#editAuditTypeSelect .multi-select-option input[value="${value}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+                updateEditAuditTypeTags();
+            }
+        }
+
+        // 點擊外部關閉審核類型下拉框
+        document.addEventListener('click', function(e) {
+            const editSelect = document.getElementById('editAuditTypeSelect');
+            if (editSelect && !editSelect.contains(e.target)) {
+                editSelect.classList.remove('open');
+            }
+            const addSelect = document.getElementById('addAuditTypeSelect');
+            if (addSelect && !addSelect.contains(e.target)) {
+                addSelect.classList.remove('open');
+            }
+        });
+
+        // 編輯商戶 Tab 切換
+        function switchParamTab(tabEl, tabId) {
+            // 移除編輯彈窗內所有 tab 的 active
+            document.querySelectorAll('#editModal .param-tab').forEach(t => t.classList.remove('active'));
+            // 添加當前 tab 的 active
+            tabEl.classList.add('active');
+
+            // 隱藏編輯彈窗內所有 tab 內容
+            document.querySelectorAll('#editModal .param-tab-content').forEach(c => c.classList.remove('active'));
+            // 顯示當前 tab 內容
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // 根據審核類型更新編輯商戶 Tab 顯示
+        function updateParamTabs() {
+            const checkboxes = document.querySelectorAll('#editAuditTypeSelect .multi-select-option input[type="checkbox"]');
+            const tabMapping = {
+                '人工充值': 'tab1',
+                '人工提現': 'tab2',
+                '人工轉帳': 'tab3',
+                '線下優惠活動': 'tab4',
+                '修改帳戶訊息': 'tab5',
+                '平台優惠活動': 'tab6',
+                '帳戶安全審核': 'tab7',
+                '資金審核': 'tab8',
+                '修改資訊': 'tab9'
+            };
+
+            const checkedTypes = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    checkedTypes.push(cb.value);
+                }
+            });
+
+            // 顯示/隱藏對應的 Tab
+            document.querySelectorAll('#editModal .param-tab').forEach(tab => {
+                const tabId = tab.getAttribute('data-tab');
+                const typeName = Object.keys(tabMapping).find(key => tabMapping[key] === tabId);
+                if (checkedTypes.includes(typeName)) {
+                    tab.style.display = '';
+                } else {
+                    tab.style.display = 'none';
+                }
+            });
+
+            // 如果當前激活的 tab 被隱藏了，切換到第一個可見的 tab
+            const activeTab = document.querySelector('#editModal .param-tab.active');
+            if (activeTab && activeTab.style.display === 'none') {
+                const firstVisibleTab = document.querySelector('#editModal .param-tab:not([style*="display: none"])');
+                if (firstVisibleTab) {
+                    const tabId = firstVisibleTab.getAttribute('data-tab');
+                    switchParamTab(firstVisibleTab, tabId);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

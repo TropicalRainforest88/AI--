@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自動通知審核中心結果 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 頁面專屬樣式 */
+        .config-form-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .config-form-row:last-child {
+            border-bottom: none;
+        }
+        .config-form-label {
+            width: 100px;
+            flex-shrink: 0;
+            font-size: 14px;
+            color: #606266;
+            line-height: 36px;
+        }
+        .config-form-content {
+            flex: 1;
+        }
+
+        /* 複選框/單選框樣式 - 與其他頁面一致 */
+        .checkbox-item,
+        .radio-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            line-height: 36px;
+        }
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #409eff;
+            cursor: pointer;
+        }
+        .checkbox-item span,
+        .radio-item span {
+            font-size: 14px;
+            color: #606266;
+        }
+
+        /* 通知群表格樣式 */
+        .notify-group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .notify-group-labels {
+            display: flex;
+            flex: 1;
+            gap: 12px;
+        }
+        .notify-group-labels span {
+            font-size: 13px;
+            color: #909399;
+            font-weight: 500;
+        }
+        .notify-group-labels span:nth-child(1) { width: 160px; }
+        .notify-group-labels span:nth-child(2) { width: 140px; }
+        .notify-group-labels span:nth-child(3) { width: 160px; }
+        .notify-group-labels span:nth-child(4) { width: 120px; }
+
+        .notify-group-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .notify-group-row:last-child {
+            margin-bottom: 0;
+        }
+        .notify-group-row .form-input {
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #303133;
+        }
+        .notify-group-row .form-input:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+        .notify-group-row .input-merchant { width: 160px; }
+        .notify-group-row .input-bot { width: 140px; }
+        .notify-group-row .input-token { width: 160px; }
+        .notify-group-row .input-group-id { width: 120px; }
+
+        /* 下拉選擇框樣式 */
+        .form-select {
+            height: 32px;
+            padding: 0 28px 0 10px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #303133;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 8px center;
+            appearance: none;
+            cursor: pointer;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+
+        /* 文本域樣式 */
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #606266;
+            line-height: 1.6;
+            resize: vertical;
+            min-height: 70px;
+            box-sizing: border-box;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+        .form-textarea::placeholder {
+            color: #c0c4cc;
+        }
+
+        /* 保存按鈕容器 */
+        .save-row {
+            display: flex;
+            justify-content: flex-end;
+            padding: 16px 0 0;
+        }
+
+        /* 操作按鈕區域 */
+        .notify-group-actions {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心</div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item active"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">配置管理</a></span><span class="breadcrumb-item active">自動通知審核中心結果</span></div></div>
+                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <!-- 自動通知審核結果 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">自動通知審核結果</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="config-form-row">
+                            <div class="config-form-label">被通知對象</div>
+                            <div class="config-form-content">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked>
+                                    <span>審核通過</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知路徑</div>
+                            <div class="config-form-content">
+                                <label class="radio-item">
+                                    <input type="radio" name="notify_path_1" checked>
+                                    <span>TG</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知群</div>
+                            <div class="config-form-content">
+                                <div class="notify-group-header">
+                                    <div class="notify-group-labels">
+                                        <span>商戶群組</span>
+                                        <span>TG機器人名稱</span>
+                                        <span>TOKEN</span>
+                                        <span>TG群</span>
+                                    </div>
+                                    <div class="notify-group-actions">
+                                        <button class="btn btn-primary" onclick="addNotifyGroup(1)">新增</button>
+                                    </div>
+                                </div>
+                                <div id="notifyGroups1">
+                                    <div class="notify-group-row">
+                                        <select class="form-select input-merchant">
+                                            <option>測試看AA換2</option>
+                                            <option>GS_GE</option>
+                                            <option>MY_MN</option>
+                                        </select>
+                                        <input type="text" class="form-input input-bot" value="OLQABotTest">
+                                        <input type="text" class="form-input input-token" value="8408201152:AAHAzk6BK">
+                                        <input type="text" class="form-input input-group-id" value="-4968897420">
+                                        <button class="btn btn-text" style="color: var(--danger-color);" onclick="deleteNotifyGroup(this)">刪除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知文本</div>
+                            <div class="config-form-content">
+                                <textarea class="form-textarea" placeholder="請輸入通知文本...">您好，審核單：{{ order }}，商戶：{{ platform }}，審核類型：{{ rc_type }}，提交審核人員：{{ request_user }}，金額：{{ amount }}，審核員：{{ user }}，已經審核通過，請知悉。</textarea>
+                            </div>
+                        </div>
+
+                        <div class="save-row">
+                            <button class="btn btn-primary" onclick="saveNotifyConfig(1)">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 自動提醒 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">自動提醒</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="config-form-row">
+                            <div class="config-form-label">被通知對象</div>
+                            <div class="config-form-content">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked>
+                                    <span>待審核</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知路徑</div>
+                            <div class="config-form-content">
+                                <label class="radio-item">
+                                    <input type="radio" name="notify_path_2" checked>
+                                    <span>TG</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知群</div>
+                            <div class="config-form-content">
+                                <div class="notify-group-header">
+                                    <div class="notify-group-labels">
+                                        <span>商戶群組</span>
+                                        <span>TG機器人名稱</span>
+                                        <span>TOKEN</span>
+                                        <span>TG群</span>
+                                    </div>
+                                    <div class="notify-group-actions">
+                                        <button class="btn btn-primary" onclick="addNotifyGroup(2)">新增</button>
+                                    </div>
+                                </div>
+                                <div id="notifyGroups2">
+                                    <div class="notify-group-row">
+                                        <select class="form-select input-merchant">
+                                            <option>測試看AA換2</option>
+                                            <option>GS_GE</option>
+                                            <option>MY_MN</option>
+                                        </select>
+                                        <input type="text" class="form-input input-bot" value="OLQABotTest">
+                                        <input type="text" class="form-input input-token" value="8408201152:AAHAzk6BK">
+                                        <input type="text" class="form-input input-group-id" value="-4968897420">
+                                        <button class="btn btn-text" style="color: var(--danger-color);" onclick="deleteNotifyGroup(this)">刪除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-form-row">
+                            <div class="config-form-label">通知文本</div>
+                            <div class="config-form-content">
+                                <textarea class="form-textarea" placeholder="請輸入通知文本..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="save-row">
+                            <button class="btn btn-primary" onclick="saveNotifyConfig(2)">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 菜單交互
+        document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
+            if (t.querySelector('.menu-arrow')) {
+                t.addEventListener('click', e => {
+                    e.preventDefault();
+                    t.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 新增通知群
+        function addNotifyGroup(section) {
+            const container = document.getElementById('notifyGroups' + section);
+            const newRow = document.createElement('div');
+            newRow.className = 'notify-group-row';
+            newRow.innerHTML = `
+                <select class="form-select input-merchant">
+                    <option>測試看AA換2</option>
+                    <option>GS_GE</option>
+                    <option>MY_MN</option>
+                </select>
+                <input type="text" class="form-input input-bot" placeholder="TG機器人名稱">
+                <input type="text" class="form-input input-token" placeholder="TOKEN">
+                <input type="text" class="form-input input-group-id" placeholder="TG群">
+                <button class="btn btn-text" style="color: var(--danger-color);" onclick="deleteNotifyGroup(this)">刪除</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        // 刪除通知群
+        function deleteNotifyGroup(btn) {
+            const row = btn.closest('.notify-group-row');
+            const container = row.parentElement;
+            if (container.querySelectorAll('.notify-group-row').length > 1) {
+                row.remove();
+            } else {
+                alert('至少需要保留一個通知群');
+            }
+        }
+
+        // 保存配置
+        function saveNotifyConfig(section) {
+            alert('配置保存成功！');
+        }
+    </script>
+</body>
+</html>

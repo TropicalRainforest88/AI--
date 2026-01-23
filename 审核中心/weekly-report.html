@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週報表 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 搜索表單 */
+        .search-form .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .search-form .form-group {
+            flex: 0 0 auto;
+            min-width: 160px;
+        }
+        .search-form .form-group.wide {
+            min-width: 240px;
+        }
+
+        /* 按鈕組 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* 表格容器 */
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .table-container .table {
+            min-width: 2000px;
+            font-size: 12px;
+        }
+        .table-container .table th,
+        .table-container .table td {
+            padding: 10px 8px;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .table-container .table th {
+            background-color: #f5f7fa;
+            font-weight: 500;
+        }
+        .table-container .table th.group-header {
+            background-color: #e8eef5;
+            border-bottom: 2px solid #409eff;
+        }
+        .table-container .table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        /* 數據顏色 */
+        .text-success { color: #67c23a; }
+        .text-danger { color: #f56c6c; }
+        .text-warning { color: #e6a23c; }
+        .text-primary { color: #409eff; }
+
+        /* 分頁 */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-top: 1px solid #ebeef5;
+        }
+        .pagination-info {
+            color: #606266;
+            font-size: 13px;
+        }
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .page-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid #dcdfe6;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #606266;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-btn:hover:not(:disabled):not(.active) {
+            color: #409eff;
+            border-color: #409eff;
+        }
+        .page-btn.active {
+            background-color: #409eff;
+            border-color: #409eff;
+            color: #fff;
+        }
+        .page-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心</div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item active"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">數據報表</a></span><span class="breadcrumb-item active">週報表</span></div></div>
+                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h1 class="page-title">週報表</h1>
+                    <p class="page-desc">查看每週審核數據統計</p>
+                </div>
+
+                <!-- 搜索條件 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">搜索條件</span>
+                    </div>
+                    <div class="card-body">
+                        <form class="search-form">
+                            <div class="form-row">
+                                <div class="form-group wide">
+                                    <label class="form-label">日期範圍</label>
+                                    <input type="text" class="form-control" placeholder="開始日期 ~ 結束日期" value="2024-01-15 ~ 2024-01-21">
+                                </div>
+                                <div class="action-buttons">
+                                    <button type="button" class="btn btn-primary">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                        查詢
+                                    </button>
+                                    <button type="reset" class="btn btn-default">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                            <path d="M3 3v5h5"></path>
+                                        </svg>
+                                        重置
+                                    </button>
+                                    <button type="button" class="btn btn-success">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                        導出
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 報表數據 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">週報表數據</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">共 <span style="color: var(--primary-color); font-weight: 500;">10</span> 條記錄</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <!-- 基本信息 -->
+                                        <th rowspan="2" style="min-width: 120px;">審核類型/商戶</th>
+                                        <!-- 審核類型統計 -->
+                                        <th colspan="7" class="group-header">審核類型統計</th>
+                                        <!-- 審批方式統計 -->
+                                        <th colspan="5" class="group-header">審批方式統計</th>
+                                        <!-- 審核結果統計 -->
+                                        <th colspan="5" class="group-header">審核結果統計</th>
+                                        <!-- 作業時間統計 -->
+                                        <th colspan="6" class="group-header">作業時間統計</th>
+                                        <!-- 金額統計 -->
+                                        <th colspan="3" class="group-header">金額統計</th>
+                                    </tr>
+                                    <tr>
+                                        <!-- 審核類型統計 -->
+                                        <th>帳戶信息</th>
+                                        <th>帳戶信息佔比</th>
+                                        <th>人工轉帳</th>
+                                        <th>人工轉帳佔比</th>
+                                        <th>人工充值</th>
+                                        <th>人工充值佔比</th>
+                                        <th>總工單量</th>
+                                        <!-- 審批方式統計 -->
+                                        <th>SINGLE</th>
+                                        <th>SINGLE佔比</th>
+                                        <th>FILE</th>
+                                        <th>FILE佔比</th>
+                                        <th>總工單量</th>
+                                        <!-- 審核結果統計 -->
+                                        <th>總通過</th>
+                                        <th>總通過佔比</th>
+                                        <th>總拒絕</th>
+                                        <th>總拒絕佔比</th>
+                                        <th>總工單量</th>
+                                        <!-- 作業時間統計 -->
+                                        <th>帳戶信息平均時間</th>
+                                        <th>人工轉帳平均時間</th>
+                                        <th>人工充值平均時間</th>
+                                        <th>SINGLE平均時間</th>
+                                        <th>FILE平均時間</th>
+                                        <th>總平均作業時間</th>
+                                        <!-- 金額統計 -->
+                                        <th>通過金額</th>
+                                        <th>未通過金額</th>
+                                        <th>總金額</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>GS</td>
+                                        <td>85</td>
+                                        <td>28.3%</td>
+                                        <td>65</td>
+                                        <td>21.7%</td>
+                                        <td>150</td>
+                                        <td>50.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td>225</td>
+                                        <td>75.0%</td>
+                                        <td>75</td>
+                                        <td>25.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td class="text-success">270</td>
+                                        <td class="text-success">90.0%</td>
+                                        <td class="text-danger">30</td>
+                                        <td class="text-danger">10.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td>2.5min</td>
+                                        <td>3.2min</td>
+                                        <td>2.8min</td>
+                                        <td>2.6min</td>
+                                        <td>3.5min</td>
+                                        <td>2.9min</td>
+                                        <td class="text-success">¥1,580,000</td>
+                                        <td class="text-danger">¥125,000</td>
+                                        <td>¥1,705,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GE</td>
+                                        <td>92</td>
+                                        <td>30.7%</td>
+                                        <td>58</td>
+                                        <td>19.3%</td>
+                                        <td>150</td>
+                                        <td>50.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td>240</td>
+                                        <td>80.0%</td>
+                                        <td>60</td>
+                                        <td>20.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td class="text-success">282</td>
+                                        <td class="text-success">94.0%</td>
+                                        <td class="text-danger">18</td>
+                                        <td class="text-danger">6.0%</td>
+                                        <td class="text-primary">300</td>
+                                        <td>2.8min</td>
+                                        <td>3.0min</td>
+                                        <td>2.5min</td>
+                                        <td>2.4min</td>
+                                        <td>3.2min</td>
+                                        <td>2.7min</td>
+                                        <td class="text-success">¥2,150,000</td>
+                                        <td class="text-danger">¥98,000</td>
+                                        <td>¥2,248,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MY</td>
+                                        <td>60</td>
+                                        <td>30.0%</td>
+                                        <td>50</td>
+                                        <td>25.0%</td>
+                                        <td>90</td>
+                                        <td>45.0%</td>
+                                        <td class="text-primary">200</td>
+                                        <td>140</td>
+                                        <td>70.0%</td>
+                                        <td>60</td>
+                                        <td>30.0%</td>
+                                        <td class="text-primary">200</td>
+                                        <td class="text-success">178</td>
+                                        <td class="text-success">89.0%</td>
+                                        <td class="text-danger">22</td>
+                                        <td class="text-danger">11.0%</td>
+                                        <td class="text-primary">200</td>
+                                        <td>3.0min</td>
+                                        <td>3.5min</td>
+                                        <td>2.9min</td>
+                                        <td>2.8min</td>
+                                        <td>3.8min</td>
+                                        <td>3.2min</td>
+                                        <td class="text-success">¥1,890,000</td>
+                                        <td class="text-danger">¥156,000</td>
+                                        <td>¥2,046,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MN</td>
+                                        <td>48</td>
+                                        <td>32.0%</td>
+                                        <td>32</td>
+                                        <td>21.3%</td>
+                                        <td>70</td>
+                                        <td>46.7%</td>
+                                        <td class="text-primary">150</td>
+                                        <td>120</td>
+                                        <td>80.0%</td>
+                                        <td>30</td>
+                                        <td>20.0%</td>
+                                        <td class="text-primary">150</td>
+                                        <td class="text-success">135</td>
+                                        <td class="text-success">90.0%</td>
+                                        <td class="text-danger">15</td>
+                                        <td class="text-danger">10.0%</td>
+                                        <td class="text-primary">150</td>
+                                        <td>2.6min</td>
+                                        <td>2.9min</td>
+                                        <td>2.7min</td>
+                                        <td>2.5min</td>
+                                        <td>3.0min</td>
+                                        <td>2.7min</td>
+                                        <td class="text-success">¥985,000</td>
+                                        <td class="text-danger">¥78,000</td>
+                                        <td>¥1,063,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MJ</td>
+                                        <td>35</td>
+                                        <td>29.2%</td>
+                                        <td>25</td>
+                                        <td>20.8%</td>
+                                        <td>60</td>
+                                        <td>50.0%</td>
+                                        <td class="text-primary">120</td>
+                                        <td>96</td>
+                                        <td>80.0%</td>
+                                        <td>24</td>
+                                        <td>20.0%</td>
+                                        <td class="text-primary">120</td>
+                                        <td class="text-success">114</td>
+                                        <td class="text-success">95.0%</td>
+                                        <td class="text-danger">6</td>
+                                        <td class="text-danger">5.0%</td>
+                                        <td class="text-primary">120</td>
+                                        <td>2.4min</td>
+                                        <td>2.8min</td>
+                                        <td>2.5min</td>
+                                        <td>2.3min</td>
+                                        <td>2.9min</td>
+                                        <td>2.6min</td>
+                                        <td class="text-success">¥756,000</td>
+                                        <td class="text-danger">¥32,000</td>
+                                        <td>¥788,000</td>
+                                    </tr>
+                                    <tr style="background-color: #fafafa; font-weight: 600;">
+                                        <td>合計</td>
+                                        <td>320</td>
+                                        <td>29.9%</td>
+                                        <td>230</td>
+                                        <td>21.5%</td>
+                                        <td>520</td>
+                                        <td>48.6%</td>
+                                        <td class="text-primary">1,070</td>
+                                        <td>821</td>
+                                        <td>76.7%</td>
+                                        <td>249</td>
+                                        <td>23.3%</td>
+                                        <td class="text-primary">1,070</td>
+                                        <td class="text-success">979</td>
+                                        <td class="text-success">91.5%</td>
+                                        <td class="text-danger">91</td>
+                                        <td class="text-danger">8.5%</td>
+                                        <td class="text-primary">1,070</td>
+                                        <td>2.7min</td>
+                                        <td>3.1min</td>
+                                        <td>2.7min</td>
+                                        <td>2.5min</td>
+                                        <td>3.3min</td>
+                                        <td>2.8min</td>
+                                        <td class="text-success">¥7,361,000</td>
+                                        <td class="text-danger">¥489,000</td>
+                                        <td>¥7,850,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 分頁 -->
+                        <div class="pagination">
+                            <div class="pagination-info">
+                                顯示 <strong>1</strong> - <strong>6</strong> 條，共 <strong>6</strong> 條記錄
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="page-btn" disabled>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn" disabled>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 菜單展開/收起
+        document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
+            if (title.querySelector('.menu-arrow')) {
+                title.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 分頁按鈕
+        document.querySelectorAll('.page-btn:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.classList.contains('active') && this.textContent.trim()) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

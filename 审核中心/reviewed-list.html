@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>已審核列表 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 單號區塊樣式 */
+        .order-ids {
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        .order-ids .order-row {
+            display: flex;
+            white-space: nowrap;
+        }
+        .order-ids .order-label {
+            color: #909399;
+            min-width: 70px;
+        }
+        .order-ids .order-value {
+            color: #303133;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .order-ids .order-value.link {
+            color: #409eff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .order-ids .order-value.link:hover {
+            text-decoration: underline;
+        }
+
+        /* 額外參數區塊樣式 */
+        .extra-params {
+            background-color: #f8f9fa;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 12px;
+            line-height: 1.6;
+            max-width: 280px;
+            min-width: 200px;
+        }
+        .extra-params .param-row {
+            display: flex;
+            margin-bottom: 2px;
+        }
+        .extra-params .param-row:last-child {
+            margin-bottom: 0;
+        }
+        .extra-params .param-label {
+            color: #909399;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+        .extra-params .param-value {
+            color: #303133;
+            word-break: break-all;
+        }
+        .extra-params .param-value.highlight {
+            color: #e6a23c;
+            font-weight: 500;
+        }
+        .extra-params .param-value.link {
+            color: #409eff;
+            cursor: pointer;
+        }
+        .extra-params .param-value.link:hover {
+            text-decoration: underline;
+        }
+        .extra-params .param-value.empty {
+            color: #c0c4cc;
+        }
+
+        /* 表格調整 */
+        .table td {
+            vertical-align: top;
+            padding: 12px 10px;
+        }
+        .table th {
+            white-space: nowrap;
+        }
+
+        /* 搜索表單調整 */
+        .search-form .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 0;
+        }
+        .search-form .form-group {
+            flex: 0 0 calc(16.666% - 14px);
+            min-width: 160px;
+        }
+        .search-form .form-group.wide {
+            flex: 0 0 calc(25% - 12px);
+        }
+
+        /* 按鈕組 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #ebeef5;
+        }
+
+        /* 分頁樣式增強 */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-top: 1px solid #ebeef5;
+        }
+        .pagination-info {
+            color: #606266;
+            font-size: 13px;
+        }
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .page-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid #dcdfe6;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #606266;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .page-btn:hover:not(:disabled):not(.active) {
+            color: #409eff;
+            border-color: #409eff;
+        }
+        .page-btn.active {
+            background-color: #409eff;
+            border-color: #409eff;
+            color: #fff;
+        }
+        .page-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 16px;
+            font-size: 13px;
+            color: #606266;
+        }
+        .page-jump input {
+            width: 50px;
+            height: 32px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .page-size {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 16px;
+            font-size: 13px;
+            color: #606266;
+        }
+        .page-size select {
+            height: 32px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            padding: 0 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 側邊欄 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">審核中心</div>
+            </div>
+            <nav class="sidebar-menu">
+                <!-- 首頁 -->
+                <div class="menu-item">
+                    <a href="index.html" class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
+                        <span class="menu-text">首頁</span>
+                    </a>
+                </div>
+
+                <!-- 審核管理 -->
+                <div class="menu-item active open">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 11 12 14 22 4"></polyline>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                        </span>
+                        <span class="menu-text">審核管理</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="pending-list.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </span>
+                                待審核列表
+                            </a>
+                        </li>
+                        <li class="submenu-item active">
+                            <a href="reviewed-list.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </span>
+                                已審核列表
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 數據報表 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                            </svg>
+                        </span>
+                        <span class="menu-text">數據報表</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="daily-report.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </span>
+                                日報表
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="weekly-report.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </span>
+                                週報表
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="rejection-report.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </span>
+                                駁回分析報表
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 商戶管理 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
+                        <span class="menu-text">商戶管理</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="merchant-settings.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                    </svg>
+                                </span>
+                                商戶設定
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="merchant-group.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </span>
+                                商戶群組設定
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 配置管理 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                        </span>
+                        <span class="menu-text">配置管理</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="quick-config.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                    </svg>
+                                </span>
+                                審核中心快捷配置
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="auto-notify.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                    </svg>
+                                </span>
+                                自動通知審核中心結果
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 後台權限設定 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </span>
+                        <span class="menu-text">後台權限設定</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="account-manage.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </span>
+                                帳號管理
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="permission-manage.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                權限管理
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主內容區 -->
+        <main class="main">
+            <!-- 頂部欄 -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item"><a href="index.html">首頁</a></span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">審核管理</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item active">已審核列表</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-user">
+                        <div class="user-avatar">A</div>
+                        <span class="user-name">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 內容區 -->
+            <div class="content">
+                <!-- 搜索區域 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">搜索條件</span>
+                    </div>
+                    <div class="card-body">
+                        <form class="search-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">審核單ID</label>
+                                    <input type="text" class="form-control" placeholder="請輸入審核單ID">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">商戶名稱</label>
+                                    <select class="form-control">
+                                        <option value="">全部</option>
+                                        <option value="GS">GS</option>
+                                        <option value="GE">GE</option>
+                                        <option value="MY">MY</option>
+                                        <option value="MN">MN</option>
+                                        <option value="MJ">MJ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">審核項目</label>
+                                    <select class="form-control">
+                                        <option value="">全部</option>
+                                        <option value="1">資金審核</option>
+                                        <option value="2">賬戶安全審核</option>
+                                        <option value="3">人工充值</option>
+                                        <option value="4">人工提現</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">提交人員</label>
+                                    <input type="text" class="form-control" placeholder="請輸入提交人員">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">審核人員</label>
+                                    <input type="text" class="form-control" placeholder="請輸入審核人員">
+                                </div>
+                                <div class="form-group wide">
+                                    <label class="form-label">提交時間</label>
+                                    <input type="text" class="form-control" placeholder="開始日期 ~ 結束日期">
+                                </div>
+                                <div class="form-group wide">
+                                    <label class="form-label">審核日期</label>
+                                    <input type="text" class="form-control" placeholder="開始日期 ~ 結束日期">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">額外參數</label>
+                                    <select class="form-control">
+                                        <option value="">請選擇參數類型</option>
+                                        <option value="username">用戶名</option>
+                                        <option value="userid">用戶ID</option>
+                                        <option value="realname">姓名</option>
+                                        <option value="changetype">帳變類型</option>
+                                        <option value="agent">所屬總代</option>
+                                        <option value="amount">充值金額</option>
+                                        <option value="remark">批注</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">參數值</label>
+                                    <input type="text" class="form-control" placeholder="請輸入參數值">
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-primary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 4v6h-6"></path>
+                                        <path d="M1 20v-6h6"></path>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                    刷新
+                                </button>
+                                <button type="reset" class="btn btn-default">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                        <path d="M3 3v5h5"></path>
+                                    </svg>
+                                    重置
+                                </button>
+                                <button type="button" class="btn btn-success">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    導出
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 表格區 -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">已審核列表</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">共 <span style="color: var(--primary-color); font-weight: 500;">2,090</span> 條記錄</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-wrapper" style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 280px;">單號</th>
+                                        <th style="width: 80px;">商戶名稱</th>
+                                        <th style="width: 100px;">審核項目</th>
+                                        <th style="width: 100px;">提交人員</th>
+                                        <th style="width: 100px;">審核人員</th>
+                                        <th style="width: 150px;">提交時間</th>
+                                        <th style="width: 150px;">審核日期</th>
+                                        <th style="min-width: 240px;">額外參數</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011514470480e42a37c03182c</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011514470400000001</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>GS</td>
+                                        <td><span class="tag tag-warning">人工充值</span></td>
+                                        <td>admin_zhang</td>
+                                        <td>reviewer_wang</td>
+                                        <td>2024-01-20 14:30:25</td>
+                                        <td>2024-01-20 18:30:25</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">vipuser001@gs</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">88001</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">張三</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">帳變類型:</span>
+                                                    <span class="param-value">221</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">所屬總代:</span>
+                                                    <span class="param-value link">gsagent01@gs</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">充值金額:</span>
+                                                    <span class="param-value highlight">3,000</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">活動獎勵發放</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value link">查看截圖(1張)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011513gewd8d7f2e91a5c3b4</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011513451800000002</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>GE</td>
+                                        <td><span class="tag tag-danger">人工提現</span></td>
+                                        <td>cs_wang</td>
+                                        <td>reviewer_li</td>
+                                        <td>2024-01-20 13:15:18</td>
+                                        <td>2024-01-20 17:45:18</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">player_ge88</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">120088</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">王五</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">帳變類型:</span>
+                                                    <span class="param-value">302</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">所屬總代:</span>
+                                                    <span class="param-value link">geagent02@ge</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">提現金額:</span>
+                                                    <span class="param-value highlight">25,000</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">用戶提現申請</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value link">查看截圖(3張)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011512myorder3c7f9e2d1a8b</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011512203300000003</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>MY</td>
+                                        <td><span class="tag tag-primary">資金審核</span></td>
+                                        <td>finance_li</td>
+                                        <td>reviewer_chen</td>
+                                        <td>2024-01-20 12:45:33</td>
+                                        <td>2024-01-20 16:20:33</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">bigvip_my</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">300156</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">李大華</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">帳變類型:</span>
+                                                    <span class="param-value">501</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">所屬總代:</span>
+                                                    <span class="param-value link">topagent@my</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">審核金額:</span>
+                                                    <span class="param-value highlight">200,000</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">大額轉賬審核</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value link">查看截圖(5張)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011511mnsecu5a9c3b2e8f1d</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011511101200000004</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>MN</td>
+                                        <td><span class="tag tag-success">賬戶安全審核</span></td>
+                                        <td>operator_chen</td>
+                                        <td>reviewer_zhao</td>
+                                        <td>2024-01-20 11:30:12</td>
+                                        <td>2024-01-20 15:10:12</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">user_mn123</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">405621</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">陳小虎</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">申請類型:</span>
+                                                    <span class="param-value">密碼重置</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">手機號碼:</span>
+                                                    <span class="param-value">139****8899</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">用戶申請密碼重置</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value link">查看截圖(2張)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011510mjchg8b2d4e6f9a1c7</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011510054500000005</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>MJ</td>
+                                        <td><span class="tag tag-warning">人工充值</span></td>
+                                        <td>admin_liu</td>
+                                        <td>reviewer_wu</td>
+                                        <td>2024-01-20 10:12:45</td>
+                                        <td>2024-01-20 14:05:45</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">vip_mj2024</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">508892</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">劉曉麗</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">帳變類型:</span>
+                                                    <span class="param-value">221</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">所屬總代:</span>
+                                                    <span class="param-value link">mjagent@mj</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">充值金額:</span>
+                                                    <span class="param-value highlight">8,888</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">VIP晉級獎勵</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value empty">沒有上傳 相關截圖</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="order-ids">
+                                                <div class="order-row">
+                                                    <span class="order-label">商戶單號:</span>
+                                                    <span class="order-value">2026011509gswd7c3e5f8a2b9d1</span>
+                                                </div>
+                                                <div class="order-row">
+                                                    <span class="order-label">審核單號:</span>
+                                                    <a href="audit-detail.html" class="order-value link">RC0000302026011509303000000006</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>GS</td>
+                                        <td><span class="tag tag-danger">人工提現</span></td>
+                                        <td>cs_zhao</td>
+                                        <td>reviewer_wang</td>
+                                        <td>2024-01-20 09:55:30</td>
+                                        <td>2024-01-20 11:30:30</td>
+                                        <td>
+                                            <div class="extra-params">
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶名:</span>
+                                                    <span class="param-value">agent_silver</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">用戶ID:</span>
+                                                    <span class="param-value">60023</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">姓名:</span>
+                                                    <span class="param-value">白銀代理</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">帳變類型:</span>
+                                                    <span class="param-value">302</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">所屬總代:</span>
+                                                    <span class="param-value empty">-</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">提現金額:</span>
+                                                    <span class="param-value highlight">15,000</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">批注:</span>
+                                                    <span class="param-value">代理佣金提現</span>
+                                                </div>
+                                                <div class="param-row">
+                                                    <span class="param-label">相關截圖:</span>
+                                                    <span class="param-value link">查看截圖(2張)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 分頁區域 -->
+                        <div class="pagination">
+                            <div class="pagination-info">
+                                顯示 <strong>1</strong> - <strong>6</strong> 條，共 <strong>2,090</strong> 條記錄
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="page-btn" disabled title="上一頁">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">2</button>
+                                <button class="page-btn">3</button>
+                                <button class="page-btn">4</button>
+                                <button class="page-btn">5</button>
+                                <span style="color: #909399; padding: 0 4px;">...</span>
+                                <button class="page-btn">349</button>
+                                <button class="page-btn" title="下一頁">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
+                                <div class="page-jump">
+                                    <span>跳至</span>
+                                    <input type="number" min="1" max="349" value="1">
+                                    <span>頁</span>
+                                </div>
+                                <div class="page-size">
+                                    <span>每頁</span>
+                                    <select>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>條</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 菜單展開/收起
+        document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
+            if (title.querySelector('.menu-arrow')) {
+                title.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const menuItem = this.parentElement;
+                    menuItem.classList.toggle('open');
+                });
+            }
+        });
+
+        // 分頁按鈕點擊效果
+        document.querySelectorAll('.page-btn:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.classList.contains('active') && this.textContent.trim()) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
