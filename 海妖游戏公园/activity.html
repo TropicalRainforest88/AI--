@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>海妖游戏公园 - 活动中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siren-theme');
+            if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <style>
+        .theme-toggle {
+            position: absolute;
+            top: 56px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { font-size: 18px; }
+        .theme-toggle .icon-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+        [data-theme="dark"] .theme-toggle { background: rgba(59, 163, 150, 0.2); border-color: rgba(59, 163, 150, 0.3); }
+        /* 活动头部 */
+        .activity-header {
+            background: linear-gradient(160deg, #0d4a40 0%, #145549 25%, #1e6b5c 50%, #2d7a6a 75%, #3d8a7a 100%);
+            padding: 44px 16px 48px;
+            position: relative;
+            overflow: visible;
+            margin-bottom: 8px;
+        }
+        /* 海浪纹理 - 多层次深海质感 + 金色光泽 */
+        .activity-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                /* 第一层：主波浪线 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Cpath d='M0 30 Q25 18 50 30 T100 30 T150 30 T200 30' stroke='%23ffffff' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Cpath d='M0 42 Q25 32 50 42 T100 42 T150 42 T200 42' stroke='%23ffffff' stroke-width='0.8' fill='none' opacity='0.06'/%3E%3Cpath d='M0 52 Q25 44 50 52 T100 52 T150 52 T200 52' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.04'/%3E%3C/svg%3E") repeat-x bottom,
+                /* 第二层：细波纹 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 30'%3E%3Cpath d='M0 15 Q15 10 30 15 T60 15 T90 15 T120 15' stroke='%23ffffff' stroke-width='0.6' fill='none' opacity='0.05'/%3E%3C/svg%3E") repeat,
+                /* 第三层：金色光点 - 增添光泽 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='15' cy='25' r='1' fill='%23ffd700' opacity='0.18'/%3E%3Ccircle cx='50' cy='12' r='0.8' fill='%23ffd700' opacity='0.15'/%3E%3Ccircle cx='85' cy='35' r='1.2' fill='%23ffeaa0' opacity='0.12'/%3E%3Ccircle cx='30' cy='60' r='0.7' fill='%23ffd700' opacity='0.16'/%3E%3Ccircle cx='70' cy='75' r='1' fill='%23ffeaa0' opacity='0.14'/%3E%3Ccircle cx='10' cy='85' r='0.9' fill='%23ffd700' opacity='0.12'/%3E%3C/svg%3E") repeat,
+                /* 第四层：海面光斑 - 大 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Ccircle cx='25' cy='40' r='1.5' fill='%23ffffff' opacity='0.12'/%3E%3Ccircle cx='75' cy='20' r='1.2' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='120' cy='55' r='1.8' fill='%23ffffff' opacity='0.08'/%3E%3Ccircle cx='50' cy='90' r='1' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='100' cy='110' r='1.4' fill='%23ffffff' opacity='0.06'/%3E%3C/svg%3E") repeat,
+                /* 第五层：细小光斑 + 金点 */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='12' cy='18' r='0.5' fill='%23ffffff' opacity='0.15'/%3E%3Ccircle cx='35' cy='10' r='0.4' fill='%23ffd700' opacity='0.12'/%3E%3Ccircle cx='58' cy='25' r='0.6' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='22' cy='45' r='0.45' fill='%23ffd700' opacity='0.1'/%3E%3Ccircle cx='48' cy='38' r='0.5' fill='%23ffffff' opacity='0.11'/%3E%3Ccircle cx='70' cy='52' r='0.55' fill='%23ffd700' opacity='0.08'/%3E%3C/svg%3E") repeat,
+                /* 第六层：金色光晕渐变 */
+                radial-gradient(ellipse at 30% 40%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 60%, rgba(255, 234, 160, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* 底部柔和圆弧 */
+        .activity-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: -5%;
+            right: -5%;
+            height: 24px;
+            background: var(--bg-color);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            z-index: 2;
+        }
+        .activity-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 3;
+        }
+        .activity-header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: 2px;
+        }
+        .activity-header-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .activity-header-badge span {
+            font-size: 13px;
+            color: var(--text-white);
+        }
+
+        /* 签到卡片 - 宝藏地图风格 */
+        .signin-card {
+            background: linear-gradient(180deg, var(--bg-white) 0%, #faf8f5 100%);
+            border-radius: var(--radius-xl);
+            margin: 8px 16px 16px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            box-shadow:
+                0 4px 20px rgba(44, 62, 45, 0.12),
+                0 8px 32px rgba(201, 162, 39, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        /* 羊皮纸纹理 */
+        .signin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='10' cy='10' r='0.8' fill='%23d4a574' opacity='0.08'/%3E%3Ccircle cx='40' cy='25' r='0.5' fill='%23c9a227' opacity='0.06'/%3E%3Ccircle cx='70' cy='15' r='0.6' fill='%23d4a574' opacity='0.07'/%3E%3Ccircle cx='25' cy='50' r='0.7' fill='%23c4754b' opacity='0.05'/%3E%3Ccircle cx='55' cy='60' r='0.5' fill='%23d4a574' opacity='0.08'/%3E%3Ccircle cx='15' cy='75' r='0.6' fill='%23c9a227' opacity='0.06'/%3E%3Ccircle cx='65' cy='70' r='0.8' fill='%23d4a574' opacity='0.07'/%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+        .signin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .signin-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+        .signin-streak {
+            font-size: 13px;
+            color: var(--gold-dark);
+            font-weight: 500;
+        }
+        .signin-days {
+            display: flex;
+            gap: 8px;
+        }
+        .signin-day {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            background: linear-gradient(180deg, var(--bg-color) 0%, #ebe5d8 100%);
+            border-radius: var(--radius-md);
+            position: relative;
+            box-shadow:
+                0 2px 4px rgba(44, 62, 45, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+        }
+        .signin-day.checked {
+            background: linear-gradient(180deg, var(--primary-lighter) 0%, rgba(30, 107, 92, 0.08) 100%);
+            border: 1px solid rgba(30, 107, 92, 0.2);
+        }
+        .signin-day.today {
+            background: var(--gradient-ocean);
+            box-shadow:
+                0 4px 12px rgba(30, 107, 92, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .signin-day-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .signin-day.checked .signin-day-icon {
+            color: var(--primary-color);
+        }
+        .signin-day.today .signin-day-icon {
+            color: var(--text-white);
+        }
+        .signin-day-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+        .signin-day.checked .signin-day-label {
+            color: var(--primary-color);
+        }
+        .signin-day.today .signin-day-label {
+            color: var(--text-white);
+        }
+        .signin-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--gradient-ocean);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 4px 12px rgba(30, 107, 92, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        /* 波光效果 */
+        .signin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        .signin-btn:disabled {
+            background: var(--border-color);
+            color: var(--text-secondary);
+            box-shadow: none;
+        }
+        .signin-btn:disabled::before {
+            display: none;
+        }
+
+        /* 活动标签 */
+        .activity-tabs {
+            display: flex;
+            padding: 0 16px;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        .activity-tab {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding-bottom: 8px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .activity-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* 活动列表 - 航海海报风格 */
+        .activity-list {
+            padding: 0 16px;
+        }
+        .activity-card {
+            margin-bottom: 16px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow:
+                0 4px 16px rgba(44, 62, 45, 0.1),
+                0 8px 24px rgba(44, 62, 45, 0.05);
+            border: 2px solid var(--border-light);
+        }
+        .activity-banner {
+            height: 130px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 海浪纹理 */
+        .activity-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cpath d='M0 20 Q20 10 40 20 T80 20' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.08'/%3E%3Cpath d='M0 30 Q20 20 40 30 T80 30' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.06'/%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+        .activity-banner.purple {
+            background: linear-gradient(135deg, #1e6b5c 0%, #2d8b78 100%);
+        }
+        .activity-banner.orange {
+            background: linear-gradient(135deg, #c4754b 0%, #d4a574 100%);
+        }
+        .activity-banner.green {
+            background: linear-gradient(135deg, #7d8c5c 0%, #a4b37a 100%);
+        }
+        .activity-banner.pink {
+            background: linear-gradient(135deg, #e07b53 0%, #d4a574 100%);
+        }
+        .activity-banner.blue {
+            background: linear-gradient(135deg, #3d7a99 0%, #5a9ab8 100%);
+        }
+        .activity-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            background: rgba(250, 248, 243, 0.2);
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-white);
+            align-self: flex-start;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid rgba(250, 248, 243, 0.3);
+        }
+        .activity-banner-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-white);
+            line-height: 1.3;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .activity-banner-icon {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            font-size: 48px;
+            opacity: 0.3;
+        }
+        .activity-info {
+            padding: 14px 16px;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-light);
+        }
+        .activity-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .activity-reward {
+            font-size: 13px;
+            color: var(--gold-dark);
+            font-weight: 500;
+        }
+        .activity-btn {
+            padding: 8px 20px;
+            background: var(--gradient-ocean);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .activity-btn.ended {
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* 任务列表 - 寻宝清单风格 */
+        .task-card {
+            background: linear-gradient(180deg, var(--bg-white) 0%, #faf8f5 100%);
+            border-radius: var(--radius-lg);
+            margin: 0 16px 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow:
+                0 2px 10px rgba(44, 62, 45, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+        /* 细微纹理 */
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 20 Q10 18 20 20 T40 20' stroke='%23d9cfc0' stroke-width='0.3' fill='none' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        .task-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: var(--primary-lighter);
+            position: relative;
+            box-shadow:
+                0 2px 6px rgba(44, 62, 45, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+        }
+        /* 珍珠光泽 */
+        .task-icon::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 60%;
+            bottom: 60%;
+            background: radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        .task-content {
+            flex: 1;
+        }
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .task-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .task-progress-fill {
+            height: 100%;
+            background: var(--gradient-ocean);
+            border-radius: 3px;
+            box-shadow: 0 0 6px rgba(30, 107, 92, 0.3);
+            position: relative;
+        }
+        /* 波光效果 */
+        .task-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+            border-radius: 3px 3px 0 0;
+        }
+        .task-progress-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .task-reward {
+            text-align: center;
+        }
+        .task-reward-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold-color);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        .task-reward-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+        .task-claim-btn {
+            padding: 6px 14px;
+            background: var(--gradient-ocean);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            position: relative;
+            box-shadow:
+                0 2px 8px rgba(30, 107, 92, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+        .task-claim-btn:disabled {
+            background: var(--border-color);
+            color: var(--text-secondary);
+            box-shadow: none;
+            text-shadow: none;
+        }
+        .task-claimed {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="page">
+            <!-- 顶部状态栏 -->
+            <div class="status-bar light">
+                <span class="status-bar-time">9:41</span>
+                <div class="status-bar-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 10a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="1" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <rect x="20" y="9" width="3" height="6" rx="1" fill="currentColor"/>
+                        <rect x="3" y="8" width="12" height="8" rx="1" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 主题切换按钮 -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换白天/黑夜模式">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+
+            <!-- 活动头部 -->
+            <div class="activity-header">
+                <div class="activity-header-content">
+                    <div class="activity-header-title">活动中心</div>
+                    <div class="activity-header-badge">
+                        <span>🎁</span>
+                        <span>我的奖励</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="page-content">
+                <!-- 签到卡片 -->
+                <div class="signin-card">
+                    <div class="signin-header">
+                        <div class="signin-title">每日签到</div>
+                        <div class="signin-streak">已连续签到 5 天</div>
+                    </div>
+                    <div class="signin-days">
+                        <div class="signin-day checked">
+                            <div class="signin-day-icon">✓</div>
+                            <div class="signin-day-label">周一</div>
+                        </div>
+                        <div class="signin-day checked">
+                            <div class="signin-day-icon">✓</div>
+                            <div class="signin-day-label">周二</div>
+                        </div>
+                        <div class="signin-day checked">
+                            <div class="signin-day-icon">✓</div>
+                            <div class="signin-day-label">周三</div>
+                        </div>
+                        <div class="signin-day checked">
+                            <div class="signin-day-icon">✓</div>
+                            <div class="signin-day-label">周四</div>
+                        </div>
+                        <div class="signin-day checked">
+                            <div class="signin-day-icon">✓</div>
+                            <div class="signin-day-label">周五</div>
+                        </div>
+                        <div class="signin-day today">
+                            <div class="signin-day-icon">🎁</div>
+                            <div class="signin-day-label">今天</div>
+                        </div>
+                        <div class="signin-day">
+                            <div class="signin-day-icon">🏆</div>
+                            <div class="signin-day-label">周日</div>
+                        </div>
+                    </div>
+                    <button class="signin-btn" onclick="alert('签到成功！获得 100 金币')">立即签到 +100金币</button>
+                </div>
+
+                <!-- 活动标签 -->
+                <div class="activity-tabs">
+                    <div class="activity-tab active" onclick="switchTab(this, 'hot')">热门活动</div>
+                    <div class="activity-tab" onclick="switchTab(this, 'task')">每日任务</div>
+                    <div class="activity-tab" onclick="switchTab(this, 'vip')">VIP特权</div>
+                </div>
+
+                <!-- 热门活动列表 -->
+                <div class="activity-list" id="hotContent">
+                    <div class="activity-card">
+                        <div class="activity-banner orange">
+                            <div class="activity-tag">🔥 限时</div>
+                            <div class="activity-banner-title">新用户首充<br/>双倍返利</div>
+                            <div class="activity-banner-icon">💎</div>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-meta">
+                                <div class="activity-time">剩余 2天 15:32:08</div>
+                                <div class="activity-reward">最高可得 10,000 金币</div>
+                            </div>
+                            <button class="activity-btn">立即参与</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-banner purple">
+                            <div class="activity-tag">🎊 春节</div>
+                            <div class="activity-banner-title">新春红包雨<br/>限时抢购</div>
+                            <div class="activity-banner-icon">🧧</div>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-meta">
+                                <div class="activity-time">2/1 - 2/15</div>
+                                <div class="activity-reward">每日 3 次抽奖机会</div>
+                            </div>
+                            <button class="activity-btn">去抽奖</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-banner green">
+                            <div class="activity-tag">👥 邀请</div>
+                            <div class="activity-banner-title">邀请好友<br/>共享奖励</div>
+                            <div class="activity-banner-icon">🤝</div>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-meta">
+                                <div class="activity-time">长期有效</div>
+                                <div class="activity-reward">每邀1人得 500 金币</div>
+                            </div>
+                            <button class="activity-btn">邀请好友</button>
+                        </div>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-banner pink">
+                            <div class="activity-tag">💝 情人节</div>
+                            <div class="activity-banner-title">甜蜜情人节<br/>专属福利</div>
+                            <div class="activity-banner-icon">💕</div>
+                        </div>
+                        <div class="activity-info">
+                            <div class="activity-meta">
+                                <div class="activity-time">已结束</div>
+                                <div class="activity-reward">活动已结束</div>
+                            </div>
+                            <button class="activity-btn ended" disabled>已结束</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 每日任务 -->
+                <div id="taskContent" style="display: none;">
+                    <div class="task-card">
+                        <div class="task-icon" style="background: linear-gradient(135deg, #faf3e0 0%, #f0e6c8 100%); border: 1px solid var(--border-light);">🎮</div>
+                        <div class="task-content">
+                            <div class="task-title">每日游戏 3 局</div>
+                            <div class="task-progress">
+                                <div class="task-progress-bar">
+                                    <div class="task-progress-fill" style="width: 66%;"></div>
+                                </div>
+                                <span class="task-progress-text">2/3</span>
+                            </div>
+                        </div>
+                        <div class="task-reward">
+                            <div class="task-reward-value">+50</div>
+                            <div class="task-reward-label">金币</div>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-icon" style="background: linear-gradient(135deg, #e8f0e3 0%, #d4e4cd 100%); border: 1px solid var(--border-light);">💰</div>
+                        <div class="task-content">
+                            <div class="task-title">每日充值任意金额</div>
+                            <div class="task-progress">
+                                <div class="task-progress-bar">
+                                    <div class="task-progress-fill" style="width: 100%;"></div>
+                                </div>
+                                <span class="task-progress-text">1/1</span>
+                            </div>
+                        </div>
+                        <button class="task-claim-btn">领取</button>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-icon" style="background: linear-gradient(135deg, #d8ebe5 0%, #c5dfd7 100%); border: 1px solid var(--border-light);">👥</div>
+                        <div class="task-content">
+                            <div class="task-title">邀请 1 位好友</div>
+                            <div class="task-progress">
+                                <div class="task-progress-bar">
+                                    <div class="task-progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="task-progress-text">0/1</span>
+                            </div>
+                        </div>
+                        <div class="task-reward">
+                            <div class="task-reward-value">+200</div>
+                            <div class="task-reward-label">金币</div>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-icon" style="background: linear-gradient(135deg, #e8ded0 0%, #ddd0be 100%); border: 1px solid var(--border-light);">⭐</div>
+                        <div class="task-content">
+                            <div class="task-title">累计获胜 5 局</div>
+                            <div class="task-progress">
+                                <div class="task-progress-bar">
+                                    <div class="task-progress-fill" style="width: 60%;"></div>
+                                </div>
+                                <span class="task-progress-text">3/5</span>
+                            </div>
+                        </div>
+                        <div class="task-reward">
+                            <div class="task-reward-value">+100</div>
+                            <div class="task-reward-label">金币</div>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-icon" style="background: linear-gradient(135deg, #fce4d6 0%, #f5d5c3 100%); border: 1px solid var(--border-light);">📱</div>
+                        <div class="task-content">
+                            <div class="task-title">分享到朋友圈</div>
+                            <div class="task-progress">
+                                <span class="task-claimed">已领取</span>
+                            </div>
+                        </div>
+                        <button class="task-claim-btn" disabled>已领取</button>
+                    </div>
+                </div>
+
+                <!-- VIP特权 -->
+                <div id="vipContent" style="display: none; padding: 0 16px;">
+                    <div class="card">
+                        <div class="card-body" style="text-align: center; padding: 40px 20px;">
+                            <div style="font-size: 64px; margin-bottom: 16px;">👑</div>
+                            <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">VIP特权系统</div>
+                            <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">累计充值达标即可升级VIP等级<br/>享受专属福利和返利</div>
+                            <button class="btn btn-gold">查看VIP等级详情</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部间距 -->
+                <div style="height: 80px;"></div>
+            </div>
+
+            <!-- 底部标签栏 -->
+            <div class="tab-bar">
+                <a href="index.html" class="tab-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>首页</span>
+                </a>
+                <a href="activity.html" class="tab-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span>活动</span>
+                </a>
+                <a href="recharge.html" class="tab-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                    <span>充值</span>
+                </a>
+                <a href="profile.html" class="tab-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>我的</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('siren-theme', newTheme);
+        }
+
+        function switchTab(el, type) {
+            // 切换标签状态
+            document.querySelectorAll('.activity-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            el.classList.add('active');
+
+            // 切换内容
+            document.getElementById('hotContent').style.display = type === 'hot' ? 'block' : 'none';
+            document.getElementById('taskContent').style.display = type === 'task' ? 'block' : 'none';
+            document.getElementById('vipContent').style.display = type === 'vip' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

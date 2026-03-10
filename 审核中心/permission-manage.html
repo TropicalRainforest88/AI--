@@ -6,7 +6,7 @@
     <title>權限管理 - 審核中心</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        /* 彈窗樣式 - 與帳號管理一致 */
+        /* 彈窗樣式 - 支持深色模式 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -23,38 +23,38 @@
             display: flex;
         }
         .modal {
-            background: #fff;
+            background: var(--bg-white);
             border-radius: 8px;
             width: 480px;
             max-width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .modal-title {
             font-size: 18px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-close {
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 20px;
             line-height: 1;
             transition: color 0.2s;
         }
         .modal-close:hover {
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-body {
             padding: 24px;
@@ -64,10 +64,10 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 16px 24px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
         }
 
-        /* 表單項樣式 - 與帳號管理一致 */
+        /* 表單項樣式 - 支持深色模式 */
         .form-item {
             margin-bottom: 20px;
         }
@@ -78,67 +78,69 @@
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
         }
         .form-item .form-label .required {
-            color: #f56c6c;
+            color: var(--danger-color);
             margin-left: 2px;
         }
         .form-item .form-input {
             width: 100%;
             height: 44px;
             padding: 0 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
+            background: var(--bg-white);
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
         .form-item .form-input:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .form-item .form-input::placeholder {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
         }
         .form-item .form-textarea {
             width: 100%;
             min-height: 88px;
             padding: 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
+            background: var(--bg-white);
             box-sizing: border-box;
             resize: vertical;
             transition: border-color 0.2s;
         }
         .form-item .form-textarea:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
 
-        /* 下拉選擇框 - 與帳號管理一致 */
+        /* 下拉選擇框 - 支持深色模式 */
         .form-item .form-select {
             width: 100%;
             height: 44px;
             padding: 0 32px 0 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            color: #303133;
-            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+            color: var(--text-primary);
+            background: var(--bg-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
             appearance: none;
             cursor: pointer;
             box-sizing: border-box;
         }
         .form-item .form-select:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
 
-        /* 保存按鈕 - 黑色風格與帳號管理一致 */
+        /* 保存按鈕 - 黑色風格 */
         .btn-save {
             background: #1a1a1a;
             color: #fff;
@@ -153,11 +155,11 @@
             background: #333;
         }
 
-        /* 取消按鈕 */
+        /* 取消按鈕 - 支持深色模式 */
         .btn-cancel {
-            background: #fff;
-            color: #606266;
-            border: 1px solid #dcdfe6;
+            background: var(--bg-white);
+            color: var(--text-regular);
+            border: 1px solid var(--border-color);
             padding: 10px 24px;
             border-radius: 6px;
             font-size: 14px;
@@ -165,8 +167,8 @@
             transition: all 0.2s;
         }
         .btn-cancel:hover {
-            border-color: #c0c4cc;
-            color: #303133;
+            border-color: var(--border-light);
+            color: var(--text-primary);
         }
 
         /* 大型彈窗 */
@@ -175,7 +177,7 @@
             max-width: 90%;
         }
 
-        /* 顯示欄位下拉框 */
+        /* 顯示欄位下拉框 - 支持深色模式 */
         .column-dropdown {
             position: relative;
             display: inline-block;
@@ -185,17 +187,17 @@
             align-items: center;
             gap: 6px;
             padding: 8px 16px;
-            background: #fff;
-            border: 1px solid #dcdfe6;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
             cursor: pointer;
             transition: all 0.2s;
         }
         .column-dropdown-btn:hover {
-            border-color: #409eff;
-            color: #409eff;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
         .column-dropdown-menu {
             display: none;
@@ -203,10 +205,10 @@
             top: 100%;
             right: 0;
             margin-top: 4px;
-            background: #fff;
-            border: 1px solid #ebeef5;
+            background: var(--bg-white);
+            border: 1px solid var(--border-lighter);
             border-radius: 4px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             padding: 8px 0;
             min-width: 150px;
             z-index: 100;
@@ -223,17 +225,17 @@
             transition: background 0.2s;
         }
         .column-dropdown-item:hover {
-            background: #f5f7fa;
+            background: var(--bg-color);
         }
         .column-dropdown-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .column-dropdown-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 頁面頭部操作區 */
@@ -243,7 +245,7 @@
             align-items: center;
         }
 
-        /* 權限列表表格 */
+        /* 權限列表表格 - 支持深色模式 */
         .permission-table {
             width: 100%;
             border-collapse: collapse;
@@ -253,18 +255,18 @@
             padding: 14px 20px;
             font-size: 14px;
             font-weight: 500;
-            color: #909399;
-            background: #fafafa;
-            border-bottom: 1px solid #ebeef5;
+            color: var(--text-secondary);
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-lighter);
         }
         .permission-table td {
             padding: 16px 20px;
             font-size: 14px;
-            color: #303133;
-            border-bottom: 1px solid #ebeef5;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-lighter);
         }
         .permission-table tr:hover {
-            background: #fafafa;
+            background: var(--bg-color);
         }
         .permission-table tr:last-child td {
             border-bottom: none;
@@ -275,11 +277,11 @@
         }
         .permission-table .col-desc {
             width: 30%;
-            color: #606266;
+            color: var(--text-regular);
         }
         .permission-table .col-date {
             width: 25%;
-            color: #909399;
+            color: var(--text-secondary);
         }
         .permission-table .col-action {
             width: 20%;
@@ -295,22 +297,22 @@
             flex: 1;
         }
 
-        /* 權限配置表格 */
+        /* 權限配置表格 - 支持深色模式 */
         .permission-config-table {
             width: 100%;
-            border: 1px solid #ebeef5;
+            border: 1px solid var(--border-lighter);
             border-radius: 6px;
             border-collapse: collapse;
             margin-top: 8px;
         }
         .permission-config-table th {
-            background: #f5f7fa;
+            background: var(--bg-color);
             padding: 14px 16px;
             font-size: 14px;
             font-weight: 500;
-            color: #303133;
+            color: var(--text-primary);
             text-align: left;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .permission-config-table th:last-child {
             text-align: center;
@@ -318,20 +320,20 @@
         .permission-config-table td {
             padding: 14px 16px;
             font-size: 14px;
-            color: #303133;
-            border-bottom: 1px solid #ebeef5;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-lighter);
             vertical-align: middle;
         }
         .permission-config-table tr:last-child td {
             border-bottom: none;
         }
         .permission-config-table .main-func {
-            background: #fafafa;
+            background: var(--bg-color);
             font-weight: 500;
         }
         .permission-config-table .sub-func {
             padding-left: 32px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .permission-type-group {
             display: flex;
@@ -347,12 +349,12 @@
         .permission-type-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .permission-type-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
     </style>
 </head>
@@ -373,7 +375,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">後台權限設定</a></span><span class="breadcrumb-item active">權限管理</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -1053,6 +1055,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單交互
         document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
             if (t.querySelector('.menu-arrow')) {

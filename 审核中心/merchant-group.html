@@ -23,7 +23,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">商戶管理</a></span><span class="breadcrumb-item active">商戶群組設定</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -166,33 +166,52 @@
     <style>
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; }
-        .modal { background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; }
-        .modal-title { font-size: 16px; font-weight: 600; margin: 0; }
-        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1; }
-        .modal-close:hover { color: #333; }
+        .modal { background: var(--bg-white); border-radius: 8px; box-shadow: var(--shadow-lg); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-lighter); }
+        .modal-title { font-size: 16px; font-weight: 600; margin: 0; color: var(--text-primary); }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); line-height: 1; }
+        .modal-close:hover { color: var(--text-primary); }
         .modal-body { padding: 20px; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid #eee; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; border-top: 1px solid var(--border-lighter); }
         .form-group { margin-bottom: 16px; }
         .form-group:last-child { margin-bottom: 0; }
-        .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #333; }
-        .form-input { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--text-primary); }
+        .form-input { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; box-sizing: border-box; background: var(--bg-white); color: var(--text-primary); }
         .form-input:focus { outline: none; border-color: var(--primary-color); }
 
         /* 多選下拉框樣式 */
         .multi-select { position: relative; }
-        .multi-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; min-height: 38px; }
-        .multi-select-trigger:hover { border-color: #bbb; }
-        .multi-select-placeholder { color: #999; font-size: 14px; }
-        .multi-select-value { font-size: 14px; color: #333; }
-        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; max-height: 200px; overflow-y: auto; }
+        .multi-select-trigger { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--bg-white); min-height: 38px; }
+        .multi-select-trigger:hover { border-color: var(--text-placeholder); }
+        .multi-select-placeholder { color: var(--text-placeholder); font-size: 14px; }
+        .multi-select-value { font-size: 14px; color: var(--text-primary); }
+        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 4px; margin-top: 4px; box-shadow: var(--shadow-md); z-index: 10; max-height: 200px; overflow-y: auto; }
         .multi-select.open .multi-select-dropdown { display: block; }
-        .multi-select-option { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; font-size: 14px; }
-        .multi-select-option:hover { background: #f5f5f5; }
-        .multi-select-option input { margin-right: 8px; }
+        .multi-select-option { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; font-size: 14px; color: var(--text-primary); }
+        .multi-select-option:hover { background: var(--bg-color); }
+        .multi-select-option input { margin-right: 8px; accent-color: var(--primary-color); }
     </style>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         document.querySelectorAll('.menu-item > .menu-title').forEach(t=>{if(t.querySelector('.menu-arrow'))t.addEventListener('click',e=>{e.preventDefault();t.parentElement.classList.toggle('open')})});
 
         function toggleMultiSelect() {

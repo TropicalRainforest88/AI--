@@ -23,38 +23,38 @@
             display: flex;
         }
         .modal {
-            background: #fff;
+            background: var(--bg-white);
             border-radius: 8px;
             width: 480px;
             max-width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .modal-title {
             font-size: 18px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-close {
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 20px;
             line-height: 1;
             transition: color 0.2s;
         }
         .modal-close:hover {
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-body {
             padding: 24px;
@@ -64,7 +64,7 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 16px 24px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
         }
 
         /* 表單項樣式 */
@@ -78,36 +78,37 @@
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
         }
         .form-item .form-label .required {
-            color: #f56c6c;
+            color: var(--danger-color);
             margin-left: 2px;
         }
         .form-item .form-input {
             width: 100%;
             height: 44px;
             padding: 0 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
+            background: var(--bg-white);
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
         .form-item .form-input:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .form-item .form-input.error {
-            border-color: #f56c6c;
-            background-color: #fef0f0;
+            border-color: var(--danger-color);
+            background-color: var(--danger-light);
         }
         .form-item .form-input::placeholder {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
         }
         .form-item .error-msg {
-            color: #f56c6c;
+            color: var(--danger-color);
             font-size: 12px;
             margin-top: 6px;
         }
@@ -117,18 +118,18 @@
             width: 100%;
             height: 44px;
             padding: 0 32px 0 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            color: #303133;
-            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+            color: var(--text-primary);
+            background: var(--bg-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
             appearance: none;
             cursor: pointer;
             box-sizing: border-box;
         }
         .form-item .form-select:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
 
         /* 單選按鈕組 */
@@ -146,12 +147,12 @@
         .radio-item input[type="radio"] {
             width: 18px;
             height: 18px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .radio-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 保存按鈕 - 黑色 */
@@ -168,6 +169,12 @@
         .btn-save:hover {
             background: #333;
         }
+        [data-theme="dark"] .btn-save {
+            background: var(--primary-color);
+        }
+        [data-theme="dark"] .btn-save:hover {
+            background: var(--primary-hover);
+        }
 
         /* 顯示欄位下拉框 */
         .column-dropdown {
@@ -179,17 +186,17 @@
             align-items: center;
             gap: 6px;
             padding: 8px 16px;
-            background: #fff;
-            border: 1px solid #dcdfe6;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
             cursor: pointer;
             transition: all 0.2s;
         }
         .column-dropdown-btn:hover {
-            border-color: #409eff;
-            color: #409eff;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
         .column-dropdown-menu {
             display: none;
@@ -197,10 +204,10 @@
             top: 100%;
             right: 0;
             margin-top: 4px;
-            background: #fff;
-            border: 1px solid #ebeef5;
+            background: var(--bg-white);
+            border: 1px solid var(--border-lighter);
             border-radius: 4px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             padding: 8px 0;
             min-width: 150px;
             z-index: 100;
@@ -217,17 +224,17 @@
             transition: background 0.2s;
         }
         .column-dropdown-item:hover {
-            background: #f5f7fa;
+            background: var(--bg-color);
         }
         .column-dropdown-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .column-dropdown-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 頁面頭部操作區 */
@@ -235,6 +242,13 @@
             display: flex;
             gap: 12px;
             align-items: center;
+        }
+
+        /* 表單輸入框禁用狀態 */
+        .form-item .form-input[readonly],
+        .form-item .form-input:disabled {
+            background-color: var(--bg-color);
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -255,7 +269,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">後台權限設定</a></span><span class="breadcrumb-item active">帳號管理</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -453,11 +467,11 @@
                 </div>
                 <div class="form-item">
                     <label class="form-label">帳號 <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="createAccount" placeholder="" style="background-color: #f5f7fa;">
+                    <input type="text" class="form-input" id="createAccount" placeholder="" readonly>
                 </div>
                 <div class="form-item">
                     <label class="form-label">密碼 <span class="required">*</span></label>
-                    <input type="password" class="form-input" id="createPassword" value="••••••••••••" style="background-color: #f5f7fa;">
+                    <input type="password" class="form-input" id="createPassword" value="••••••••••••" readonly>
                 </div>
                 <div class="form-item">
                     <label class="form-label">再次輸入密碼 <span class="required">*</span></label>
@@ -465,7 +479,7 @@
                 </div>
                 <div class="form-item">
                     <label class="form-label">電子郵件 <span class="required">*</span></label>
-                    <input type="text" class="form-input error" id="createEmail" value="coco" style="background-color: #fef0f0;">
+                    <input type="text" class="form-input error" id="createEmail" value="coco">
                     <div class="error-msg">請輸入正確的電子郵件</div>
                 </div>
                 <div class="form-item">
@@ -511,7 +525,7 @@
                 </div>
                 <div class="form-item">
                     <label class="form-label">帳號 <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="editAccount" placeholder="" readonly style="background-color: #f5f7fa;">
+                    <input type="text" class="form-input" id="editAccount" placeholder="" readonly>
                 </div>
                 <div class="form-item">
                     <label class="form-label">電子郵件 <span class="required">*</span></label>
@@ -547,6 +561,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單交互
         document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
             if (t.querySelector('.menu-arrow')) {

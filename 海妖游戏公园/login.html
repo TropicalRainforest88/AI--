@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>海妖游戏公园 - 登录</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .login-page {
+            height: 100%;
+            background: var(--gradient-deep);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 背景装饰 */
+        .login-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+        .login-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, transparent 50%);
+            animation: float 20s infinite;
+        }
+        .login-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -30%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
+            animation: float 15s infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(180deg); }
+        }
+
+        /* 气泡装饰 */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: rise 10s infinite;
+        }
+        .bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; bottom: -40px; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 20px; height: 20px; left: 20%; bottom: -20px; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 60px; height: 60px; left: 70%; bottom: -60px; animation-delay: 4s; }
+        .bubble:nth-child(4) { width: 30px; height: 30px; left: 80%; bottom: -30px; animation-delay: 6s; }
+        .bubble:nth-child(5) { width: 50px; height: 50px; left: 40%; bottom: -50px; animation-delay: 8s; }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-800px) scale(0.3); opacity: 0; }
+        }
+
+        /* 内容区域 */
+        .login-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Logo区域 */
+        .login-logo {
+            text-align: center;
+            padding: 80px 0 40px;
+        }
+        .login-logo-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+        }
+        .login-logo-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 8px;
+        }
+        .login-logo-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 表单区域 */
+        .login-form {
+            flex: 1;
+        }
+        .login-input-group {
+            margin-bottom: 16px;
+        }
+        .login-input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px 0 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            color: var(--text-white);
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .login-input-wrap {
+            position: relative;
+        }
+        .login-input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .login-input-action {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* 验证码输入 */
+        .login-code-wrap {
+            display: flex;
+            gap: 12px;
+        }
+        .login-code-wrap .login-input {
+            flex: 1;
+        }
+        .login-code-btn {
+            width: 110px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            font-size: 13px;
+            color: var(--primary-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .login-code-btn:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .login-code-btn:disabled {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 登录按钮 */
+        .login-btn {
+            width: 100%;
+            height: 52px;
+            background: var(--gradient-ocean);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s;
+            margin-top: 24px;
+        }
+        .login-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        /* 其他登录方式 */
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 32px 0;
+        }
+        .login-divider::before,
+        .login-divider::after {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            content: '';
+        }
+        .login-divider span {
+            padding: 0 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .login-social {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+        .login-social-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .login-social-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* 底部链接 */
+        .login-footer {
+            padding: 24px;
+            text-align: center;
+        }
+        .login-footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .login-footer span {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin: 0 8px;
+        }
+
+        /* 切换标签 */
+        .login-tabs {
+            display: flex;
+            margin-bottom: 32px;
+        }
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .login-tab.active {
+            color: var(--text-white);
+            border-bottom-color: var(--primary-light);
+        }
+
+        /* 协议 */
+        .login-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .login-agreement input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            margin-top: 2px;
+        }
+        .login-agreement label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+        .login-agreement a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="login-page">
+            <!-- 背景装饰 -->
+            <div class="login-bg">
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+            </div>
+
+            <!-- 顶部状态栏 -->
+            <div class="status-bar light">
+                <span class="status-bar-time">9:41</span>
+                <div class="status-bar-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 10a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="1" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <rect x="20" y="9" width="3" height="6" rx="1" fill="currentColor"/>
+                        <rect x="3" y="8" width="12" height="8" rx="1" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="login-content">
+                <!-- Logo -->
+                <div class="login-logo">
+                    <div class="login-logo-icon">🧜</div>
+                    <div class="login-logo-title">海妖游戏公园</div>
+                    <div class="login-logo-desc">畅玩海量精彩游戏</div>
+                </div>
+
+                <!-- 表单 -->
+                <div class="login-form">
+                    <!-- 切换标签 -->
+                    <div class="login-tabs">
+                        <div class="login-tab active" onclick="switchLoginTab(this, 'phone')">手机登录</div>
+                        <div class="login-tab" onclick="switchLoginTab(this, 'password')">密码登录</div>
+                    </div>
+
+                    <!-- 手机登录表单 -->
+                    <div id="phoneForm">
+                        <div class="login-input-group">
+                            <div class="login-input-wrap">
+                                <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                                <input type="tel" class="login-input" placeholder="请输入手机号码">
+                            </div>
+                        </div>
+                        <div class="login-input-group">
+                            <div class="login-code-wrap">
+                                <div class="login-input-wrap" style="flex: 1;">
+                                    <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                    <input type="text" class="login-input" placeholder="请输入验证码">
+                                </div>
+                                <button class="login-code-btn" onclick="sendCode(this)">获取验证码</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 密码登录表单 -->
+                    <div id="passwordForm" style="display: none;">
+                        <div class="login-input-group">
+                            <div class="login-input-wrap">
+                                <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <input type="text" class="login-input" placeholder="请输入账号/手机号">
+                            </div>
+                        </div>
+                        <div class="login-input-group">
+                            <div class="login-input-wrap">
+                                <svg class="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <input type="password" class="login-input" placeholder="请输入密码" id="passwordInput">
+                                <button class="login-input-action" onclick="togglePassword()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 协议 -->
+                    <div class="login-agreement">
+                        <input type="checkbox" id="agreement" checked>
+                        <label for="agreement">
+                            我已阅读并同意 <a href="#">《用户协议》</a>和<a href="#">《隐私政策》</a>
+                        </label>
+                    </div>
+
+                    <!-- 登录按钮 -->
+                    <button class="login-btn" onclick="doLogin()">登 录</button>
+
+                    <!-- 其他登录方式 -->
+                    <div class="login-divider">
+                        <span>其他登录方式</span>
+                    </div>
+                    <div class="login-social">
+                        <button class="login-social-btn" onclick="alert('微信登录')">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#07c160">
+                                <path d="M8.5 11a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-6.5 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4.5 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                        </button>
+                        <button class="login-social-btn" onclick="alert('QQ登录')">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#1296db">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </button>
+                        <button class="login-social-btn" onclick="alert('Apple登录')">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 底部 -->
+                <div class="login-footer">
+                    <a href="register.html">注册新账号</a>
+                    <span>|</span>
+                    <a href="#">忘记密码</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchLoginTab(el, type) {
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            el.classList.add('active');
+
+            document.getElementById('phoneForm').style.display = type === 'phone' ? 'block' : 'none';
+            document.getElementById('passwordForm').style.display = type === 'password' ? 'block' : 'none';
+        }
+
+        function sendCode(btn) {
+            btn.disabled = true;
+            let seconds = 60;
+            btn.textContent = seconds + '秒后重试';
+
+            const timer = setInterval(() => {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = seconds + '秒后重试';
+                }
+            }, 1000);
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function doLogin() {
+            if (!document.getElementById('agreement').checked) {
+                alert('请先同意用户协议和隐私政策');
+                return;
+            }
+            alert('登录成功！');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -23,34 +23,34 @@
             display: flex;
         }
         .modal {
-            background: #fff;
+            background: var(--bg-white);
             border-radius: 8px;
             width: 500px;
             max-width: 90%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px 20px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .modal-title {
             font-size: 16px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-close {
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
-            color: #909399;
+            color: var(--text-secondary);
             transition: color 0.2s;
         }
         .modal-close:hover {
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-body {
             padding: 20px;
@@ -60,7 +60,7 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 16px 20px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
         }
 
         /* 表單樣式 */
@@ -74,11 +74,20 @@
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .form-item .form-control {
             width: 100%;
             box-sizing: border-box;
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .form-item .form-control:focus {
+            border-color: var(--primary-color);
+        }
+        .form-item .form-control[readonly] {
+            background-color: var(--bg-color);
         }
 
         /* 私鑰輸入框組 */
@@ -99,26 +108,26 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .switch-wrapper:last-child {
             border-bottom: none;
         }
         .switch-label {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .switch {
             position: relative;
             width: 44px;
             height: 22px;
-            background: #dcdfe6;
+            background: var(--border-color);
             border-radius: 11px;
             cursor: pointer;
             transition: background 0.3s;
         }
         .switch.active {
-            background: #409eff;
+            background: var(--primary-color);
         }
         .switch::after {
             content: '';
@@ -151,12 +160,12 @@
         .checkbox-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .checkbox-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 多選下拉框樣式 */
@@ -169,17 +178,17 @@
             justify-content: space-between;
             min-height: 36px;
             padding: 6px 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            background: #fff;
+            background: var(--bg-white);
             cursor: pointer;
             transition: border-color 0.2s;
         }
         .multi-select-trigger:hover {
-            border-color: #c0c4cc;
+            border-color: var(--text-placeholder);
         }
         .multi-select.open .multi-select-trigger {
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .multi-select-tags {
             display: flex;
@@ -192,10 +201,10 @@
             align-items: center;
             gap: 4px;
             padding: 2px 8px;
-            background: #f0f2f5;
+            background: var(--bg-color);
             border-radius: 4px;
             font-size: 12px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .multi-select-tag-close {
             display: inline-flex;
@@ -204,21 +213,21 @@
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: #c0c4cc;
+            background: var(--text-placeholder);
             color: #fff;
             font-size: 10px;
             cursor: pointer;
             transition: background 0.2s;
         }
         .multi-select-tag-close:hover {
-            background: #909399;
+            background: var(--text-secondary);
         }
         .multi-select-placeholder {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
             font-size: 14px;
         }
         .multi-select-arrow {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
             transition: transform 0.2s;
         }
         .multi-select.open .multi-select-arrow {
@@ -231,10 +240,10 @@
             left: 0;
             right: 0;
             margin-top: 4px;
-            background: #fff;
-            border: 1px solid #e4e7ed;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
             border-radius: 4px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             z-index: 100;
             max-height: 200px;
             overflow-y: auto;
@@ -251,17 +260,17 @@
             transition: background 0.2s;
         }
         .multi-select-option:hover {
-            background: #f5f7fa;
+            background: var(--bg-color);
         }
         .multi-select-option input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .multi-select-option span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 大型彈窗 */
@@ -275,26 +284,26 @@
         /* 參數配置區域 */
         .param-config-section {
             margin-top: 24px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
             padding-top: 20px;
         }
         .param-config-title {
             font-size: 14px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
             margin-bottom: 16px;
         }
 
         /* Tab 切換 */
         .param-tabs {
             display: flex;
-            border-bottom: 1px solid #e4e7ed;
+            border-bottom: 1px solid var(--border-light);
             margin-bottom: 0;
         }
         .param-tab {
             padding: 12px 24px;
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
             cursor: pointer;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
@@ -304,11 +313,11 @@
             border-right: none;
         }
         .param-tab:hover {
-            color: #409eff;
+            color: var(--primary-color);
         }
         .param-tab.active {
-            color: #409eff;
-            border-bottom-color: #409eff;
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
             font-weight: 500;
         }
 
@@ -324,22 +333,22 @@
         .param-config-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #ebeef5;
+            border: 1px solid var(--border-lighter);
         }
         .param-config-table th {
-            background: #f5f7fa;
+            background: var(--bg-color);
             padding: 12px 16px;
             font-size: 14px;
             font-weight: 500;
-            color: #606266;
+            color: var(--text-regular);
             text-align: left;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .param-config-table td {
             padding: 12px 16px;
             font-size: 14px;
-            color: #303133;
-            border-bottom: 1px solid #ebeef5;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-lighter);
             vertical-align: middle;
         }
         .param-config-table tr:last-child td {
@@ -347,7 +356,7 @@
         }
         .param-config-table .param-name {
             width: 120px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .param-config-table .param-input {
             width: 200px;
@@ -356,15 +365,16 @@
             width: 100%;
             height: 32px;
             padding: 0 10px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
+            background: var(--bg-white);
             box-sizing: border-box;
         }
         .param-config-table .param-input input:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .param-config-table .param-display {
             display: flex;
@@ -377,7 +387,7 @@
         }
         .param-display-group-title {
             font-size: 12px;
-            color: #909399;
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
         .param-display-item {
@@ -389,12 +399,12 @@
         .param-display-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .param-display-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
     </style>
 </head>
@@ -415,7 +425,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">商戶管理</a></span><span class="breadcrumb-item active">商戶設定</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -523,7 +533,7 @@
             <div class="modal-body">
                 <div class="form-item">
                     <label class="form-label">商戶代碼</label>
-                    <input type="text" class="form-control" id="editMerchantCode" readonly style="background-color: #f5f7fa;">
+                    <input type="text" class="form-control" id="editMerchantCode" readonly>
                 </div>
                 <div class="form-item">
                     <label class="form-label">商戶名稱</label>
@@ -1459,6 +1469,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單交互
         document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
             if (t.querySelector('.menu-arrow')) {

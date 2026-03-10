@@ -8,9 +8,9 @@
     <style>
         /* 頁面專屬樣式 */
         .config-card {
-            background: #fff;
+            background: var(--bg-white);
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
             padding: 20px;
         }
         .config-header {
@@ -19,12 +19,12 @@
             align-items: center;
             margin-bottom: 16px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .config-title {
             font-size: 16px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .config-actions {
             display: flex;
@@ -43,20 +43,26 @@
         .btn-refresh:hover {
             background: #1a1a1a;
         }
+        [data-theme="dark"] .btn-refresh {
+            background: var(--primary-color);
+        }
+        [data-theme="dark"] .btn-refresh:hover {
+            background: var(--primary-hover);
+        }
         .btn-columns {
             display: flex;
             align-items: center;
             gap: 4px;
             padding: 6px 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            background: #fff;
-            color: #606266;
+            background: var(--bg-white);
+            color: var(--text-regular);
             cursor: pointer;
             font-size: 13px;
         }
         .btn-columns:hover {
-            border-color: #c0c4cc;
+            border-color: var(--text-placeholder);
         }
 
         /* 批量操作區域 */
@@ -70,18 +76,22 @@
             border-radius: 4px;
             margin-bottom: 12px;
         }
+        [data-theme="dark"] .batch-bar {
+            background: linear-gradient(135deg, rgba(245, 108, 108, 0.15) 0%, rgba(245, 108, 108, 0.1) 100%);
+            border-color: rgba(245, 108, 108, 0.3);
+        }
         .batch-bar.show {
             display: flex;
         }
         .batch-bar .selected-info {
             font-size: 13px;
-            color: #f56c6c;
+            color: var(--danger-color);
         }
         .batch-bar .selected-count {
             font-weight: 600;
         }
         .btn-delete-batch {
-            background: #f56c6c;
+            background: var(--danger-color);
             color: #fff;
             padding: 6px 16px;
             border: none;
@@ -101,20 +111,20 @@
         .phrase-table th {
             text-align: left;
             padding: 10px 12px;
-            border-bottom: 1px solid #ebeef5;
-            color: #909399;
+            border-bottom: 1px solid var(--border-lighter);
+            color: var(--text-secondary);
             font-weight: 500;
             font-size: 13px;
-            background: #fafafa;
+            background: var(--bg-color);
         }
         .phrase-table td {
             padding: 10px 12px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border-lighter);
             font-size: 13px;
-            color: #303133;
+            color: var(--text-primary);
         }
         .phrase-table tbody tr:hover {
-            background-color: #f5f7fa;
+            background-color: var(--bg-color);
         }
         .phrase-table tr:last-child td {
             border-bottom: none;
@@ -129,15 +139,15 @@
         .row-title input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .title-text {
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .row-title-parent {
-            background-color: #fafbfc;
+            background-color: var(--bg-color);
         }
 
         /* 子項行樣式 */
@@ -145,7 +155,7 @@
             padding-left: 38px;
         }
         .row-child .type-label {
-            color: #409eff;
+            color: var(--primary-color);
             font-size: 12px;
         }
 
@@ -157,7 +167,7 @@
             white-space: nowrap;
         }
         .btn-edit {
-            background: #409eff;
+            background: var(--primary-color);
             color: #fff;
             padding: 4px 12px;
             border: none;
@@ -169,7 +179,7 @@
             background: #337ecc;
         }
         .btn-delete {
-            background: #f56c6c;
+            background: var(--danger-color);
             color: #fff;
             padding: 4px 12px;
             border: none;
@@ -181,7 +191,7 @@
             background: #dd5a5a;
         }
         .btn-add-phrase {
-            background: #67c23a;
+            background: var(--success-color);
             color: #fff;
             padding: 4px 12px;
             border: none;
@@ -210,35 +220,35 @@
             display: flex;
         }
         .modal {
-            background: #fff;
+            background: var(--bg-white);
             border-radius: 8px;
             width: 440px;
             max-width: 90%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-lg);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 14px 20px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .modal-title {
             font-size: 15px;
             font-weight: 600;
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-close {
             background: none;
             border: none;
             cursor: pointer;
             padding: 4px;
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 18px;
             line-height: 1;
         }
         .modal-close:hover {
-            color: #303133;
+            color: var(--text-primary);
         }
         .modal-body {
             padding: 16px 20px;
@@ -248,7 +258,7 @@
             justify-content: flex-end;
             gap: 10px;
             padding: 12px 20px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
         }
         .form-item {
             margin-bottom: 16px;
@@ -260,13 +270,24 @@
             display: block;
             margin-bottom: 6px;
             font-size: 13px;
-            color: #606266;
+            color: var(--text-regular);
         }
         .form-item .form-control {
             width: 100%;
             box-sizing: border-box;
             padding: 8px 12px;
             font-size: 13px;
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .form-item .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-item .form-control[readonly] {
+            background-color: var(--bg-color);
         }
     </style>
 </head>
@@ -287,7 +308,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">配置管理</a></span><span class="breadcrumb-item active">審核快捷短語配置</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -514,7 +535,7 @@
             <div class="modal-body">
                 <div class="form-item">
                     <label class="form-label">所屬標題</label>
-                    <input type="text" class="form-control" id="addPhraseParent" readonly style="background-color: #f5f7fa;">
+                    <input type="text" class="form-control" id="addPhraseParent" readonly>
                 </div>
                 <div class="form-item">
                     <label class="form-label">快捷語內容</label>
@@ -549,6 +570,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單交互
         document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
             if (t.querySelector('.menu-arrow')) {

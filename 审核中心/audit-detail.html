@@ -16,11 +16,11 @@
             white-space: nowrap;
         }
         .order-ids .order-label {
-            color: #909399;
+            color: var(--text-secondary);
             min-width: 80px;
         }
         .order-ids .order-value {
-            color: #303133;
+            color: var(--text-primary);
             font-family: 'Consolas', 'Monaco', monospace;
         }
 
@@ -28,7 +28,7 @@
         .card-header .card-title {
             font-weight: 600;
             font-size: 15px;
-            color: #303133;
+            color: var(--text-primary);
         }
 
         /* 審核內容展開樣式 */
@@ -43,26 +43,26 @@
             gap: 6px;
         }
         .audit-content .content-label {
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 13px;
         }
         .audit-content .content-value {
-            color: #303133;
+            color: var(--text-primary);
             font-size: 14px;
         }
         .audit-content .content-value.highlight {
-            color: #e6a23c;
+            color: var(--warning-color);
             font-weight: 500;
         }
         .audit-content .content-value.link {
-            color: #409eff;
+            color: var(--primary-color);
             cursor: pointer;
         }
         .audit-content .content-value.link:hover {
             text-decoration: underline;
         }
         .audit-content .content-value.empty {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
         }
         .audit-content .content-item.full-width {
             grid-column: 1 / -1;
@@ -80,11 +80,11 @@
             gap: 6px;
         }
         .detail-info .info-label {
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 13px;
         }
         .detail-info .info-value {
-            color: #303133;
+            color: var(--text-primary);
             font-size: 14px;
         }
         .detail-info .info-item.full-width {
@@ -103,11 +103,11 @@
             gap: 6px;
         }
         .status-label {
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 13px;
         }
         .status-value {
-            color: #303133;
+            color: var(--text-primary);
             font-size: 14px;
         }
 
@@ -122,19 +122,19 @@
             font-weight: 600;
         }
         .status-badge.pending {
-            background: linear-gradient(135deg, #fdf6ec 0%, #faecd8 100%);
-            color: #e6a23c;
-            border: 1px solid #f5dab1;
+            background: var(--warning-light);
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
         }
         .status-badge.approved {
-            background: linear-gradient(135deg, #f0f9eb 0%, #e1f3d8 100%);
-            color: #67c23a;
-            border: 1px solid #c2e7b0;
+            background: var(--success-light);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
         }
         .status-badge.rejected {
-            background: linear-gradient(135deg, #fef0f0 0%, #fde2e2 100%);
-            color: #f56c6c;
-            border: 1px solid #fbc4c4;
+            background: var(--danger-light);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
         }
         .status-badge svg {
             width: 20px;
@@ -150,7 +150,7 @@
         .notify-section-title {
             font-weight: 600;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
             margin-bottom: 16px;
         }
         .notify-status {
@@ -163,14 +163,14 @@
             font-weight: 500;
         }
         .notify-status.success {
-            background-color: #f0f9eb;
-            color: #67c23a;
-            border: 1px solid #c2e7b0;
+            background-color: var(--success-light);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
         }
         .notify-status.fail {
-            background-color: #fef0f0;
-            color: #f56c6c;
-            border: 1px solid #fbc4c4;
+            background-color: var(--danger-light);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
         }
         .notify-status svg {
             width: 14px;
@@ -188,7 +188,7 @@
             gap: 6px;
         }
         .notify-label {
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 13px;
         }
         .notify-url-wrapper {
@@ -202,15 +202,15 @@
             max-width: 500px;
             height: 36px;
             padding: 0 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 13px;
-            color: #606266;
-            background-color: #f5f7fa;
+            color: var(--text-regular);
+            background-color: var(--bg-color);
         }
         .notify-url-input:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .notify-actions {
             display: flex;
@@ -386,6 +386,23 @@
                     </div>
                 </div>
                 <div class="header-right">
+                    <!-- 主題切換按鈕 -->
+                    <button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式">
+                        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
                     <div class="header-user">
                         <div class="user-avatar">A</div>
                         <span class="user-name">Admin</span>
@@ -611,6 +628,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單展開/收起
         document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
             if (title.querySelector('.menu-arrow')) {

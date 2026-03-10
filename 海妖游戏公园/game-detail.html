@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>海妖游戏公园 - 游戏详情</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .game-header {
+            height: 260px;
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-header-icon {
+            font-size: 100px;
+            opacity: 0.9;
+        }
+        .game-header-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: absolute;
+            top: 54px;
+            left: 16px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            text-decoration: none;
+        }
+        .back-btn svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        /* 游戏信息卡片 */
+        .game-info-card {
+            background: var(--bg-white);
+            margin: -40px 16px 16px;
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-lg);
+        }
+        .game-info-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .game-info-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+        .game-info-content {
+            flex: 1;
+        }
+        .game-info-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .game-info-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .game-tag {
+            padding: 3px 8px;
+            background: var(--primary-lighter);
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .game-tag.hot {
+            background: var(--danger-light);
+            color: var(--danger-color);
+        }
+        .game-info-stats {
+            display: flex;
+            gap: 16px;
+        }
+        .game-info-stat {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .game-info-stat svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* 游戏数据 */
+        .game-stats {
+            display: flex;
+            border-top: 1px solid var(--border-light);
+            padding-top: 16px;
+        }
+        .game-stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        .game-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        .game-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* 底部开始按钮 */
+        .game-footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            padding: 12px 16px;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+        .game-footer-left {
+            display: flex;
+            gap: 20px;
+        }
+        .game-footer-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .game-footer-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        .game-footer-btn span {
+            font-size: 10px;
+        }
+        .game-start-btn {
+            flex: 1;
+            padding: 14px;
+            background: var(--gradient-ocean);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-white);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        /* 游戏介绍 */
+        .game-section {
+            background: var(--bg-white);
+            margin: 0 16px 16px;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+        }
+        .game-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-section-title span {
+            font-size: 16px;
+        }
+        .game-desc {
+            font-size: 14px;
+            color: var(--text-regular);
+            line-height: 1.8;
+        }
+
+        /* 游戏截图 */
+        .game-screenshots {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .game-screenshots::-webkit-scrollbar {
+            display: none;
+        }
+        .game-screenshot {
+            width: 200px;
+            height: 120px;
+            border-radius: var(--radius-md);
+            background: var(--gradient-wave);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        /* 玩法说明 */
+        .game-rules {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .game-rules li {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .game-rules li:last-child {
+            border-bottom: none;
+        }
+        .rule-number {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-lighter);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        .rule-text {
+            font-size: 14px;
+            color: var(--text-regular);
+            line-height: 1.6;
+        }
+
+        /* 在线玩家 */
+        .online-players {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .player-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-wave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid var(--bg-white);
+            margin-left: -10px;
+        }
+        .player-avatar:first-child {
+            margin-left: 0;
+        }
+        .player-more {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            border: 2px solid var(--bg-white);
+            margin-left: -10px;
+        }
+        .online-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="page">
+            <!-- 顶部状态栏 -->
+            <div class="status-bar light" style="position: absolute; top: 0; left: 0; right: 0; z-index: 100;">
+                <span class="status-bar-time">9:41</span>
+                <div class="status-bar-icons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 10a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="1" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <rect x="20" y="9" width="3" height="6" rx="1" fill="currentColor"/>
+                        <rect x="3" y="8" width="12" height="8" rx="1" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 游戏头图 -->
+            <div class="game-header">
+                <a href="index.html" class="back-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+                <div class="game-header-icon">🎰</div>
+                <div class="game-header-overlay"></div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="page-content" style="padding-bottom: 80px;">
+                <!-- 游戏信息卡片 -->
+                <div class="game-info-card">
+                    <div class="game-info-header">
+                        <div class="game-info-icon">🎰</div>
+                        <div class="game-info-content">
+                            <div class="game-info-name">海洋宝藏</div>
+                            <div class="game-info-tags">
+                                <span class="game-tag hot">HOT</span>
+                                <span class="game-tag">老虎机</span>
+                                <span class="game-tag">休闲</span>
+                            </div>
+                            <div class="game-info-stats">
+                                <div class="game-info-stat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                    </svg>
+                                    4.8分
+                                </div>
+                                <div class="game-info-stat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                    2,341人在玩
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-stats">
+                        <div class="game-stat-item">
+                            <div class="game-stat-value">98.5%</div>
+                            <div class="game-stat-label">返奖率</div>
+                        </div>
+                        <div class="game-stat-item">
+                            <div class="game-stat-value">10-10K</div>
+                            <div class="game-stat-label">投注范围</div>
+                        </div>
+                        <div class="game-stat-item">
+                            <div class="game-stat-value">x500</div>
+                            <div class="game-stat-label">最高倍数</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 在线玩家 -->
+                <div class="game-section">
+                    <div class="game-section-title">
+                        <span>👥</span>
+                        正在游戏
+                    </div>
+                    <div class="online-players">
+                        <div class="player-avatar" style="background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);">🧜</div>
+                        <div class="player-avatar" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">🐙</div>
+                        <div class="player-avatar" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);">🦈</div>
+                        <div class="player-avatar" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">🐚</div>
+                        <div class="player-avatar" style="background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);">🐋</div>
+                        <div class="player-more">+99</div>
+                        <span class="online-text">2,341 人正在游戏中</span>
+                    </div>
+                </div>
+
+                <!-- 游戏介绍 -->
+                <div class="game-section">
+                    <div class="game-section-title">
+                        <span>📖</span>
+                        游戏介绍
+                    </div>
+                    <div class="game-desc">
+                        《海洋宝藏》是一款以深海探险为主题的老虎机游戏。在神秘的海底世界中，玩家将遇见美人鱼、海盗船长、神秘宝箱等精彩元素。游戏拥有超高返奖率和丰富的免费旋转奖励，让您体验刺激的寻宝之旅！
+                    </div>
+                </div>
+
+                <!-- 游戏截图 -->
+                <div class="game-section">
+                    <div class="game-section-title">
+                        <span>🖼️</span>
+                        游戏截图
+                    </div>
+                    <div class="game-screenshots">
+                        <div class="game-screenshot" style="background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);">🌊</div>
+                        <div class="game-screenshot" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">🎰</div>
+                        <div class="game-screenshot" style="background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);">💰</div>
+                        <div class="game-screenshot" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">🏆</div>
+                    </div>
+                </div>
+
+                <!-- 玩法说明 -->
+                <div class="game-section">
+                    <div class="game-section-title">
+                        <span>🎯</span>
+                        玩法说明
+                    </div>
+                    <ul class="game-rules">
+                        <li>
+                            <span class="rule-number">1</span>
+                            <span class="rule-text">选择您的投注金额，可在 10-10,000 金币之间调整</span>
+                        </li>
+                        <li>
+                            <span class="rule-number">2</span>
+                            <span class="rule-text">点击旋转按钮开始游戏，相同图案连成线即可获得奖励</span>
+                        </li>
+                        <li>
+                            <span class="rule-number">3</span>
+                            <span class="rule-text">获得 3 个或以上免费旋转图标，可触发免费游戏</span>
+                        </li>
+                        <li>
+                            <span class="rule-number">4</span>
+                            <span class="rule-text">宝箱图标为百搭符号，可替代任意图标</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 底部按钮 -->
+            <div class="game-footer">
+                <div class="game-footer-left">
+                    <a href="#" class="game-footer-btn" onclick="alert('已收藏')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <span>收藏</span>
+                    </a>
+                    <a href="#" class="game-footer-btn" onclick="alert('分享链接已复制')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        <span>分享</span>
+                    </a>
+                </div>
+                <button class="game-start-btn" onclick="alert('正在进入游戏...')">
+                    🎮 开始游戏
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

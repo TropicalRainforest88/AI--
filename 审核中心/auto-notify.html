@@ -11,7 +11,7 @@
             display: flex;
             align-items: flex-start;
             padding: 16px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .config-form-row:last-child {
             border-bottom: none;
@@ -20,7 +20,7 @@
             width: 100px;
             flex-shrink: 0;
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
             line-height: 36px;
         }
         .config-form-content {
@@ -40,13 +40,13 @@
         .radio-item input[type="radio"] {
             width: 16px;
             height: 16px;
-            accent-color: #409eff;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
         .checkbox-item span,
         .radio-item span {
             font-size: 14px;
-            color: #606266;
+            color: var(--text-regular);
         }
 
         /* 通知群表格樣式 */
@@ -62,7 +62,7 @@
         }
         .notify-group-labels span {
             font-size: 13px;
-            color: #909399;
+            color: var(--text-secondary);
             font-weight: 500;
         }
         .notify-group-labels span:nth-child(1) { width: 160px; }
@@ -82,14 +82,15 @@
         .notify-group-row .form-input {
             height: 32px;
             padding: 0 10px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 13px;
-            color: #303133;
+            color: var(--text-primary);
+            background: var(--bg-white);
         }
         .notify-group-row .form-input:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .notify-group-row .input-merchant { width: 160px; }
         .notify-group-row .input-bot { width: 140px; }
@@ -100,27 +101,28 @@
         .form-select {
             height: 32px;
             padding: 0 28px 0 10px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 13px;
-            color: #303133;
-            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 8px center;
+            color: var(--text-primary);
+            background: var(--bg-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 8px center;
             appearance: none;
             cursor: pointer;
         }
         .form-select:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
 
         /* 文本域樣式 */
         .form-textarea {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid #dcdfe6;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 13px;
-            color: #606266;
+            color: var(--text-regular);
+            background: var(--bg-white);
             line-height: 1.6;
             resize: vertical;
             min-height: 70px;
@@ -128,10 +130,10 @@
         }
         .form-textarea:focus {
             outline: none;
-            border-color: #409eff;
+            border-color: var(--primary-color);
         }
         .form-textarea::placeholder {
-            color: #c0c4cc;
+            color: var(--text-placeholder);
         }
 
         /* 保存按鈕容器 */
@@ -164,7 +166,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">配置管理</a></span><span class="breadcrumb-item active">自動通知審核中心結果</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -310,6 +312,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單交互
         document.querySelectorAll('.menu-item > .menu-title').forEach(t => {
             if (t.querySelector('.menu-arrow')) {

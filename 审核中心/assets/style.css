@@ -55,6 +55,70 @@
     --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* ========================================
+   深色模式
+   ======================================== */
+
+[data-theme="dark"] {
+    /* 主色调 - 深色模式下稍微调亮 */
+    --primary-color: #409eff;
+    --primary-hover: #79bbff;
+    --primary-light: rgba(64, 158, 255, 0.15);
+
+    /* 功能色 - 深色模式 */
+    --success-color: #67c23a;
+    --success-light: rgba(103, 194, 58, 0.15);
+    --warning-color: #e6a23c;
+    --warning-light: rgba(230, 162, 60, 0.15);
+    --danger-color: #f56c6c;
+    --danger-light: rgba(245, 108, 108, 0.15);
+    --info-color: #909399;
+    --info-light: rgba(144, 147, 153, 0.15);
+
+    /* 文字色 - 深色模式 */
+    --text-primary: #e5eaf3;
+    --text-regular: #cfd3dc;
+    --text-secondary: #a3a6ad;
+    --text-placeholder: #6c6e72;
+
+    /* 边框色 - 深色模式 */
+    --border-color: #4c4d4f;
+    --border-light: #414243;
+    --border-lighter: #363637;
+
+    /* 背景色 - 深色模式 */
+    --bg-color: #1d1e1f;
+    --bg-white: #2b2b2c;
+
+    /* 侧边栏 - 深色模式 */
+    --sidebar-bg: #232324;
+    --sidebar-hover: #363637;
+    --sidebar-active: rgba(64, 158, 255, 0.15);
+
+    /* 顶部栏 - 深色模式 */
+    --header-bg: #232324;
+
+    /* 阴影 - 深色模式 */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* 深色模式下的额外样式调整 */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] select.form-control {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .upload-area:hover {
+    background: rgba(64, 158, 255, 0.1);
+}
+
+[data-theme="dark"] .logo-image {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     font-size: 14px;
@@ -938,6 +1002,57 @@ select.form-control {
 .stat-label {
     font-size: 14px;
     color: var(--text-secondary);
+}
+
+/* ========================================
+   主题切换按钮
+   ======================================== */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--sidebar-hover);
+    color: var(--primary-color);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover svg {
+    transform: rotate(15deg);
+}
+
+/* 太阳图标（浅色模式显示） */
+.theme-toggle .icon-sun {
+    display: block;
+}
+
+.theme-toggle .icon-moon {
+    display: none;
+}
+
+/* 深色模式下切换图标 */
+[data-theme="dark"] .theme-toggle .icon-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+    display: block;
 }
 
 /* ========================================

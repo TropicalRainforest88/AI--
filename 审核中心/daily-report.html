@@ -32,7 +32,7 @@
             min-width: 130px;
         }
         .date-range-picker .date-separator {
-            color: #909399;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -59,12 +59,12 @@
             text-align: center;
         }
         .table-container .table th {
-            background-color: #f5f7fa;
+            background-color: var(--bg-color);
             font-weight: 500;
         }
         .table-container .table th.group-header {
-            background-color: #e8eef5;
-            border-bottom: 2px solid #409eff;
+            background-color: var(--primary-light);
+            border-bottom: 2px solid var(--primary-color);
         }
 
         /* 顯示欄位下拉面板 */
@@ -78,10 +78,10 @@
             top: 100%;
             right: 0;
             margin-top: 4px;
-            background: #fff;
-            border: 1px solid #dcdfe6;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
             padding: 16px;
             z-index: 100;
             width: 600px;
@@ -97,12 +97,12 @@
             align-items: center;
             margin-bottom: 12px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #ebeef5;
+            border-bottom: 1px solid var(--border-lighter);
         }
         .column-panel-title {
             font-weight: 600;
             font-size: 14px;
-            color: #303133;
+            color: var(--text-primary);
         }
         .column-group {
             margin-bottom: 16px;
@@ -113,10 +113,10 @@
         .column-group-title {
             font-weight: 500;
             font-size: 13px;
-            color: #606266;
+            color: var(--text-regular);
             margin-bottom: 8px;
             padding-left: 4px;
-            border-left: 3px solid #409eff;
+            border-left: 3px solid var(--primary-color);
         }
         .column-checkboxes {
             display: grid;
@@ -128,20 +128,21 @@
             align-items: center;
             gap: 6px;
             font-size: 12px;
-            color: #606266;
+            color: var(--text-regular);
             cursor: pointer;
         }
         .column-checkbox input {
             width: 14px;
             height: 14px;
             cursor: pointer;
+            accent-color: var(--primary-color);
         }
 
         /* 數據顏色 */
-        .text-success { color: #67c23a; }
-        .text-danger { color: #f56c6c; }
-        .text-warning { color: #e6a23c; }
-        .text-primary { color: #409eff; }
+        .text-success { color: var(--success-color); }
+        .text-danger { color: var(--danger-color); }
+        .text-warning { color: var(--warning-color); }
+        .text-primary { color: var(--primary-color); }
 
         /* 分頁 */
         .pagination {
@@ -149,10 +150,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px 20px;
-            border-top: 1px solid #ebeef5;
+            border-top: 1px solid var(--border-lighter);
         }
         .pagination-info {
-            color: #606266;
+            color: var(--text-regular);
             font-size: 13px;
         }
         .pagination-controls {
@@ -164,23 +165,23 @@
             min-width: 32px;
             height: 32px;
             padding: 0 8px;
-            border: 1px solid #dcdfe6;
-            background: #fff;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
             border-radius: 4px;
             cursor: pointer;
             font-size: 13px;
-            color: #606266;
+            color: var(--text-regular);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .page-btn:hover:not(:disabled):not(.active) {
-            color: #409eff;
-            border-color: #409eff;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
         }
         .page-btn.active {
-            background-color: #409eff;
-            border-color: #409eff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
             color: #fff;
         }
         .page-btn:disabled {
@@ -206,7 +207,7 @@
         <main class="main">
             <header class="header">
                 <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">數據報表</a></span><span class="breadcrumb-item active">日報表</span></div></div>
-                <div class="header-right"><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
             </header>
 
             <div class="content">
@@ -663,7 +664,7 @@
                                 <button class="page-btn">3</button>
                                 <button class="page-btn">4</button>
                                 <button class="page-btn">5</button>
-                                <span style="color: #909399; padding: 0 4px;">...</span>
+                                <span style="color: var(--text-secondary); padding: 0 4px;">...</span>
                                 <button class="page-btn">7</button>
                                 <button class="page-btn">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -679,6 +680,25 @@
     </div>
 
     <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
         // 菜單展開/收起
         document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
             if (title.querySelector('.menu-arrow')) {

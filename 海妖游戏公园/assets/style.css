@@ -1,0 +1,2634 @@
+/* ========================================
+   海妖游戏公园 - 全局样式
+   白莲花度假村风格 - 西西里海岸 × 热带植物
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* 白莲花主色调 - 西西里海岸 */
+    --primary-color: #1e6b5c;
+    --primary-dark: #145549;
+    --primary-light: #2d8b78;
+    --primary-lighter: rgba(30, 107, 92, 0.12);
+
+    /* 地中海渐变 - 西西里海洋 */
+    --gradient-ocean: linear-gradient(160deg, #0d4a40 0%, #145549 25%, #1e6b5c 50%, #2d7a6a 75%, #3d8a7a 100%);
+    --gradient-sunset: linear-gradient(135deg, #e07b53 0%, #d4a574 50%, #c9b896 100%);
+    --gradient-tropical: linear-gradient(180deg, #0d4a40 0%, #1e6b5c 40%, #e8dcc8 100%);
+    --gradient-golden: linear-gradient(135deg, #c9a227 0%, #d4b847 100%);
+
+    /* 白莲花色板 */
+    --terracotta: #c4754b;
+    --terracotta-light: rgba(196, 117, 75, 0.15);
+    --coral: #e07b53;
+    --coral-light: rgba(224, 123, 83, 0.12);
+    --sand: #d4a574;
+    --sand-light: rgba(212, 165, 116, 0.15);
+    --cream: #f5efe6;
+    --ivory: #faf8f3;
+    --olive: #7d8c5c;
+    --olive-light: rgba(125, 140, 92, 0.15);
+
+    /* 金色 - 奢华感 */
+    --gold-color: #c9a227;
+    --gold-light: rgba(201, 162, 39, 0.15);
+    --gold-dark: #a68b1f;
+
+    /* 功能色 */
+    --success-color: #5a8f7b;
+    --success-light: rgba(90, 143, 123, 0.15);
+    --warning-color: #d4a574;
+    --warning-light: rgba(212, 165, 116, 0.15);
+    --danger-color: #c4754b;
+    --danger-light: rgba(196, 117, 75, 0.12);
+
+    /* 文字色 - 复古感 */
+    --text-primary: #2c3e2d;
+    --text-regular: #4a5d4b;
+    --text-secondary: #7a8b7b;
+    --text-placeholder: #a8b5a9;
+    --text-white: #faf8f3;
+
+    /* 边框色 */
+    --border-color: #d9cfc0;
+    --border-light: #e8e0d4;
+
+    /* 背景色 - 温暖奶油色 */
+    --bg-color: #f5efe6;
+    --bg-white: #fdfcfa;
+    --bg-card: #fdfcfa;
+    --bg-dark: #2c3e2d;
+
+    /* 阴影 - 柔和 */
+    --shadow-sm: 0 2px 8px rgba(44, 62, 45, 0.08);
+    --shadow-md: 0 4px 16px rgba(44, 62, 45, 0.1);
+    --shadow-lg: 0 8px 32px rgba(44, 62, 45, 0.12);
+
+    /* 圆角 */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* 安全区域 */
+    --safe-area-top: env(safe-area-inset-top, 44px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 34px);
+
+    /* 底部导航高度 */
+    --tab-bar-height: 56px;
+}
+
+/* ========================================
+   夜间模式 - 深海夜色
+   ======================================== */
+[data-theme="dark"] {
+    /* 深海蓝黑主色调 */
+    --primary-color: #3ba396;
+    --primary-dark: #2d8b78;
+    --primary-light: #4dbfaf;
+    --primary-lighter: rgba(59, 163, 150, 0.15);
+
+    /* 夜间渐变 */
+    --gradient-ocean: linear-gradient(160deg, #0a1a18 0%, #0d2520 25%, #102d28 50%, #153530 75%, #1a3d38 100%);
+
+    /* 夜间色板 */
+    --cream: #1a2320;
+    --ivory: #1e2825;
+
+    /* 金色 - 夜间更亮 */
+    --gold-color: #d4b847;
+    --gold-light: rgba(212, 184, 71, 0.2);
+    --gold-dark: #c9a227;
+
+    /* 文字色 - 夜间柔和 */
+    --text-primary: #e8ede9;
+    --text-regular: #c5d0c7;
+    --text-secondary: #8fa392;
+    --text-placeholder: #5a6d5c;
+    --text-white: #f5f8f6;
+
+    /* 边框色 - 深色 */
+    --border-color: #2a3a2c;
+    --border-light: #1e2d20;
+
+    /* 背景色 - 深海夜色 */
+    --bg-color: #0f1a17;
+    --bg-white: #151f1c;
+    --bg-card: #1a2623;
+    --bg-dark: #0a1210;
+
+    /* 阴影 - 夜间更重 */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* 夜间模式 - 手机框架 */
+[data-theme="dark"] .phone-frame {
+    box-shadow:
+        0 0 0 10px #0a0a0a,
+        0 0 0 12px #d4b847,
+        0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 夜间模式 - 页面背景 */
+[data-theme="dark"] .page {
+    background: var(--bg-color);
+}
+
+/* 夜间模式 - 页面纹理 */
+[data-theme="dark"] .page::before {
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='5' cy='8' r='0.3' fill='%233ba396' fill-opacity='0.06'/%3E%3Ccircle cx='25' cy='12' r='0.35' fill='%23d4b847' fill-opacity='0.04'/%3E%3Ccircle cx='45' cy='10' r='0.25' fill='%233ba396' fill-opacity='0.05'/%3E%3Ccircle cx='10' cy='22' r='0.35' fill='%23d4b847' fill-opacity='0.03'/%3E%3Ccircle cx='30' cy='25' r='0.3' fill='%233ba396' fill-opacity='0.06'/%3E%3Ccircle cx='50' cy='28' r='0.25' fill='%23d4b847' fill-opacity='0.04'/%3E%3C/svg%3E") repeat,
+        radial-gradient(ellipse at 30% 20%, rgba(59, 163, 150, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(212, 184, 71, 0.02) 0%, transparent 40%);
+}
+
+[data-theme="dark"] .page::after {
+    background:
+        linear-gradient(180deg,
+            rgba(10, 26, 24, 0.3) 0%,
+            rgba(16, 45, 40, 0.2) 40%,
+            transparent 100%),
+        radial-gradient(ellipse at 20% 30%, rgba(59, 163, 150, 0.05) 0%, transparent 30%),
+        radial-gradient(ellipse at 80% 20%, rgba(212, 184, 71, 0.03) 0%, transparent 25%);
+}
+
+/* 夜间模式 - 头部横幅 */
+[data-theme="dark"] .header-banner {
+    background: var(--gradient-ocean);
+}
+
+[data-theme="dark"] .header-banner::after {
+    background: var(--bg-color);
+}
+
+/* 夜间模式 - 分类导航 */
+[data-theme="dark"] .category-nav {
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--cream) 100%);
+}
+
+/* 夜间模式 - 分类图标 */
+[data-theme="dark"] .category-icon-sm {
+    background: radial-gradient(ellipse at 30% 30%,
+        #2a3a2c 0%,
+        #243328 20%,
+        #1e2d20 40%,
+        #182618 60%,
+        #121f12 80%,
+        #0c180c 100%);
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.3),
+        0 1px 4px rgba(0, 0, 0, 0.2),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.2),
+        inset 0 2px 3px rgba(59, 163, 150, 0.15);
+    border: 1px solid rgba(59, 163, 150, 0.2);
+}
+
+[data-theme="dark"] .category-icon-sm::before {
+    background: radial-gradient(ellipse at center,
+        rgba(59, 163, 150, 0.3) 0%,
+        rgba(59, 163, 150, 0.1) 30%,
+        transparent 70%);
+}
+
+/* 夜间模式 - 轮播图 */
+[data-theme="dark"] .banner-slide {
+    border-color: var(--gold-color);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 8px 32px rgba(212, 184, 71, 0.1);
+}
+
+/* 夜间模式 - 公告栏 */
+[data-theme="dark"] .notice-bar {
+    background: linear-gradient(135deg, #1a2620 0%, #151f1c 100%);
+    border-color: var(--gold-color);
+}
+
+/* 夜间模式 - 游戏卡片 */
+[data-theme="dark"] .game-card-sm {
+    background: linear-gradient(180deg, var(--bg-card) 0%, #1e2825 100%);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .game-name-sm {
+    background: linear-gradient(180deg, var(--bg-card) 0%, #1a2320 100%);
+}
+
+/* 夜间模式 - 迷你游戏卡片 */
+[data-theme="dark"] .game-thumb-mini {
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(59, 163, 150, 0.1);
+}
+
+/* 夜间模式 - 底部标签栏 */
+[data-theme="dark"] .tab-bar {
+    background: linear-gradient(180deg, var(--bg-white) 0%, #1a2320 100%);
+    border-top-color: var(--primary-color);
+}
+
+[data-theme="dark"] .tab-bar::before {
+    background: linear-gradient(90deg, transparent, var(--gold-color), transparent);
+}
+
+[data-theme="dark"] .tab-item {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .tab-item.active {
+    color: var(--primary-color);
+}
+
+/* 夜间模式 - 用户统计卡片 */
+[data-theme="dark"] .profile-stats {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+/* 夜间模式 - 列表 */
+[data-theme="dark"] .list {
+    background: linear-gradient(180deg, var(--bg-card) 0%, #1e2825 100%);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .list-item {
+    border-bottom-color: var(--border-color);
+}
+
+/* 夜间模式 - 珍珠图标 */
+[data-theme="dark"] .list-icon.pearl-icon {
+    background: radial-gradient(ellipse at 30% 30%,
+        #2a3a2c 0%,
+        #243328 20%,
+        #1e2d20 40%,
+        #182618 60%,
+        #121f12 80%,
+        #0c180c 100%);
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.3),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.2),
+        inset 0 2px 3px rgba(59, 163, 150, 0.15);
+    border-color: rgba(59, 163, 150, 0.2);
+}
+
+/* 夜间模式 - 卡片 */
+[data-theme="dark"] .card {
+    background: linear-gradient(180deg, var(--bg-card) 0%, #1e2825 100%);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+/* 夜间模式 - 按钮 */
+[data-theme="dark"] .btn-primary {
+    background: linear-gradient(180deg, #4dbfaf 0%, #3ba396 40%, #2d8b78 100%);
+}
+
+[data-theme="dark"] .btn-outline {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* 夜间模式 - 个人中心头部 */
+[data-theme="dark"] .profile-header {
+    background: var(--gradient-ocean);
+}
+
+[data-theme="dark"] .profile-header::after {
+    background: var(--bg-color);
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', 'PingFang SC', serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    background-color: #2c3e2d;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ========================================
+   手机框架容器
+   ======================================== */
+
+.phone-frame {
+    width: 375px;
+    height: min(812px, calc(100vh - 40px));
+    max-height: 812px;
+    background: var(--bg-color);
+    border-radius: 40px;
+    box-shadow:
+        0 0 0 10px #1a1a1a,
+        0 0 0 12px #c9a227,
+        0 25px 60px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* 刘海 */
+.phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 30px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    z-index: 100;
+}
+
+/* 页面容器 */
+.page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-color);
+    overflow: hidden;
+    position: relative;
+}
+
+/* 沙滩纹理背景 - 多层细腻质感 */
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        /* 第一层：极细沙粒 - 高密度 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='5' cy='8' r='0.3' fill='%23d4a574' fill-opacity='0.08'/%3E%3Ccircle cx='15' cy='3' r='0.25' fill='%23c9a227' fill-opacity='0.06'/%3E%3Ccircle cx='25' cy='12' r='0.35' fill='%23d4a574' fill-opacity='0.07'/%3E%3Ccircle cx='35' cy='5' r='0.3' fill='%23e0c8a0' fill-opacity='0.05'/%3E%3Ccircle cx='45' cy='10' r='0.25' fill='%23d4a574' fill-opacity='0.08'/%3E%3Ccircle cx='55' cy='7' r='0.3' fill='%23c9a227' fill-opacity='0.06'/%3E%3Ccircle cx='10' cy='22' r='0.35' fill='%23d4a574' fill-opacity='0.07'/%3E%3Ccircle cx='20' cy='18' r='0.25' fill='%23e0c8a0' fill-opacity='0.05'/%3E%3Ccircle cx='30' cy='25' r='0.3' fill='%23c9a227' fill-opacity='0.08'/%3E%3Ccircle cx='40' cy='20' r='0.35' fill='%23d4a574' fill-opacity='0.06'/%3E%3Ccircle cx='50' cy='28' r='0.25' fill='%23e0c8a0' fill-opacity='0.07'/%3E%3Ccircle cx='8' cy='35' r='0.3' fill='%23d4a574' fill-opacity='0.05'/%3E%3Ccircle cx='18' cy='42' r='0.25' fill='%23c9a227' fill-opacity='0.08'/%3E%3Ccircle cx='28' cy='38' r='0.35' fill='%23d4a574' fill-opacity='0.06'/%3E%3Ccircle cx='38' cy='45' r='0.3' fill='%23e0c8a0' fill-opacity='0.07'/%3E%3Ccircle cx='48' cy='40' r='0.25' fill='%23d4a574' fill-opacity='0.05'/%3E%3Ccircle cx='58' cy='48' r='0.35' fill='%23c9a227' fill-opacity='0.08'/%3E%3Ccircle cx='12' cy='55' r='0.3' fill='%23d4a574' fill-opacity='0.06'/%3E%3Ccircle cx='22' cy='52' r='0.25' fill='%23e0c8a0' fill-opacity='0.07'/%3E%3Ccircle cx='32' cy='58' r='0.35' fill='%23d4a574' fill-opacity='0.05'/%3E%3Ccircle cx='42' cy='55' r='0.3' fill='%23c9a227' fill-opacity='0.08'/%3E%3Ccircle cx='52' cy='50' r='0.25' fill='%23d4a574' fill-opacity='0.06'/%3E%3C/svg%3E") repeat,
+        /* 第二层：中等沙粒 - 中密度 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='10' cy='15' r='0.5' fill='%23d4a574' fill-opacity='0.1'/%3E%3Ccircle cx='30' cy='8' r='0.4' fill='%23c9a227' fill-opacity='0.08'/%3E%3Ccircle cx='50' cy='20' r='0.55' fill='%23d4a574' fill-opacity='0.09'/%3E%3Ccircle cx='70' cy='12' r='0.45' fill='%23e0c8a0' fill-opacity='0.07'/%3E%3Ccircle cx='20' cy='40' r='0.5' fill='%23c9a227' fill-opacity='0.1'/%3E%3Ccircle cx='40' cy='35' r='0.45' fill='%23d4a574' fill-opacity='0.08'/%3E%3Ccircle cx='60' cy='45' r='0.55' fill='%23e0c8a0' fill-opacity='0.09'/%3E%3Ccircle cx='15' cy='65' r='0.4' fill='%23d4a574' fill-opacity='0.07'/%3E%3Ccircle cx='35' cy='70' r='0.5' fill='%23c9a227' fill-opacity='0.1'/%3E%3Ccircle cx='55' cy='62' r='0.45' fill='%23d4a574' fill-opacity='0.08'/%3E%3Ccircle cx='75' cy='75' r='0.55' fill='%23e0c8a0' fill-opacity='0.09'/%3E%3C/svg%3E") repeat,
+        /* 第三层：贝壳光泽点 + 金色闪光 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='20' cy='25' r='0.8' fill='%23ffffff' fill-opacity='0.15'/%3E%3Ccircle cx='60' cy='15' r='0.6' fill='%23ffd700' fill-opacity='0.1'/%3E%3Ccircle cx='100' cy='35' r='0.7' fill='%23ffffff' fill-opacity='0.1'/%3E%3Ccircle cx='40' cy='70' r='0.65' fill='%23ffd700' fill-opacity='0.08'/%3E%3Ccircle cx='80' cy='90' r='0.75' fill='%23ffffff' fill-opacity='0.11'/%3E%3Ccircle cx='15' cy='100' r='0.55' fill='%23ffd700' fill-opacity='0.09'/%3E%3C/svg%3E") repeat,
+        /* 第四层：柔和渐变底色 + 金色光晕 */
+        radial-gradient(ellipse at 30% 20%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(30, 107, 92, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 234, 160, 0.02) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 海浪波光效果层 - 多层次光影 + 金色光泽 */
+.page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background:
+        /* 顶部海水渐变 */
+        linear-gradient(180deg,
+            rgba(13, 74, 64, 0.04) 0%,
+            rgba(30, 107, 92, 0.03) 20%,
+            rgba(61, 122, 153, 0.02) 40%,
+            rgba(201, 162, 39, 0.02) 60%,
+            transparent 100%),
+        /* 金色光斑效果 */
+        radial-gradient(ellipse at 20% 30%, rgba(255, 215, 0, 0.03) 0%, transparent 30%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 234, 160, 0.025) 0%, transparent 25%),
+        radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ========================================
+   顶部状态栏
+   ======================================== */
+
+.status-bar {
+    height: 44px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    position: relative;
+    z-index: 10;
+}
+
+.status-bar-time {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.status-bar-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-bar-icons svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* 深色背景状态栏 */
+.status-bar.light {
+    color: var(--text-white);
+}
+
+.status-bar.light .status-bar-time {
+    color: var(--text-white);
+}
+
+.status-bar.light svg {
+    stroke: var(--text-white);
+}
+
+/* ========================================
+   导航栏
+   ======================================== */
+
+.nav-bar {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-white);
+}
+
+.nav-bar-left,
+.nav-bar-right {
+    width: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-bar-right {
+    justify-content: flex-end;
+}
+
+.nav-bar-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+}
+
+.nav-bar-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.nav-bar-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 透明导航栏 */
+.nav-bar.transparent {
+    background: transparent;
+    position: absolute;
+    top: 44px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.nav-bar.transparent .nav-bar-btn {
+    color: var(--text-white);
+}
+
+/* ========================================
+   底部标签栏 - 航海罗盘风格
+   ======================================== */
+
+.tab-bar {
+    height: var(--tab-bar-height);
+    padding-bottom: 8px;
+    background: linear-gradient(180deg, var(--bg-white) 0%, #f8f6f2 100%);
+    border-top: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    box-shadow: 0 -2px 10px rgba(44, 62, 45, 0.05);
+}
+
+/* 金色装饰线 */
+.tab-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-color), transparent);
+}
+
+/* 波浪纹理 */
+.tab-bar::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='8' viewBox='0 0 60 8'%3E%3Cpath d='M0 4 Q7.5 2 15 4 T30 4 T45 4 T60 4' stroke='%23d9cfc0' stroke-width='0.5' fill='none' opacity='0.4'/%3E%3C/svg%3E") repeat-x;
+    pointer-events: none;
+}
+
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 0;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.tab-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+    transition: all 0.2s;
+}
+
+.tab-item span {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+}
+
+.tab-item.active svg {
+    stroke-width: 2;
+    filter: drop-shadow(0 2px 3px rgba(30, 107, 92, 0.2));
+}
+
+/* 选中状态指示器 */
+.tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--gold-color);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(201, 162, 39, 0.5);
+}
+
+/* ========================================
+   内容区域
+   ======================================== */
+
+.page-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 1;
+}
+
+.page-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========================================
+   头部横幅区域
+   ======================================== */
+
+.header-banner {
+    background: var(--gradient-ocean);
+    padding: 0 16px 32px;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 16px;
+}
+
+/* 海浪纹理 - 多层次深海质感 + 金色光泽 */
+.header-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        /* 第一层：主波浪线 - 底部 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Cpath d='M0 30 Q25 18 50 30 T100 30 T150 30 T200 30' stroke='%23ffffff' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Cpath d='M0 42 Q25 32 50 42 T100 42 T150 42 T200 42' stroke='%23ffffff' stroke-width='0.8' fill='none' opacity='0.06'/%3E%3Cpath d='M0 52 Q25 44 50 52 T100 52 T150 52 T200 52' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.04'/%3E%3C/svg%3E") repeat-x bottom,
+        /* 第二层：细波纹 - 中层 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 30'%3E%3Cpath d='M0 15 Q15 10 30 15 T60 15 T90 15 T120 15' stroke='%23ffffff' stroke-width='0.6' fill='none' opacity='0.05'/%3E%3Cpath d='M0 22 Q15 18 30 22 T60 22 T90 22 T120 22' stroke='%23ffffff' stroke-width='0.4' fill='none' opacity='0.03'/%3E%3C/svg%3E") repeat,
+        /* 第三层：金色光点 - 增添光泽 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='15' cy='25' r='1' fill='%23ffd700' opacity='0.18'/%3E%3Ccircle cx='50' cy='12' r='0.8' fill='%23ffd700' opacity='0.15'/%3E%3Ccircle cx='85' cy='35' r='1.2' fill='%23ffeaa0' opacity='0.12'/%3E%3Ccircle cx='30' cy='60' r='0.7' fill='%23ffd700' opacity='0.16'/%3E%3Ccircle cx='70' cy='75' r='1' fill='%23ffeaa0' opacity='0.14'/%3E%3Ccircle cx='10' cy='85' r='0.9' fill='%23ffd700' opacity='0.12'/%3E%3C/svg%3E") repeat,
+        /* 第四层：海面光斑 - 大 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Ccircle cx='25' cy='40' r='1.5' fill='%23ffffff' opacity='0.12'/%3E%3Ccircle cx='75' cy='20' r='1.2' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='120' cy='55' r='1.8' fill='%23ffffff' opacity='0.08'/%3E%3Ccircle cx='50' cy='90' r='1' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='100' cy='110' r='1.4' fill='%23ffffff' opacity='0.06'/%3E%3Ccircle cx='20' cy='130' r='1.2' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E") repeat,
+        /* 第五层：海面光斑 - 细小 + 金点 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='12' cy='18' r='0.5' fill='%23ffffff' opacity='0.15'/%3E%3Ccircle cx='35' cy='10' r='0.4' fill='%23ffd700' opacity='0.12'/%3E%3Ccircle cx='58' cy='25' r='0.6' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='22' cy='45' r='0.45' fill='%23ffd700' opacity='0.1'/%3E%3Ccircle cx='48' cy='38' r='0.5' fill='%23ffffff' opacity='0.11'/%3E%3Ccircle cx='70' cy='52' r='0.55' fill='%23ffd700' opacity='0.08'/%3E%3Ccircle cx='15' cy='68' r='0.4' fill='%23ffffff' opacity='0.13'/%3E%3Ccircle cx='40' cy='72' r='0.5' fill='%23ffd700' opacity='0.1'/%3E%3Ccircle cx='65' cy='65' r='0.45' fill='%23ffffff' opacity='0.12'/%3E%3C/svg%3E") repeat,
+        /* 第六层：金色光晕渐变 */
+        radial-gradient(ellipse at 30% 40%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(255, 234, 160, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(201, 162, 39, 0.06) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 底部柔和圆弧 */
+.header-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -5%;
+    right: -5%;
+    height: 24px;
+    background: var(--bg-color);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    z-index: 2;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0 24px;
+    position: relative;
+    z-index: 3;
+}
+
+.header-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header-info {
+    flex: 1;
+}
+
+.header-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-white);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.header-id {
+    font-size: 12px;
+    color: rgba(250, 248, 243, 0.8);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.header-balance {
+    text-align: right;
+}
+
+.header-balance-label {
+    font-size: 11px;
+    color: rgba(250, 248, 243, 0.8);
+    margin-bottom: 2px;
+}
+
+.header-balance-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold-color);
+    font-family: 'Georgia', serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   搜索框 - 复古风格
+   ======================================== */
+
+.search-bar {
+    padding: 12px 16px;
+    background: var(--bg-white);
+}
+
+.search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 14px;
+    background: var(--cream);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+
+.search-input-wrap:focus-within {
+    border-color: var(--primary-color);
+    background: var(--bg-white);
+}
+
+.search-input-wrap svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-placeholder);
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    font-family: inherit;
+}
+
+.search-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+/* ========================================
+   分类导航 - 珍珠风格
+   ======================================== */
+
+.category-nav {
+    padding: 16px;
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--cream) 100%);
+    position: relative;
+}
+
+/* 底部波浪装饰线 */
+.category-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='4' viewBox='0 0 100 4'%3E%3Cpath d='M0 2 Q12.5 0 25 2 T50 2 T75 2 T100 2' stroke='%23d9cfc0' stroke-width='1' fill='none'/%3E%3C/svg%3E") repeat-x;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+/* 珍珠圆形图标 */
+.category-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    /* 珍珠渐变 - 清爽白色基底 */
+    background: radial-gradient(ellipse at 30% 30%,
+        #ffffff 0%,
+        #f8f8f8 20%,
+        #f0f0f0 40%,
+        #e8e8e8 60%,
+        #e0e0e0 80%,
+        #d8d8d8 100%);
+    box-shadow:
+        /* 外部柔和阴影 */
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.08),
+        /* 珍珠光泽内阴影 */
+        inset 0 -4px 8px rgba(0, 0, 0, 0.06),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* 珍珠高光 - 左上角光斑 */
+.category-icon::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    width: 16px;
+    height: 12px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.8) 30%,
+        transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 珍珠底部微光 */
+.category-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    width: 8px;
+    height: 6px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 255, 255, 0.6) 0%,
+        transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.category-item:active .category-icon {
+    transform: scale(0.95);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        0 1px 3px rgba(0, 0, 0, 0.08),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.08),
+        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* 不同色调的珍珠 */
+.category-icon.hot {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fff8f5 0%,
+        #ffe8e0 20%,
+        #ffd8cc 40%,
+        #ffc8b8 60%,
+        #f0b8a8 80%,
+        #e0a898 100%);
+    border-color: rgba(255, 200, 180, 0.5);
+}
+
+.category-icon.new {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f8fff8 0%,
+        #e8f5e8 20%,
+        #d8ecd8 40%,
+        #c8e0c8 60%,
+        #b8d4b8 80%,
+        #a8c8a8 100%);
+    border-color: rgba(180, 220, 180, 0.5);
+}
+
+.category-icon.slots {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffdf5 0%,
+        #fff5d8 20%,
+        #ffefc0 40%,
+        #ffe8a8 60%,
+        #f0d890 80%,
+        #e0c878 100%);
+    border-color: rgba(240, 210, 130, 0.5);
+}
+
+.category-icon.cards {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffaf5 0%,
+        #f5ebe0 20%,
+        #ebe0d0 40%,
+        #e0d4c0 60%,
+        #d4c8b0 80%,
+        #c8bca0 100%);
+    border-color: rgba(210, 195, 170, 0.5);
+}
+
+.category-icon.fish {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f5fffd 0%,
+        #e0f5f0 20%,
+        #c8ebe5 40%,
+        #b0e0d8 60%,
+        #98d4c8 80%,
+        #80c8b8 100%);
+    border-color: rgba(150, 210, 195, 0.5);
+}
+
+.category-name {
+    font-size: 12px;
+    color: var(--text-regular);
+    font-weight: 500;
+}
+
+/* ========================================
+   轮播图 - 复古海报风格
+   ======================================== */
+
+.banner-swiper {
+    padding: 16px;
+}
+
+.banner-slide {
+    width: 100%;
+    height: 140px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    border: 3px solid var(--gold-color);
+    box-shadow:
+        0 4px 16px rgba(44, 62, 45, 0.15),
+        0 8px 32px rgba(201, 162, 39, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: linear-gradient(135deg, #1e6b5c 0%, #2d8b78 40%, #d4a574 100%);
+}
+
+.banner-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(90deg, rgba(44, 62, 45, 0.75) 0%, rgba(44, 62, 45, 0.3) 60%, transparent 100%);
+}
+
+/* 海浪波光装饰 */
+.banner-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 20 60 30 T120 30' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.1'/%3E%3Cpath d='M0 45 Q30 35 60 45 T120 45' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.08'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+.banner-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-white);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.banner-desc {
+    font-size: 13px;
+    color: rgba(250, 248, 243, 0.9);
+    position: relative;
+}
+
+.banner-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.banner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-color);
+    transition: all 0.3s;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.banner-dot.active {
+    width: 20px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--gold-color) 0%, var(--gold-dark) 100%);
+    box-shadow: 0 2px 4px rgba(201, 162, 39, 0.3);
+}
+
+/* ========================================
+   区块标题 - 典雅风格
+   ======================================== */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+}
+
+.section-title-icon {
+    font-size: 18px;
+}
+
+.section-more {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.section-more svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ========================================
+   游戏卡片 - 贝壳珍珠质感
+   ======================================== */
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 0 16px 16px;
+}
+
+.game-card {
+    background: linear-gradient(180deg, var(--bg-white) 0%, #f8f6f2 100%);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow:
+        0 3px 10px rgba(44, 62, 45, 0.1),
+        0 1px 3px rgba(44, 62, 45, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border-light);
+    position: relative;
+}
+
+.game-card:active {
+    transform: scale(0.98) translateY(1px);
+    box-shadow:
+        0 1px 4px rgba(44, 62, 45, 0.1),
+        inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.game-thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    position: relative;
+    background: linear-gradient(135deg, #e8ded0 0%, #d9cfc0 100%);
+    overflow: hidden;
+}
+
+/* 波光纹理 */
+.game-thumb::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 20 Q10 15 20 20 T40 20' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 30 Q10 25 20 30 T40 30' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+/* 珍珠光泽 */
+.game-thumb::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.game-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-white);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.game-badge.hot {
+    background: linear-gradient(135deg, var(--coral) 0%, #c4754b 100%);
+}
+
+.game-badge.new {
+    background: linear-gradient(135deg, var(--olive) 0%, #5a6b42 100%);
+}
+
+.game-info {
+    padding: 10px;
+    background: linear-gradient(180deg, var(--bg-white) 0%, #faf8f5 100%);
+    position: relative;
+}
+
+.game-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-players {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.game-players::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 4px rgba(30, 107, 92, 0.4);
+}
+
+/* 横向游戏列表 */
+.game-list-h {
+    display: flex;
+    gap: 12px;
+    padding: 0 16px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.game-list-h::-webkit-scrollbar {
+    display: none;
+}
+
+.game-card-h {
+    flex-shrink: 0;
+    width: 140px;
+    background: var(--bg-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    border: 1px solid var(--border-light);
+}
+
+.game-card-h .game-thumb {
+    height: 100px;
+}
+
+/* ========================================
+   公告栏 - 航海卷轴风格
+   ======================================== */
+
+.notice-bar {
+    margin: 0 16px 16px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #faf3e0 0%, #f5efe6 100%);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--gold-color);
+    border-left: 4px solid var(--gold-color);
+    box-shadow:
+        0 2px 8px rgba(201, 162, 39, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 羊皮纸纹理 */
+.notice-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Ccircle cx='5' cy='5' r='0.5' fill='%23c9a227' opacity='0.1'/%3E%3Ccircle cx='25' cy='15' r='0.3' fill='%23d4a574' opacity='0.08'/%3E%3Ccircle cx='45' cy='25' r='0.4' fill='%23c9a227' opacity='0.06'/%3E%3Ccircle cx='15' cy='35' r='0.5' fill='%23d4a574' opacity='0.1'/%3E%3Ccircle cx='35' cy='45' r='0.3' fill='%23c9a227' opacity='0.08'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+.notice-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.notice-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--gold-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+/* ========================================
+   按钮样式 - 海洋岩石质感
+   ======================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #2d8b78 0%, #1e6b5c 40%, #145549 100%);
+    color: var(--text-white);
+    box-shadow:
+        /* 多层阴影增加立体感 */
+        0 1px 2px rgba(30, 107, 92, 0.2),
+        0 2px 4px rgba(30, 107, 92, 0.15),
+        0 4px 8px rgba(30, 107, 92, 0.15),
+        0 8px 16px rgba(30, 107, 92, 0.1),
+        /* 内发光模拟按钮凸起 */
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 波光效果 */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 25%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0.1) 75%,
+        transparent 100%);
+    animation: shimmer 3s infinite;
+}
+
+/* 按钮表面纹理 */
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='8' cy='10' r='0.3' fill='%23ffffff' opacity='0.08'/%3E%3Ccircle cx='25' cy='5' r='0.25' fill='%23ffffff' opacity='0.06'/%3E%3Ccircle cx='35' cy='18' r='0.3' fill='%23ffffff' opacity='0.07'/%3E%3Ccircle cx='15' cy='28' r='0.25' fill='%23ffffff' opacity='0.05'/%3E%3Ccircle cx='30' cy='35' r='0.3' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+.btn-primary:active {
+    transform: scale(0.98) translateY(1px);
+    box-shadow:
+        0 1px 2px rgba(30, 107, 92, 0.3),
+        0 2px 4px rgba(30, 107, 92, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.15),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary {
+    background: linear-gradient(180deg, #fdfcfa 0%, var(--cream) 40%, #ebe5d8 100%);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    box-shadow:
+        0 1px 2px rgba(44, 62, 45, 0.06),
+        0 2px 4px rgba(44, 62, 45, 0.06),
+        0 4px 8px rgba(44, 62, 45, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.btn-gold {
+    background: linear-gradient(180deg, #d4b847 0%, #c9a227 40%, #a68b1f 100%);
+    color: var(--text-white);
+    box-shadow:
+        0 1px 2px rgba(201, 162, 39, 0.25),
+        0 2px 4px rgba(201, 162, 39, 0.2),
+        0 4px 8px rgba(201, 162, 39, 0.2),
+        0 8px 16px rgba(201, 162, 39, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 2px 4px rgba(255, 255, 255, 0.15),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* 金色按钮波光 */
+.btn-gold::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2.5s infinite;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: inset 0 0 0 1px rgba(30, 107, 92, 0.1);
+}
+
+.btn-outline:active {
+    background: var(--primary-lighter);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 16px;
+}
+
+/* ========================================
+   卡片样式 - 海边岩石质感
+   ======================================== */
+
+.card {
+    background: linear-gradient(180deg, var(--bg-white) 0%, #fdfcfa 50%, #faf8f5 100%);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        /* 多层阴影增加深度 */
+        0 1px 2px rgba(44, 62, 45, 0.04),
+        0 2px 4px rgba(44, 62, 45, 0.04),
+        0 4px 8px rgba(44, 62, 45, 0.06),
+        0 8px 16px rgba(44, 62, 45, 0.04),
+        0 16px 32px rgba(44, 62, 45, 0.02),
+        /* 内发光 */
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+    margin: 0 16px 16px;
+    overflow: hidden;
+    border: 1px solid rgba(232, 224, 212, 0.8);
+    position: relative;
+}
+
+/* 细腻纹理效果 */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        /* 细微波纹 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M0 30 Q15 27 30 30 T60 30' stroke='%23d9cfc0' stroke-width='0.4' fill='none' opacity='0.25'/%3E%3Cpath d='M0 45 Q20 42 40 45 T60 45' stroke='%23e8e0d4' stroke-width='0.25' fill='none' opacity='0.15'/%3E%3C/svg%3E") repeat,
+        /* 细沙质感 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='8' cy='10' r='0.2' fill='%23d4a574' opacity='0.06'/%3E%3Ccircle cx='25' cy='5' r='0.15' fill='%23c9a227' opacity='0.04'/%3E%3Ccircle cx='35' cy='18' r='0.2' fill='%23d4a574' opacity='0.05'/%3E%3Ccircle cx='15' cy='28' r='0.18' fill='%23e0c8a0' opacity='0.04'/%3E%3Ccircle cx='30' cy='35' r='0.15' fill='%23d4a574' opacity='0.06'/%3E%3C/svg%3E") repeat,
+        /* 柔和渐变 */
+        radial-gradient(ellipse at 20% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+.card-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+    position: relative;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.card-body {
+    padding: 16px;
+    position: relative;
+}
+
+/* ========================================
+   列表样式 - 珊瑚礁层次感
+   ======================================== */
+
+.list {
+    background: linear-gradient(180deg, var(--bg-white) 0%, #fdfcfa 50%, #faf8f5 100%);
+    box-shadow:
+        0 1px 2px rgba(44, 62, 45, 0.03),
+        0 2px 4px rgba(44, 62, 45, 0.04),
+        0 4px 8px rgba(44, 62, 45, 0.05),
+        0 8px 16px rgba(44, 62, 45, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(232, 224, 212, 0.7);
+    position: relative;
+}
+
+/* 列表细腻纹理 */
+.list::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Ccircle cx='10' cy='12' r='0.2' fill='%23d4a574' opacity='0.05'/%3E%3Ccircle cx='30' cy='8' r='0.15' fill='%23c9a227' opacity='0.04'/%3E%3Ccircle cx='45' cy='25' r='0.2' fill='%23d4a574' opacity='0.05'/%3E%3Ccircle cx='20' cy='38' r='0.18' fill='%23e0c8a0' opacity='0.04'/%3E%3Ccircle cx='38' cy='45' r='0.15' fill='%23d4a574' opacity='0.05'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(232, 224, 212, 0.6);
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:active {
+    background: linear-gradient(90deg, var(--cream) 0%, rgba(245, 239, 230, 0.8) 50%, var(--cream) 100%);
+}
+
+/* 贝壳装饰图标 */
+.list-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary-lighter) 0%, rgba(30, 107, 92, 0.08) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 12px;
+    border: 1px solid var(--border-light);
+    box-shadow:
+        0 2px 6px rgba(44, 62, 45, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+    position: relative;
+}
+
+/* 珍珠光泽 */
+.list-icon::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 60%;
+    bottom: 60%;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* 珍珠质感图标 */
+.list-icon.pearl-icon {
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 30% 30%,
+        #ffffff 0%,
+        #f8f8f8 20%,
+        #f0f0f0 40%,
+        #e8e8e8 60%,
+        #e0e0e0 80%,
+        #d8d8d8 100%);
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.12),
+        0 1px 4px rgba(0, 0, 0, 0.08),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.06),
+        inset 0 2px 3px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* 珍珠高光 */
+.list-icon.pearl-icon::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    width: 12px;
+    height: 8px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.6) 40%,
+        transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.list-icon.pearl-icon::after {
+    top: 3px;
+    left: 3px;
+    right: 55%;
+    bottom: 55%;
+}
+
+/* 珍珠色调变体 */
+.list-icon.pearl-gold {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffdf5 0%,
+        #fff5d8 20%,
+        #ffefc0 40%,
+        #ffe8a8 60%,
+        #f0d890 80%,
+        #e0c878 100%);
+    border-color: rgba(240, 210, 130, 0.5);
+}
+
+.list-icon.pearl-teal {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f5fffd 0%,
+        #e0f5f0 20%,
+        #c8ebe5 40%,
+        #b0e0d8 60%,
+        #98d4c8 80%,
+        #80c8b8 100%);
+    border-color: rgba(150, 210, 195, 0.5);
+}
+
+.list-icon.pearl-sand {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffaf5 0%,
+        #f5ebe0 20%,
+        #ebe0d0 40%,
+        #e0d4c0 60%,
+        #d4c8b0 80%,
+        #c8bca0 100%);
+    border-color: rgba(210, 195, 170, 0.5);
+}
+
+.list-icon.pearl-coral {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fff8f5 0%,
+        #ffe8e0 20%,
+        #ffd8cc 40%,
+        #ffc8b8 60%,
+        #f0b8a8 80%,
+        #e0a898 100%);
+    border-color: rgba(255, 200, 180, 0.5);
+}
+
+.list-icon.pearl-olive {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f8fff8 0%,
+        #e8f5e8 20%,
+        #d8ecd8 40%,
+        #c8e0c8 60%,
+        #b8d4b8 80%,
+        #a8c8a8 100%);
+    border-color: rgba(180, 220, 180, 0.5);
+}
+
+.list-content {
+    flex: 1;
+}
+
+.list-title {
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.list-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.list-arrow {
+    color: var(--text-placeholder);
+}
+
+.list-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+.list-value {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+/* ========================================
+   表单样式
+   ======================================== */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--bg-white);
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+/* ========================================
+   金额输入
+   ======================================== */
+
+.amount-input-wrap {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: var(--cream);
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.amount-symbol {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-right: 8px;
+}
+
+.amount-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    outline: none;
+    font-family: 'Georgia', serif;
+}
+
+.amount-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+/* 金额快捷选择 */
+.amount-quick {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.amount-quick-btn {
+    padding: 12px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-white);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.amount-quick-btn.active,
+.amount-quick-btn:active {
+    border-color: var(--primary-color);
+    background: var(--primary-lighter);
+    color: var(--primary-color);
+}
+
+/* ========================================
+   用户中心
+   ======================================== */
+
+.profile-header {
+    background: var(--gradient-ocean);
+    padding: 48px 16px 28px;
+    text-align: center;
+    position: relative;
+    overflow: visible;
+}
+
+/* 海浪纹理 - 多层次深海质感 + 金色光泽 */
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        /* 第一层：主波浪线 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Cpath d='M0 30 Q25 18 50 30 T100 30 T150 30 T200 30' stroke='%23ffffff' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Cpath d='M0 42 Q25 32 50 42 T100 42 T150 42 T200 42' stroke='%23ffffff' stroke-width='0.8' fill='none' opacity='0.06'/%3E%3Cpath d='M0 52 Q25 44 50 52 T100 52 T150 52 T200 52' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.04'/%3E%3C/svg%3E") repeat-x bottom,
+        /* 第二层：细波纹 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 30'%3E%3Cpath d='M0 15 Q15 10 30 15 T60 15 T90 15 T120 15' stroke='%23ffffff' stroke-width='0.6' fill='none' opacity='0.05'/%3E%3C/svg%3E") repeat,
+        /* 第三层：金色光点 - 增添光泽 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='15' cy='25' r='1' fill='%23ffd700' opacity='0.18'/%3E%3Ccircle cx='50' cy='12' r='0.8' fill='%23ffd700' opacity='0.15'/%3E%3Ccircle cx='85' cy='35' r='1.2' fill='%23ffeaa0' opacity='0.12'/%3E%3Ccircle cx='30' cy='60' r='0.7' fill='%23ffd700' opacity='0.16'/%3E%3Ccircle cx='70' cy='75' r='1' fill='%23ffeaa0' opacity='0.14'/%3E%3Ccircle cx='10' cy='85' r='0.9' fill='%23ffd700' opacity='0.12'/%3E%3C/svg%3E") repeat,
+        /* 第四层：海面光斑 - 大 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Ccircle cx='25' cy='40' r='1.5' fill='%23ffffff' opacity='0.12'/%3E%3Ccircle cx='75' cy='20' r='1.2' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='120' cy='55' r='1.8' fill='%23ffffff' opacity='0.08'/%3E%3Ccircle cx='50' cy='90' r='1' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='100' cy='110' r='1.4' fill='%23ffffff' opacity='0.06'/%3E%3C/svg%3E") repeat,
+        /* 第五层：细小光斑 + 金点 */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='12' cy='18' r='0.5' fill='%23ffffff' opacity='0.15'/%3E%3Ccircle cx='35' cy='10' r='0.4' fill='%23ffd700' opacity='0.12'/%3E%3Ccircle cx='58' cy='25' r='0.6' fill='%23ffffff' opacity='0.1'/%3E%3Ccircle cx='22' cy='45' r='0.45' fill='%23ffd700' opacity='0.1'/%3E%3Ccircle cx='48' cy='38' r='0.5' fill='%23ffffff' opacity='0.11'/%3E%3Ccircle cx='70' cy='52' r='0.55' fill='%23ffd700' opacity='0.08'/%3E%3C/svg%3E") repeat,
+        /* 第六层：金色光晕渐变 */
+        radial-gradient(ellipse at 30% 40%, rgba(255, 215, 0, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(255, 234, 160, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 底部柔和圆弧 */
+.profile-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -5%;
+    right: -5%;
+    height: 24px;
+    background: var(--bg-color);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    z-index: 2;
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 3;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-white);
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+}
+
+.profile-id {
+    font-size: 13px;
+    color: rgba(250, 248, 243, 0.8);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 用户统计 */
+.profile-stats {
+    display: flex;
+    margin: 8px 16px 16px;
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    border: 1px solid var(--border-light);
+}
+
+.profile-stat-item {
+    flex: 1;
+    padding: 16px;
+    text-align: center;
+    border-right: 1px solid var(--border-light);
+}
+
+.profile-stat-item:last-child {
+    border-right: none;
+}
+
+.profile-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+    font-family: 'Georgia', serif;
+}
+
+.profile-stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   活动卡片 - 海岸风格
+   ======================================== */
+
+.activity-card {
+    margin: 0 16px 12px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow:
+        0 4px 16px rgba(44, 62, 45, 0.1),
+        0 8px 24px rgba(44, 62, 45, 0.05);
+    border: 2px solid var(--border-light);
+}
+
+.activity-banner {
+    height: 120px;
+    padding: 16px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 海浪浪花装饰 */
+.activity-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 20'%3E%3Cdefs%3E%3ClinearGradient id='afoam' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.85'/%3E%3Cstop offset='100%25' stop-color='%23fdfcfa' stop-opacity='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23afoam)' d='M0,12 Q25,5 50,10 T100,7 T150,12 T200,6 T250,11 T300,5 T350,10 T400,8 L400,20 L0,20 Z'/%3E%3C/svg%3E") no-repeat bottom center;
+    background-size: 100% 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.activity-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(250, 248, 243, 0.25);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-white);
+    align-self: flex-start;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(250, 248, 243, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.activity-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-white);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.activity-info {
+    padding: 14px 16px;
+    background: var(--bg-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.activity-time {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.activity-btn {
+    padding: 6px 16px;
+    background: var(--gradient-ocean);
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-white);
+    cursor: pointer;
+    letter-spacing: 0.5px;
+}
+
+/* ========================================
+   空状态
+   ======================================== */
+
+.empty-state {
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.empty-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   弹窗/模态框
+   ======================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(44, 62, 45, 0.6);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 375px;
+    background: var(--bg-white);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-light);
+    position: relative;
+}
+
+.modal-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.modal-close svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary);
+}
+
+.modal-body {
+    padding: 16px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* ========================================
+   徽章/标签
+   ======================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-primary {
+    background: var(--primary-lighter);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background: var(--success-light);
+    color: var(--success-color);
+}
+
+.badge-warning {
+    background: var(--warning-light);
+    color: var(--warning-color);
+}
+
+.badge-danger {
+    background: var(--danger-light);
+    color: var(--danger-color);
+}
+
+/* ========================================
+   加载动画
+   ======================================== */
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   工具类
+   ======================================== */
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-success { color: var(--success-color); }
+.text-warning { color: var(--warning-color); }
+.text-danger { color: var(--danger-color); }
+.text-gold { color: var(--gold-color); }
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.p-16 { padding: 16px; }
+
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+
+/* ========================================
+   首页紧凑布局 - 高信息密度
+   ======================================== */
+
+/* 紧凑头部横幅 */
+.header-banner.compact {
+    padding: 0 16px 20px;
+    margin-bottom: 8px;
+}
+
+.header-banner.compact .header-user {
+    padding: 12px 0 16px;
+}
+
+.header-avatar.compact {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+}
+
+.header-name.compact {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.header-balance-value.compact {
+    font-size: 18px;
+}
+
+/* 紧凑公告栏 */
+.notice-bar.compact {
+    margin: 0 12px 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+}
+
+.notice-bar.compact .notice-icon {
+    font-size: 14px;
+}
+
+.notice-bar.compact .notice-text {
+    font-size: 12px;
+}
+
+/* 紧凑分类导航 */
+.category-nav.compact {
+    padding: 10px 12px;
+}
+
+.category-nav.compact::after {
+    left: 12px;
+    right: 12px;
+}
+
+/* 紧凑轮播图 */
+.banner-swiper.compact {
+    padding: 12px;
+}
+
+.banner-swiper.compact .banner-slide {
+    height: 120px;
+    border-radius: var(--radius-md);
+}
+
+/* 世界杯主题轮播图 */
+.banner-slide.worldcup .banner-image {
+    background: linear-gradient(135deg, #8B1538 0%, #6B1028 30%, #4a0a1c 60%, #2d0610 100%);
+}
+
+.banner-slide.worldcup {
+    border-color: #c9a227;
+}
+
+.banner-slide.worldcup .banner-content::before {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 30 Q30 20 60 30 T120 30' stroke='%23c9a227' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 45 Q30 35 60 45 T120 45' stroke='%23c9a227' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E") repeat;
+}
+
+
+/* 双行10格分类导航 */
+.category-grid-2row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px 6px;
+}
+
+.category-item-sm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+}
+
+.category-icon-sm {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: transform 0.2s;
+    position: relative;
+    background: radial-gradient(ellipse at 30% 30%,
+        #ffffff 0%,
+        #f8f8f8 20%,
+        #f0f0f0 40%,
+        #e8e8e8 60%,
+        #e0e0e0 80%,
+        #d8d8d8 100%);
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.1),
+        0 1px 4px rgba(0, 0, 0, 0.06),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.05),
+        inset 0 2px 3px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* 珍珠高光 */
+.category-icon-sm::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    width: 12px;
+    height: 8px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.7) 30%,
+        transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.category-item-sm:active .category-icon-sm {
+    transform: scale(0.95);
+}
+
+/* 分类图标色调 */
+.category-icon-sm.hot {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fff8f5 0%, #ffe8e0 20%, #ffd8cc 40%, #ffc8b8 60%, #f0b8a8 80%, #e0a898 100%);
+}
+
+.category-icon-sm.new {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f8fff8 0%, #e8f5e8 20%, #d8ecd8 40%, #c8e0c8 60%, #b8d4b8 80%, #a8c8a8 100%);
+}
+
+.category-icon-sm.slots {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffdf5 0%, #fff5d8 20%, #ffefc0 40%, #ffe8a8 60%, #f0d890 80%, #e0c878 100%);
+}
+
+.category-icon-sm.cards {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fffaf5 0%, #f5ebe0 20%, #ebe0d0 40%, #e0d4c0 60%, #d4c8b0 80%, #c8bca0 100%);
+}
+
+.category-icon-sm.fish {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f5fffd 0%, #e0f5f0 20%, #c8ebe5 40%, #b0e0d8 60%, #98d4c8 80%, #80c8b8 100%);
+}
+
+.category-icon-sm.arcade {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f8f5ff 0%, #ece5f5 20%, #e0d8ec 40%, #d4cce0 60%, #c8c0d4 80%, #bcb4c8 100%);
+}
+
+.category-icon-sm.live {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fff5f8 0%, #ffe5ec 20%, #ffd8e0 40%, #ffc8d4 60%, #f0b8c4 80%, #e0a8b4 100%);
+}
+
+.category-icon-sm.lottery {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f5f8ff 0%, #e5ecf5 20%, #d8e0ec 40%, #ccd4e0 60%, #c0c8d4 80%, #b4bcc8 100%);
+}
+
+.category-icon-sm.sports {
+    background: radial-gradient(ellipse at 30% 30%,
+        #f5fff8 0%, #e5f5ec 20%, #d8ecdf 40%, #cce0d4 60%, #c0d4c6 80%, #b4c8ba 100%);
+}
+
+.category-icon-sm.all {
+    background: radial-gradient(ellipse at 30% 30%,
+        #fafafa 0%, #f0f0f0 20%, #e8e8e8 40%, #e0e0e0 60%, #d8d8d8 80%, #d0d0d0 100%);
+}
+
+.category-name-sm {
+    font-size: 10px;
+    color: var(--text-regular);
+    font-weight: 500;
+}
+
+/* 促销横幅条 */
+.promo-bar {
+    margin: 0 12px 12px;
+    background: linear-gradient(135deg, #1e6b5c 0%, #2d8b78 100%);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(30, 107, 92, 0.3);
+}
+
+.promo-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    gap: 10px;
+    position: relative;
+}
+
+/* 金色光泽动画 */
+.promo-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.15), transparent);
+    animation: shimmer 3s infinite;
+}
+
+.promo-tag {
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #c9a227 0%, #d4b847 100%);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.promo-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+.promo-arrow {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+}
+
+/* 紧凑区块标题 */
+.section-header.compact {
+    padding: 12px 12px 8px;
+}
+
+.section-header.compact h3 {
+    font-size: 14px;
+}
+
+.section-header.compact .section-title-icon {
+    font-size: 16px;
+}
+
+/* 紧凑游戏网格 - 3列 */
+.game-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 12px 12px;
+}
+
+/* 小尺寸游戏卡片 */
+.game-card-sm {
+    background: linear-gradient(180deg, var(--bg-white) 0%, #f8f6f2 100%);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow:
+        0 2px 6px rgba(44, 62, 45, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: transform 0.2s;
+    border: 1px solid var(--border-light);
+}
+
+.game-card-sm:active {
+    transform: scale(0.98);
+}
+
+.game-thumb-sm {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 波光纹理 */
+.game-thumb-sm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 20 Q10 15 20 20 T40 20' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.12'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+/* 珍珠光泽 */
+.game-thumb-sm::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.game-badge-sm {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--text-white);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.game-badge-sm.hot {
+    background: linear-gradient(135deg, var(--coral) 0%, #c4754b 100%);
+}
+
+.game-badge-sm.new {
+    background: linear-gradient(135deg, var(--olive) 0%, #5a6b42 100%);
+}
+
+.game-name-sm {
+    padding: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: linear-gradient(180deg, var(--bg-white) 0%, #faf8f5 100%);
+}
+
+/* 横向滚动游戏行 */
+.game-scroll-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 12px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.game-scroll-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* 迷你游戏卡片 */
+.game-card-mini {
+    flex-shrink: 0;
+    width: 72px;
+    text-decoration: none;
+}
+
+.game-thumb-mini {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 2px 6px rgba(44, 62, 45, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 4px;
+}
+
+/* 波光效果 */
+.game-thumb-mini::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath d='M0 15 Q7.5 10 15 15 T30 15' stroke='%23ffffff' stroke-width='0.8' fill='none' opacity='0.15'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+/* 珍珠光泽 */
+.game-thumb-mini::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -40%;
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.game-name-mini {
+    font-size: 10px;
+    color: var(--text-regular);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
