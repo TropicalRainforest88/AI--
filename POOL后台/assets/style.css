@@ -1,5 +1,5 @@
 /* ========================================
-   审核中心 - 全局样式
+   POOL后台 - 全局样式
    ======================================== */
 
 * {
@@ -60,12 +60,10 @@
    ======================================== */
 
 [data-theme="dark"] {
-    /* 主色调 - 深色模式下稍微调亮 */
     --primary-color: #409eff;
     --primary-hover: #79bbff;
     --primary-light: rgba(64, 158, 255, 0.15);
 
-    /* 功能色 - 深色模式 */
     --success-color: #67c23a;
     --success-light: rgba(103, 194, 58, 0.15);
     --warning-color: #e6a23c;
@@ -75,36 +73,29 @@
     --info-color: #909399;
     --info-light: rgba(144, 147, 153, 0.15);
 
-    /* 文字色 - 深色模式 */
     --text-primary: #e5eaf3;
     --text-regular: #cfd3dc;
     --text-secondary: #a3a6ad;
     --text-placeholder: #6c6e72;
 
-    /* 边框色 - 深色模式 */
     --border-color: #4c4d4f;
     --border-light: #414243;
     --border-lighter: #363637;
 
-    /* 背景色 - 深色模式 */
     --bg-color: #1d1e1f;
     --bg-white: #2b2b2c;
 
-    /* 侧边栏 - 深色模式 */
     --sidebar-bg: #232324;
     --sidebar-hover: #363637;
     --sidebar-active: rgba(64, 158, 255, 0.15);
 
-    /* 顶部栏 - 深色模式 */
     --header-bg: #232324;
 
-    /* 阴影 - 深色模式 */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* 深色模式下的额外样式调整 */
 [data-theme="dark"] .form-control,
 [data-theme="dark"] select.form-control {
     background-color: var(--bg-color);
@@ -175,128 +166,6 @@ ul, li {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.sidebar-logo .pending-badge-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.sidebar-logo .pending-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #ff4d4f;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 6px;
-    border-radius: 11px;
-    line-height: 1;
-}
-
-.sidebar-logo .badge-info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fa8c16;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    font-style: normal;
-    line-height: 1;
-    flex-shrink: 0;
-}
-
-.sidebar-logo .badge-tooltip {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 320px;
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    padding: 14px 16px;
-    z-index: 1000;
-    font-size: 12px;
-    line-height: 1.8;
-    color: var(--text-regular);
-}
-
-.sidebar-logo .pending-badge-wrap:hover .badge-tooltip {
-    display: block;
-}
-
-.sidebar-logo .badge-tooltip::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 16px;
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border-left: 1px solid var(--border-color);
-    border-top: 1px solid var(--border-color);
-    transform: rotate(45deg);
-}
-
-.sidebar-logo .badge-tooltip .tooltip-title {
-    font-weight: 700;
-    color: #d46b08;
-    font-size: 13px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.sidebar-logo .badge-tooltip .tooltip-title .tooltip-new {
-    display: inline-block;
-    background: #ff4d4f;
-    color: #fff;
-    font-size: 9px;
-    font-weight: 700;
-    padding: 1px 4px;
-    border-radius: 3px;
-}
-
-.sidebar-logo .badge-tooltip code {
-    background: rgba(250, 140, 22, 0.12);
-    color: #d46b08;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: 'SFMono-Regular', Consolas, monospace;
-    font-size: 11px;
-}
-
-[data-theme="dark"] .sidebar-logo .badge-tooltip {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="dark"] .sidebar-logo .badge-tooltip::before {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .sidebar-logo .badge-tooltip .tooltip-title {
-    color: #ffc53d;
-}
-
-[data-theme="dark"] .sidebar-logo .badge-tooltip code {
-    background: rgba(212, 136, 6, 0.2);
-    color: #ffc53d;
 }
 
 .sidebar-menu {
@@ -873,154 +742,6 @@ select.form-control {
 }
 
 /* ========================================
-   时间线组件
-   ======================================== */
-
-.timeline {
-    padding: 0;
-}
-
-.timeline-item {
-    display: flex;
-    padding-bottom: 24px;
-    position: relative;
-}
-
-.timeline-item:last-child {
-    padding-bottom: 0;
-}
-
-.timeline-item:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    left: 11px;
-    top: 24px;
-    bottom: 0;
-    width: 2px;
-    background: var(--border-lighter);
-}
-
-.timeline-dot {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    border: 2px solid var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    z-index: 1;
-}
-
-.timeline-dot.success {
-    background: var(--success-light);
-    border-color: var(--success-color);
-}
-
-.timeline-dot.warning {
-    background: var(--warning-light);
-    border-color: var(--warning-color);
-}
-
-.timeline-dot.danger {
-    background: var(--danger-light);
-    border-color: var(--danger-color);
-}
-
-.timeline-content {
-    flex: 1;
-    margin-left: 16px;
-    padding-top: 2px;
-}
-
-.timeline-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-}
-
-.timeline-desc {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-}
-
-.timeline-time {
-    font-size: 12px;
-    color: var(--text-placeholder);
-}
-
-/* ========================================
-   上传组件
-   ======================================== */
-
-.upload-area {
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 40px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.upload-area:hover {
-    border-color: var(--primary-color);
-    background: var(--primary-light);
-}
-
-.upload-icon {
-    font-size: 48px;
-    color: var(--text-placeholder);
-    margin-bottom: 12px;
-}
-
-.upload-text {
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
-.upload-text em {
-    color: var(--primary-color);
-    font-style: normal;
-}
-
-.upload-hint {
-    font-size: 12px;
-    color: var(--text-placeholder);
-    margin-top: 8px;
-}
-
-/* ========================================
-   信息列表
-   ======================================== */
-
-.info-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-}
-
-.info-item {
-    display: flex;
-    align-items: flex-start;
-}
-
-.info-label {
-    width: 100px;
-    flex-shrink: 0;
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
-.info-value {
-    flex: 1;
-    font-size: 14px;
-    color: var(--text-primary);
-}
-
-/* ========================================
    首页样式
    ======================================== */
 
@@ -1162,7 +883,6 @@ select.form-control {
     transform: rotate(15deg);
 }
 
-/* 太阳图标（浅色模式显示） */
 .theme-toggle .icon-sun {
     display: block;
 }
@@ -1171,7 +891,6 @@ select.form-control {
     display: none;
 }
 
-/* 深色模式下切换图标 */
 [data-theme="dark"] .theme-toggle .icon-sun {
     display: none;
 }
@@ -1196,10 +915,6 @@ select.form-control {
     }
 
     .home-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .info-list {
         grid-template-columns: 1fr;
     }
 }

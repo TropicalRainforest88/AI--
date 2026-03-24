@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首頁 - POOL後台</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- 側邊欄 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">POOL後台</div>
+            </div>
+            <nav class="sidebar-menu">
+                <!-- 首頁 -->
+                <div class="menu-item">
+                    <a href="index.html" class="menu-title" style="color: var(--primary-color);">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
+                        <span class="menu-text">首頁</span>
+                    </a>
+                </div>
+
+                <!-- 監控 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </span>
+                        <span class="menu-text">監控</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="#">監控概覽</a></li>
+                    </ul>
+                </div>
+
+                <!-- 管理 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                        </span>
+                        <span class="menu-text">管理</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="#">管理概覽</a></li>
+                    </ul>
+                </div>
+
+                <!-- 渠道 -->
+                <div class="menu-item open">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 3h5v5"></path>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
+                            </svg>
+                        </span>
+                        <span class="menu-text">渠道</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="wechat-list.html">
+                                <span class="submenu-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </span>
+                                金寶微信列表
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 日誌 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </span>
+                        <span class="menu-text">日誌</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="#">操作日誌</a></li>
+                    </ul>
+                </div>
+
+                <!-- 簡訊 -->
+                <div class="menu-item">
+                    <div class="menu-title">
+                        <span class="menu-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </span>
+                        <span class="menu-text">簡訊</span>
+                        <span class="menu-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <ul class="submenu">
+                        <li class="submenu-item"><a href="#">簡訊管理</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主內容區 -->
+        <main class="main">
+            <!-- 頂部欄 -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item active">首頁</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <!-- 主題切換按鈕 -->
+                    <button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式">
+                        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                    <div class="header-user">
+                        <div class="user-avatar">A</div>
+                        <span class="user-name">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 內容區 -->
+            <div class="content">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="home-logo">
+                            <div class="logo-image" style="background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);">
+                                <span class="logo-text">POOL</span>
+                            </div>
+                            <h1 class="home-title">POOL後台</h1>
+                            <p class="home-desc">POOL後台管理系統，提供完整的後台管理功能</p>
+
+                            <div class="home-stats">
+                                <div class="stat-card">
+                                    <div class="stat-icon primary">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-value">--</div>
+                                    <div class="stat-label">用戶數</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon success">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-value">--</div>
+                                    <div class="stat-label">在線數</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon warning">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-value">--</div>
+                                    <div class="stat-label">交易額</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon danger">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-value">--</div>
+                                    <div class="stat-label">報表數</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 主題切換功能
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // 頁面載入時檢查已保存的主題
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
+        // 菜單展開/收起
+        document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
+            if (title.querySelector('.menu-arrow')) {
+                title.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const menuItem = this.parentElement;
+                    menuItem.classList.toggle('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
