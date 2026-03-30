@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Watchdog Health Check
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.openclaw/watchdog/watchdog.sh
+WorkingDirectory=%h/.openclaw
+
+[Install]
+WantedBy=default.target

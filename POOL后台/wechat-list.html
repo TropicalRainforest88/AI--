@@ -648,6 +648,24 @@
         .data-table.filter-active tr[data-bank-stopped="false"]:hover > td.bank-cell {
             opacity: 0.5;
         }
+
+        /* 警告：停用但没有锁卡、没有维护 */
+        tr.alert-row {
+            background: #fff1f0 !important;
+        }
+        tr.alert-row:hover {
+            background: #ffe7e5 !important;
+        }
+        tr.alert-row td {
+            background: #fff1f0 !important;
+        }
+        tr.alert-row:hover td {
+            background: #ffe7e5 !important;
+        }
+        tr.alert-row .bank-code-link {
+            color: #f5222d;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -1110,6 +1128,119 @@
             document.getElementById('filterCount').textContent = count;
         }
 
+        // 标记警告行：停用 + 没锁卡 + 没维护
+        function markAlertRows() {
+            var tbody = document.querySelector('.data-table tbody');
+            var rows = tbody.querySelectorAll('tr');
+
+            // 先清除所有警告标记
+            rows.forEach(function(r) { r.classList.remove('alert-row'); });
+
+            rows.forEach(function(row) {
+                // 找到该行的停用 checkbox
+                var disableCheckbox = row.querySelector('td.bank-cell input[type="checkbox"]');
+                if (!disableCheckbox) return; // 没有停用 checkbox，跳过
+
+                // 找到该行所属账号的一层、二层 radio（通过向上找到账号第一行）
+                var accountFirstRow = row;
+                while (accountFirstRow && !accountFirstRow.classList.contains('account-first')) {
+                    accountFirstRow = accountFirstRow.previousElementSibling;
+                }
+                if (!accountFirstRow) return;
+
+                // 获取该账号的一层、二层 radio
+                var layer1Radio = accountFirstRow.querySelector('td.check-col:nth-last-child(2) input[type="radio"]');
+                var layer2Radio = accountFirstRow.querySelector('td.check-col:nth-last-child(1) input[type="radio"]');
+
+                // 判断条件：停用勾选 && 一层未勾选 && 二层未勾选
+                var isAlert = disableCheckbox.checked &&
+                             (!layer1Radio || !layer1Radio.checked) &&
+                             (!layer2Radio || !layer2Radio.checked);
+
+                // 标记所有同银行的行（该 checkbox 的 rowspan 覆盖范围）
+                if (isAlert) {
+                    var td = disableCheckbox.closest('td');
+                    var span = parseInt(td.getAttribute('rowspan')) || 1;
+                    var currentRow = row;
+                    for (var i = 0; i < span; i++) {
+                        if (currentRow) {
+                            currentRow.classList.add('alert-row');
+                            currentRow = currentRow.nextElementSibling;
+                        }
+                    }
+                }
+            });
+        }
+
+        // 置顶警告行（按账号分组排序）
+        function sortAlertRowsToTop() {
+            var tbody = document.querySelector('.data-table tbody');
+            var accountGroups = [];
+            var currentGroup = [];
+
+            // 按账号分组
+            var rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.forEach(function(row) {
+                if (row.classList.contains('account-first')) {
+                    if (currentGroup.length > 0) {
+                        accountGroups.push(currentGroup);
+                    }
+                    currentGroup = [row];
+                } else {
+                    currentGroup.push(row);
+                }
+            });
+            if (currentGroup.length > 0) {
+                accountGroups.push(currentGroup);
+            }
+
+            // 将账号分为警告组和非警告组
+            var alertGroups = [];
+            var normalGroups = [];
+
+            accountGroups.forEach(function(group) {
+                var hasAlert = group.some(function(row) {
+                    return row.classList.contains('alert-row');
+                });
+                if (hasAlert) {
+                    alertGroups.push(group);
+                } else {
+                    normalGroups.push(group);
+                }
+            });
+
+            // 清空 tbody
+            tbody.innerHTML = '';
+
+            // 先添加警告组，再添加正常组
+            alertGroups.concat(normalGroups).forEach(function(group) {
+                group.forEach(function(row) {
+                    tbody.appendChild(row);
+                });
+            });
+        }
+
+        // 监听所有 checkbox 和 radio 变化
+        function bindCheckboxListeners() {
+            // 停用 checkbox
+            document.querySelectorAll('.data-table tbody td.bank-cell input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    updateBankStoppedAttr(this);
+                    updateFilterCount();
+                    markAlertRows();
+                    sortAlertRowsToTop();
+                });
+            });
+
+            // 一层、二层 radio
+            document.querySelectorAll('.data-table tbody td.check-col input[type="radio"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    markAlertRows();
+                    sortAlertRowsToTop();
+                });
+            });
+        }
+
         // 点击遮罩关闭
         document.getElementById('bankCardModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
@@ -1140,12 +1271,11 @@
             });
         });
 
-        // 表格内停用 checkbox 直接点击 → 同步属性 + 更新计数
-        document.querySelectorAll('.data-table tbody td.bank-cell input[type="checkbox"]').forEach(function(cb) {
-            cb.addEventListener('change', function() {
-                updateBankStoppedAttr(this);
-                updateFilterCount();
-            });
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            bindCheckboxListeners();
+            markAlertRows();
+            sortAlertRowsToTop();
         });
     </script>
 

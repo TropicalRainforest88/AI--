@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI AGENT - OpenClaw Operations</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 頂部導航 */
+        .top-bar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar h1 { font-size: 22px; font-weight: 700; }
+        .top-bar .subtitle { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+        .top-bar .back-link {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .top-bar .back-link:hover { opacity: 1; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        /* 統計卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .stat-card .stat-label { font-size: 12px; color: #999; margin-bottom: 8px; }
+        .stat-card .stat-value { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+        .stat-card .stat-desc { font-size: 11px; color: #999; margin-top: 4px; }
+        .stat-card.highlight { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stat-card.highlight .stat-label,
+        .stat-card.highlight .stat-desc { color: rgba(255,255,255,0.8); }
+        .stat-card.highlight .stat-value { color: white; }
+
+        /* 區塊卡片 */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .section-card h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin: 16px 0 10px;
+        }
+
+        /* 表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: #fafafa;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+        }
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f5f5f5;
+            vertical-align: top;
+        }
+        .data-table tr:hover td { background: #fafafa; }
+
+        /* 標籤 */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .tag-blue { background: #e6f7ff; color: #1890ff; }
+        .tag-green { background: #f6ffed; color: #52c41a; }
+        .tag-orange { background: #fff7e6; color: #fa8c16; }
+        .tag-purple { background: #f9f0ff; color: #722ed1; }
+        .tag-red { background: #fff1f0; color: #f5222d; }
+        .tag-cyan { background: #e6fffb; color: #13c2c2; }
+
+        /* 架構樹 */
+        .tree-block {
+            background: #1a1a2e;
+            color: #a0e8af;
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .tree-comment { color: #666; }
+
+        /* 狀態機 */
+        .state-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 16px 0;
+        }
+        .state-node {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .state-standby { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+        .state-active { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+        .state-cooldown { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+        .state-alert { background: #fff1f0; color: #f5222d; border: 1px solid #ffa39e; }
+        .state-arrow { color: #999; font-size: 18px; }
+
+        /* 兩欄佈局 */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+        /* 代碼塊 */
+        code {
+            background: rgba(0,0,0,0.06);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 12px;
+        }
+
+        /* 流程圖 */
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+        }
+        .flow-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .flow-step-content { font-size: 13px; }
+        .flow-step-content strong { color: #1a1a2e; }
+        .flow-connector {
+            width: 28px;
+            display: flex;
+            justify-content: center;
+        }
+        .flow-connector .line {
+            width: 2px;
+            height: 16px;
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <h1>OpenClaw Operations</h1>
+            <div class="subtitle">多 Agent 運維設定庫 — Agent 設定、Skill、Workspace 和部署流程</div>
+        </div>
+        <a href="../index.html" class="back-link">&larr; 返回導航</a>
+    </div>
+
+    <div class="container">
+        <!-- 統計概覽 -->
+        <div class="stats-grid">
+            <div class="stat-card highlight">
+                <div class="stat-label">Agent 數量</div>
+                <div class="stat-value">6</div>
+                <div class="stat-desc">含 main、cams-cryp、onepay 等</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Skill 總數</div>
+                <div class="stat-value">24</div>
+                <div class="stat-desc">按 workspace 隔離</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Telegram 群組</div>
+                <div class="stat-value">8</div>
+                <div class="stat-desc">含 PRE / OL 環境群組</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">HA 架構</div>
+                <div class="stat-value">2</div>
+                <div class="stat-desc">主備伺服器 + Watchdog</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">定時任務</div>
+                <div class="stat-value">2</div>
+                <div class="stat-desc">Daily Jira / Agent Digest</div>
+            </div>
+        </div>
+
+        <!-- 架構概覽 -->
+        <div class="section-card">
+            <h2>架構概覽</h2>
+            <div class="tree-block">openclaw_op/
+├── config/
+│   ├── openclaw.json          <span class="tree-comment"># 主設定（agent、bindings、channels）</span>
+│   └── cron-jobs.json         <span class="tree-comment"># 排程任務定義</span>
+├── workspaces/
+│   ├── cams-cryp-pre/         <span class="tree-comment"># PRE 環境 CAMS/CRYP agent workspace</span>
+│   │   ├── SOUL.md            <span class="tree-comment"># Agent 人設</span>
+│   │   └── skills/            <span class="tree-comment"># 18 個 skill</span>
+│   ├── cams-cryp-ol/          <span class="tree-comment"># OL 環境</span>
+│   ├── onepay/                <span class="tree-comment"># OnePay agent（PRE + OL 雙環境）</span>
+│   ├── gb-ol/                 <span class="tree-comment"># GB OL agent</span>
+│   ├── settlement/            <span class="tree-comment"># 結算 agent</span>
+│   └── openclaw-coderevie-ol/ <span class="tree-comment"># 代碼審查 agent</span>
+├── scripts/
+│   ├── deploy.sh              <span class="tree-comment"># 部署腳本（支援雙主機 HA 部署）</span>
+│   └── setup-standby.sh       <span class="tree-comment"># 備援伺服器初始化</span>
+└── watchdog/
+    ├── watchdog.sh            <span class="tree-comment"># HA 故障切換狀態機</span>
+    ├── openclaw-watchdog.service
+    └── openclaw-watchdog.timer <span class="tree-comment"># 30 秒健康檢查</span></div>
+        </div>
+
+        <!-- Agent 設定 -->
+        <div class="section-card">
+            <h2>Agent 設定</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th>環境</th>
+                        <th>模型</th>
+                        <th>Telegram 綁定</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>main</code></td>
+                        <td><span class="tag tag-blue">-</span></td>
+                        <td>openai/gpt-5.1-codex</td>
+                        <td>無（DM only）</td>
+                    </tr>
+                    <tr>
+                        <td><code>cams-cryp-pre</code></td>
+                        <td><span class="tag tag-orange">PRE</span></td>
+                        <td>openai/gpt-5.3-codex</td>
+                        <td>1 個群組</td>
+                    </tr>
+                    <tr>
+                        <td><code>cams-cryp-ol</code></td>
+                        <td><span class="tag tag-green">OL</span></td>
+                        <td>openai/gpt-5.3-codex</td>
+                        <td>5 個群組</td>
+                    </tr>
+                    <tr>
+                        <td><code>onepay</code></td>
+                        <td><span class="tag tag-purple">PRE + OL</span></td>
+                        <td>openai/gpt-5.4</td>
+                        <td>1 個群組</td>
+                    </tr>
+                    <tr>
+                        <td><code>gb-ol</code></td>
+                        <td><span class="tag tag-green">OL</span></td>
+                        <td>openai/gpt-5.4</td>
+                        <td>無</td>
+                    </tr>
+                    <tr>
+                        <td><code>openclaw-coderevie-ol</code></td>
+                        <td><span class="tag tag-blue">-</span></td>
+                        <td>openai/gpt-5.3-codex</td>
+                        <td>1 個群組（代碼審查）</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>命名規則</h3>
+            <p style="font-size:13px;color:#666;">格式：<code>{service}-{env}</code>，例如 <code>cams-cryp-pre</code>、<code>cams-cryp-ol</code>。例外：<code>onepay</code> 不帶環境後綴，透過訊息語境判斷環境。</p>
+        </div>
+
+        <div class="two-col">
+            <!-- Skill 架構 -->
+            <div class="section-card">
+                <h2>Skill 架構</h2>
+                <h3>CAMS/CRYP（18 個 Skill）</h3>
+                <table class="data-table">
+                    <thead><tr><th>類別</th><th>Skill</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="tag tag-blue">CAMS</span></td><td style="font-size:12px;">balance, deposit, withdraw, swap, merchant, liquidity, fund-flow, notify-alert, risk-address, wallet-transfer</td></tr>
+                        <tr><td><span class="tag tag-cyan">CRYP</span></td><td style="font-size:12px;">deposit, withdraw, notify, fee-gas, node-block</td></tr>
+                        <tr><td><span class="tag tag-purple">跨系統</span></td><td style="font-size:12px;">cams-cryp-query</td></tr>
+                        <tr><td><span class="tag tag-orange">規格</span></td><td style="font-size:12px;">cams-specs, cryp-specs</td></tr>
+                    </tbody>
+                </table>
+                <h3>OnePay（2 個 Skill）</h3>
+                <table class="data-table">
+                    <thead><tr><th>Skill</th><th>說明</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>onepay-direct-api</code></td><td style="font-size:12px;">充值建單、配對提現單、ELK 查詢</td></tr>
+                        <tr><td><code>onepay-jira</code></td><td style="font-size:12px;">Jira 開單整合</td></tr>
+                    </tbody>
+                </table>
+                <h3>其他 Agent</h3>
+                <table class="data-table">
+                    <thead><tr><th>Agent</th><th>Skill</th><th>說明</th></tr></thead>
+                    <tbody>
+                        <tr><td>gb-ol</td><td><code>elk-log-query</code></td><td style="font-size:12px;">ELK 日誌查詢</td></tr>
+                        <tr><td>settlement</td><td><code>settlement-bot</code></td><td style="font-size:12px;">結算訂單查詢、OCR</td></tr>
+                        <tr><td>coderevie</td><td><code>code-review</code></td><td style="font-size:12px;">自動代碼審查</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PR 生命週期 -->
+            <div class="section-card">
+                <h2>PR 生命週期</h2>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-step-num">1</div>
+                        <div class="flow-step-content"><strong>開發完成</strong> — Claude Code 執行 <code>/push-pr</code>，建分支、commit、開 PR</div>
+                    </div>
+                    <div class="flow-connector"><div class="line"></div></div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">2</div>
+                        <div class="flow-step-content"><strong>Code Review</strong> — 自動觸發 codereview agent 四面向審查</div>
+                    </div>
+                    <div class="flow-connector"><div class="line"></div></div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">3</div>
+                        <div class="flow-step-content"><strong>審查結果</strong> — approved 則 Telegram 提醒部署；need-change 則修改後重推</div>
+                    </div>
+                    <div class="flow-connector"><div class="line"></div></div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">4</div>
+                        <div class="flow-step-content"><strong>部署</strong> — 告訴 Agent「merge 並部署 PR #N」，觸發 deploy workflow</div>
+                    </div>
+                    <div class="flow-connector"><div class="line"></div></div>
+                    <div class="flow-step">
+                        <div class="flow-step-num">5</div>
+                        <div class="flow-step-content"><strong>驗證</strong> — 執行 <code>/verify-pr #N</code>，SSH 逐項驗證，標記 verified</div>
+                    </div>
+                </div>
+
+                <h3>Label 狀態機</h3>
+                <table class="data-table">
+                    <thead><tr><th>Label</th><th>含義</th><th>觸發</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="tag tag-blue">review</span></td><td>等待 code review</td><td>自動</td></tr>
+                        <tr><td><span class="tag tag-red">need-change</span></td><td>需修改</td><td>agent</td></tr>
+                        <tr><td><span class="tag tag-green">approved</span></td><td>審查通過</td><td>agent</td></tr>
+                        <tr><td><span class="tag tag-purple">deployed</span></td><td>已部署</td><td>workflow</td></tr>
+                        <tr><td><span class="tag tag-cyan">verified</span></td><td>驗證完成</td><td>skill</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- HA 故障切換 -->
+        <div class="section-card">
+            <h2>HA 故障切換 — Watchdog 狀態機</h2>
+            <div class="state-flow">
+                <div class="state-node state-standby">STANDBY<br><span style="font-size:11px;font-weight:400;">待命</span></div>
+                <div class="state-arrow">&rarr;</div>
+                <div style="font-size:11px;color:#999;text-align:center;">主機連續<br>5 分鐘無回應</div>
+                <div class="state-arrow">&rarr;</div>
+                <div class="state-node state-active">ACTIVE<br><span style="font-size:11px;font-weight:400;">接管</span></div>
+                <div class="state-arrow">&rarr;</div>
+                <div style="font-size:11px;color:#999;text-align:center;">主機恢復<br>穩定 1.5 分鐘</div>
+                <div class="state-arrow">&rarr;</div>
+                <div class="state-node state-cooldown">COOLDOWN<br><span style="font-size:11px;font-weight:400;">冷卻 5 分鐘</span></div>
+                <div class="state-arrow">&rarr;</div>
+                <div class="state-node state-standby">STANDBY</div>
+            </div>
+            <div style="margin-top:8px;">
+                <div class="state-node state-alert" style="display:inline-block;">ALERT<br><span style="font-size:11px;font-weight:400;">頻繁切換 &ge;3 次/小時</span></div>
+            </div>
+
+            <div class="two-col" style="margin-top:20px;">
+                <div>
+                    <h3>主伺服器（Primary）</h3>
+                    <table class="data-table">
+                        <tbody>
+                            <tr><td style="color:#999;">IP</td><td><code>100.127.134.23</code> (Tailscale)</td></tr>
+                            <tr><td style="color:#999;">主機名</td><td>hqj-ubuntu-21</td></tr>
+                            <tr><td style="color:#999;">OpenClaw</td><td>2026.3.13</td></tr>
+                            <tr><td style="color:#999;">Gateway</td><td><code>:18789</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>備援伺服器（Standby）</h3>
+                    <table class="data-table">
+                        <tbody>
+                            <tr><td style="color:#999;">IP</td><td><code>100.85.165.67</code> (Tailscale)</td></tr>
+                            <tr><td style="color:#999;">角色</td><td>待命（STANDBY）</td></tr>
+                            <tr><td style="color:#999;">切換</td><td>Watchdog 自動</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Telegram & Cron -->
+        <div class="two-col">
+            <div class="section-card">
+                <h2>Telegram 群組綁定</h2>
+                <table class="data-table">
+                    <thead><tr><th>群組</th><th>Agent</th></tr></thead>
+                    <tbody>
+                        <tr><td>PRE-CAMS_助理</td><td><code>cams-cryp-pre</code></td></tr>
+                        <tr><td>OL-CAMS_助理</td><td><code>cams-cryp-ol</code></td></tr>
+                        <tr><td>CRYP_產研測試群</td><td><code>cams-cryp-ol</code></td></tr>
+                        <tr><td>CAMS</td><td><code>cams-cryp-ol</code></td></tr>
+                        <tr><td>HQCC报告群</td><td><code>cams-cryp-ol</code></td></tr>
+                        <tr><td>CAMS/CRYP_助理工程師</td><td><code>cams-cryp-ol</code></td></tr>
+                        <tr><td>Pre-onepay助理</td><td><code>onepay</code></td></tr>
+                        <tr><td>Oenclaw_OP_代碼審查</td><td><code>openclaw-coderevie-ol</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section-card">
+                <h2>定時任務 & 部署指令</h2>
+                <h3>Cron Jobs</h3>
+                <table class="data-table">
+                    <thead><tr><th>任務</th><th>排程</th><th>Agent</th></tr></thead>
+                    <tbody>
+                        <tr><td>Daily Jira Digest</td><td>10:00</td><td><code>main</code></td></tr>
+                        <tr><td>Daily Agent Digest</td><td>21:00</td><td><code>main</code></td></tr>
+                    </tbody>
+                </table>
+                <h3>部署指令</h3>
+                <div class="tree-block" style="font-size:11px;line-height:1.7;margin-top:8px;">./scripts/deploy.sh --all           <span class="tree-comment"># 完整部署</span>
+./scripts/deploy.sh --config        <span class="tree-comment"># 僅 config</span>
+./scripts/deploy.sh --skills        <span class="tree-comment"># 僅 skill</span>
+./scripts/deploy.sh --soul          <span class="tree-comment"># 僅 SOUL.md</span>
+./scripts/deploy.sh --all --target both <span class="tree-comment"># HA 雙主機</span></div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

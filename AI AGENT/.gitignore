@@ -1,0 +1,27 @@
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.bak.*
+
+# Claude Code local config (keep shared skills visible)
+.claude/**
+!.claude/skills/
+!.claude/skills/**
+
+# Superset local config
+.superset/
+
+# AI knowledge (local reference only)
+ai.knowledge/

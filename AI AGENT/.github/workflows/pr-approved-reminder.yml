@@ -1,0 +1,76 @@
+name: PR Approved Reminder
+
+on:
+  schedule:
+    # UTC+8 weekdays 10:00, 14:00, 17:00
+    - cron: '0 2,6,9 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  CHAT_ID: ${{ vars.TELEGRAM_REMINDER_CHAT_ID }}
+
+jobs:
+  check-approved-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query approved PRs
+        id: query
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # reviewDecision requires branch protection rules; use reviews array instead
+          PRS=$(gh pr list \
+            --repo sitruc-workshop/openclaw_op \
+            --state open \
+            --json number,title,url,reviews,updatedAt \
+            --jq '[.[] | select(.reviews | map(.state) | any(. == "APPROVED"))]')
+
+          COUNT=$(echo "$PRS" | jq 'length')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No approved PRs pending merge."
+            exit 0
+          fi
+
+          # Build Telegram message
+          MSG="⏳ <b>待處理 PR 提醒</b>"
+          NOW=$(date +%s)
+
+          for row in $(echo "$PRS" | jq -r '.[] | @base64'); do
+            _jq() { echo "$row" | base64 --decode | jq -r "$1"; }
+            NUMBER=$(_jq '.number')
+            TITLE=$(_jq '.title' | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+            URL=$(_jq '.url')
+            UPDATED=$(_jq '.updatedAt')
+
+            # Calculate hours since last update
+            UPDATED_TS=$(date -d "$UPDATED" +%s 2>/dev/null || echo "$NOW")
+            DIFF_HOURS=$(( (NOW - UPDATED_TS) / 3600 ))
+
+            if [ "$DIFF_HOURS" -lt 1 ]; then
+              WAIT="不到 1 小時"
+            else
+              WAIT="${DIFF_HOURS} 小時"
+            fi
+
+            MSG=$(printf '%s\n\n<b>#%s</b> %s\n   ✅ Approved\n   🕐 等待 %s\n   🔗 <a href="%s">#%s</a>' \
+              "$MSG" "$NUMBER" "$TITLE" "$WAIT" "$URL" "$NUMBER")
+          done
+
+          # Save message to file to preserve newlines
+          echo "$MSG" > /tmp/telegram_msg.txt
+
+      - name: Send Telegram notification
+        if: steps.query.outputs.count != '0'
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${CHAT_ID}" \
+            -d parse_mode="HTML" \
+            --data-urlencode "text@/tmp/telegram_msg.txt" \
+            -o /dev/null -w "Telegram HTTP %{http_code}\n"

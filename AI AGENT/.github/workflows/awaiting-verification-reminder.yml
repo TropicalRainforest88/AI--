@@ -1,0 +1,79 @@
+name: Awaiting Verification Reminder
+
+on:
+  schedule:
+    # UTC 02:05, 06:05, 09:05 weekdays = UTC+8 10:05, 14:05, 17:05
+    # Staggered 5min after pr-approved-reminder to avoid Telegram rate limits
+    - cron: '5 2,6,9 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query unverified PRs
+        id: query
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Find PRs with awaiting-verification label (merged within last 7 days)
+          CUTOFF=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-7d +%Y-%m-%dT%H:%M:%SZ)
+
+          PRS=$(gh pr list --repo "${{ github.repository }}" \
+            --state all \
+            --label "awaiting-verification" \
+            --json number,title,url,mergedAt \
+            --jq "[.[] | select(.mergedAt > \"$CUTOFF\")]")
+
+          COUNT=$(echo "$PRS" | jq 'length')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No unverified PRs found."
+            exit 0
+          fi
+
+          # HTML escape helper for Telegram parse_mode=HTML
+          html_escape() { echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'; }
+
+          # Build Telegram message
+          NOW=$(date +%s)
+          MSG=$(printf '🔍 <b>待驗證 PR 提醒</b>\n\n')
+
+          echo "$PRS" | jq -c '.[]' | while read -r pr; do
+            NUMBER=$(echo "$pr" | jq -r '.number')
+            TITLE_RAW=$(echo "$pr" | jq -r '.title')
+            TITLE=$(html_escape "$TITLE_RAW")
+            URL=$(echo "$pr" | jq -r '.url')
+            MERGED=$(echo "$pr" | jq -r '.mergedAt')
+
+            # Calculate hours since merge
+            MERGED_TS=$(date -d "$MERGED" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$MERGED" +%s 2>/dev/null || echo "$NOW")
+            HOURS=$(( (NOW - MERGED_TS) / 3600 ))
+
+            printf '<b>#%s</b> %s\n   🕐 部署後等待 %s 小時\n   🔗 <a href="%s">#%s</a>\n\n' \
+              "$NUMBER" "$TITLE" "$HOURS" "$URL" "$NUMBER"
+          done > /tmp/reminder_msg.txt
+
+          MSG="${MSG}$(cat /tmp/reminder_msg.txt)"
+          MSG="${MSG}💡 使用 <code>/verify-pr #N</code> 進行驗證"
+
+          printf "%s" "$MSG" > /tmp/final_msg.txt
+          echo "has_prs=true" >> "$GITHUB_OUTPUT"
+
+      - name: Send Telegram notification
+        if: steps.query.outputs.has_prs == 'true'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          CHAT_ID="${{ vars.TELEGRAM_REMINDER_CHAT_ID }}"
+          MSG=$(cat /tmp/final_msg.txt)
+
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="$CHAT_ID" \
+            -d parse_mode="HTML" \
+            --data-urlencode "text=${MSG}" \
+            -o /dev/null -w "Telegram HTTP %{http_code}\n"

@@ -1,0 +1,349 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.2",
+    "lastTouchedAt": "2026-03-06T16:15:39.909Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-05T16:16:52.358Z",
+    "lastRunVersion": "2026.3.2",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "openai:default": {
+        "provider": "openai",
+        "mode": "api_key"
+      }
+    }
+  },
+  "update": {
+    "checkOnStart": false
+  },
+  "session": {
+    "resetByType": {
+      "direct": { "mode": "idle", "idleMinutes": 60 },
+      "group": { "mode": "idle", "idleMinutes": 120 },
+      "thread": { "mode": "daily", "atHour": 4 }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai/gpt-5.1-codex",
+        "fallbacks": [
+          "openai/gpt-5.3-codex"
+        ]
+      },
+      "models": {
+        "openai/gpt-5.3-codex": {},
+        "openai/gpt-5.1-codex": {
+          "alias": "GPT"
+        },
+        "openai/gpt-4.1": {},
+        "openai/gpt-5.4": {},
+        "openai/gpt-5.4-codex": {}
+      },
+      "compaction": {
+        "mode": "safeguard"
+      }
+    },
+    "list": [
+      {
+        "id": "main"
+      },
+      {
+        "id": "cams-cryp-pre",
+        "name": "cams-cryp-pre",
+        "workspace": "/home/hqj/.openclaw/workspace-cams-cryp-pre",
+        "agentDir": "/home/hqj/.openclaw/agents/cams-cryp-pre/agent",
+        "model": "openai/gpt-5.3-codex"
+      },
+      {
+        "id": "cams-cryp-ol",
+        "name": "cams-cryp-ol",
+        "workspace": "/home/hqj/.openclaw/workspace-cams-cryp-ol",
+        "agentDir": "/home/hqj/.openclaw/agents/cams-cryp-ol/agent",
+        "model": "openai/gpt-5.3-codex"
+      },
+      {
+        "id": "onepay",
+        "name": "onepay",
+        "workspace": "/home/hqj/.openclaw/workspace-onepay",
+        "agentDir": "/home/hqj/.openclaw/agents/onepay/agent",
+        "model": "openai/gpt-5.4"
+      },
+      {
+        "id": "gb-ol",
+        "name": "gb-ol",
+        "workspace": "/home/hqj/.openclaw/workspace-gb-ol",
+        "agentDir": "/home/hqj/.openclaw/agents/gb-ol/agent",
+        "model": "openai/gpt-5.4"
+      },
+      {
+        "id": "openclaw-coderevie-ol",
+        "name": "openclaw-coderevie-ol",
+        "workspace": "/home/hqj/.openclaw/workspace-openclaw-coderevie-ol",
+        "agentDir": "/home/hqj/.openclaw/agents/openclaw-coderevie-ol/agent",
+        "model": "openai/gpt-5.3-codex"
+      },
+      {
+        "id": "settlement",
+        "name": "settlement",
+        "workspace": "/home/hqj/.openclaw/workspace-settlement",
+        "agentDir": "/home/hqj/.openclaw/agents/settlement/agent",
+        "model": "openai/gpt-4.1"
+      },
+      {
+        "id": "onepay-internal",
+        "name": "onepay-internal",
+        "workspace": "/home/hqj/.openclaw/workspace-onepay-internal",
+        "agentDir": "/home/hqj/.openclaw/agents/onepay-internal/agent",
+        "model": "openai/gpt-5.4"
+      },
+      {
+        "id": "onepay-external",
+        "name": "onepay-external",
+        "workspace": "/home/hqj/.openclaw/workspace-onepay-external",
+        "agentDir": "/home/hqj/.openclaw/agents/onepay-external/agent",
+        "model": "openai/gpt-5.4"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "agentId": "cams-cryp-pre",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5147383846"
+        }
+      }
+    },
+    {
+      "agentId": "cams-cryp-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5259338266"
+        }
+      }
+    },
+    {
+      "agentId": "cams-cryp-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-1002325901340"
+        }
+      }
+    },
+    {
+      "agentId": "cams-cryp-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-1003894595368"
+        }
+      }
+    },
+    {
+      "agentId": "cams-cryp-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-1002097705414"
+        }
+      }
+    },
+    {
+      "agentId": "cams-cryp-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5175904159"
+        }
+      }
+    },
+    {
+      "agentId": "onepay-internal",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5189560927"
+        }
+      }
+    },
+    {
+      "agentId": "openclaw-coderevie-ol",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-5190882894"
+        }
+      }
+    },
+    {
+      "agentId": "settlement",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "__SETTLEMENT_TG_GROUP__"
+        }
+      }
+    },
+    {
+      "agentId": "onepay-internal",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-4995823830"
+        }
+      }
+    },
+    {
+      "agentId": "onepay-internal",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-477722033"
+        }
+      }
+    },
+    {
+      "agentId": "onepay-external",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-2009969451"
+        }
+      }
+    }
+  ],
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw",
+    "allowFrom": {
+      "*": ["957924055", "510192912"]
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "__TELEGRAM_BOT_TOKEN__",
+      "groups": {
+        "-5147383846": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-5259338266": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-1002097705414": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-1002325901340": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-5175904159": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-5189560927": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-5190882894": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-1003894595368": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "__SETTLEMENT_TG_GROUP__": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-4995823830": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-477722033": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        },
+        "-2009969451": {
+          "requireMention": true,
+          "enabled": true,
+          "allowFrom": ["*"]
+        }
+      },
+      "allowFrom": [
+        957924055
+      ],
+      "groupAllowFrom": [],
+      "groupPolicy": "allowlist",
+      "streaming": "partial"
+    }
+  },
+  "gateway": {
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowedOrigins": [
+        "http://localhost:18789",
+        "http://127.0.0.1:18789",
+        "http://100.127.134.23:18789",
+        "https://hqj-ubuntu-21.tail35514a.ts.net"
+      ],
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "__GATEWAY_AUTH_TOKEN__"
+    },
+    "trustedProxies": [
+      "127.0.0.1"
+    ]
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      },
+      "minimax-portal-auth": {
+        "enabled": true
+      }
+    }
+  }
+}

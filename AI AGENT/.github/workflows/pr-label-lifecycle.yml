@@ -1,0 +1,26 @@
+name: PR Label Lifecycle
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Add review label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+
+          # Add review label
+          gh pr edit "$PR_NUMBER" --repo "$REPO" --add-label "review"
+
+          # Remove need-change if exists (returning to review after fixes)
+          gh pr edit "$PR_NUMBER" --repo "$REPO" --remove-label "need-change" 2>/dev/null || true

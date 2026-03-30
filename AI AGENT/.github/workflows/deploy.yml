@@ -1,0 +1,378 @@
+name: Deploy OpenClaw
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deploy target (all/config/skills/soul/cron)'
+        required: false
+        default: 'all'
+      ref:
+        description: 'Git ref to deploy (commit SHA, tag, or branch). Leave empty for latest main.'
+        required: false
+        default: ''
+      server:
+        description: 'Deploy server (primary/standby/both)'
+        required: false
+        default: 'both'
+      pr_number:
+        description: 'PR number that triggered this deploy (for notification)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Setup SSH tools
+        run: sudo apt-get install -y sshpass rsync
+
+      - name: Create .env
+        run: |
+          echo "REMOTE_HOST=$REMOTE_HOST" > .env
+          echo "REMOTE_USER=$REMOTE_USER" >> .env
+          echo "OPENCLAW_BASE=$OPENCLAW_BASE" >> .env
+          echo "TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN" >> .env
+          echo "GATEWAY_AUTH_TOKEN=$GATEWAY_AUTH_TOKEN" >> .env
+          echo "JIRA_TOKEN=$JIRA_TOKEN" >> .env
+          echo "ELK_USER=$ELK_USER" >> .env
+          echo "ELK_PASS=$ELK_PASS" >> .env
+          printf 'ONEPAY_PLATFORMS_JSON=%s\n' "$(printf '%s' "$ONEPAY_PLATFORMS_JSON" | tr -d '\n')" >> .env
+          echo "ELK_MCP_TOKEN=$ELK_MCP_TOKEN" >> .env
+          echo "REVIEWER_APP_PRIVATE_KEY_BASE64=$REVIEWER_APP_PRIVATE_KEY_BASE64" >> .env
+          echo "OPENAI_API_KEY_MAIN=$OPENAI_API_KEY_MAIN" >> .env
+          echo "OPENAI_API_KEY_CAMS=$OPENAI_API_KEY_CAMS" >> .env
+          echo "OPENAI_API_KEY_ONEPAY=$OPENAI_API_KEY_ONEPAY" >> .env
+          echo "OPENAI_API_KEY_CODEREVIE_OL=$OPENAI_API_KEY_CODEREVIE_OL" >> .env
+          echo "OPENAI_API_KEY_GB_OL=$OPENAI_API_KEY_GB_OL" >> .env
+          echo "STANDBY_HOST=$STANDBY_HOST" >> .env
+          echo "STANDBY_USER=$STANDBY_USER" >> .env
+          echo "WATCHDOG_BOT_TOKEN=$WATCHDOG_BOT_TOKEN" >> .env
+          echo "WATCHDOG_CHAT_ID=$WATCHDOG_CHAT_ID" >> .env
+          echo "TG_BOT_TOKEN_SETTLEMENT=$TG_BOT_TOKEN_SETTLEMENT" >> .env
+          echo "ES_HOST_SETTLEMENT=$ES_HOST_SETTLEMENT" >> .env
+          echo "ES_PASS_SETTLEMENT=$ES_PASS_SETTLEMENT" >> .env
+          echo "TG_FORWARD_GROUP_SETTLEMENT=$TG_FORWARD_GROUP_SETTLEMENT" >> .env
+          echo "SETTLEMENT_TG_GROUP=$SETTLEMENT_TG_GROUP" >> .env
+          echo "OPENAI_API_KEY_SETTLEMENT=$OPENAI_API_KEY_SETTLEMENT" >> .env
+          echo "OPENAI_ADMIN_API_KEY=$OPENAI_ADMIN_API_KEY" >> .env
+        env:
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          OPENCLAW_BASE: ${{ secrets.OPENCLAW_BASE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          GATEWAY_AUTH_TOKEN: ${{ secrets.GATEWAY_AUTH_TOKEN }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          ELK_USER: ${{ secrets.ELK_USER }}
+          ELK_PASS: ${{ secrets.ELK_PASS }}
+          ONEPAY_PLATFORMS_JSON: ${{ secrets.ONEPAY_PLATFORMS_JSON }}
+          ELK_MCP_TOKEN: ${{ secrets.ELK_MCP_TOKEN }}
+          REVIEWER_APP_PRIVATE_KEY_BASE64: ${{ secrets.REVIEWER_APP_PRIVATE_KEY_BASE64 }}
+          OPENAI_API_KEY_MAIN: ${{ secrets.OPENAI_API_KEY_MAIN }}
+          OPENAI_API_KEY_CAMS: ${{ secrets.OPENAI_API_KEY_CAMS }}
+          OPENAI_API_KEY_ONEPAY: ${{ secrets.OPENAI_API_KEY_ONEPAY }}
+          OPENAI_API_KEY_CODEREVIE_OL: ${{ secrets.OPENAI_API_KEY_CODEREVIE_OL }}
+          OPENAI_API_KEY_GB_OL: ${{ secrets.OPENAI_API_KEY_GB_OL }}
+          STANDBY_HOST: ${{ secrets.STANDBY_HOST }}
+          STANDBY_USER: ${{ secrets.STANDBY_USER }}
+          WATCHDOG_BOT_TOKEN: ${{ secrets.WATCHDOG_BOT_TOKEN }}
+          WATCHDOG_CHAT_ID: ${{ secrets.WATCHDOG_CHAT_ID }}
+          TG_BOT_TOKEN_SETTLEMENT: ${{ secrets.TG_BOT_TOKEN_SETTLEMENT }}
+          ES_HOST_SETTLEMENT: ${{ secrets.ES_HOST_SETTLEMENT }}
+          ES_PASS_SETTLEMENT: ${{ secrets.ES_PASS_SETTLEMENT }}
+          TG_FORWARD_GROUP_SETTLEMENT: ${{ secrets.TG_FORWARD_GROUP_SETTLEMENT }}
+          SETTLEMENT_TG_GROUP: ${{ secrets.SETTLEMENT_TG_GROUP }}
+          OPENAI_API_KEY_SETTLEMENT: ${{ secrets.OPENAI_API_KEY_SETTLEMENT }}
+          OPENAI_ADMIN_API_KEY: ${{ secrets.OPENAI_ADMIN_API_KEY }}
+
+      - name: Analyze diff for deploy target
+        id: analyze
+        if: github.event_name == 'push'
+        run: |
+          CHANGED=$(git diff HEAD~1 --name-only 2>/dev/null || echo "")
+          if [ -z "$CHANGED" ]; then
+            echo "target=all" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          HAS_CONFIG=false
+          HAS_CRON=false
+          HAS_SKILLS=false
+          HAS_SOUL=false
+          HAS_OTHER=false
+
+          while IFS= read -r file; do
+            case "$file" in
+              config/openclaw.json)           HAS_CONFIG=true ;;
+              config/cron-jobs.json)           HAS_CRON=true ;;
+              workspaces/*/SOUL.md)            HAS_SOUL=true ;;
+              *)
+                if [[ "$file" == workspaces/*/skills/* ]]; then
+                  HAS_SKILLS=true
+                else
+                  HAS_OTHER=true
+                fi
+                ;;
+            esac
+          done <<< "$CHANGED"
+
+          # Count how many categories changed
+          COUNT=0
+          TARGET=""
+          if $HAS_CONFIG;  then COUNT=$((COUNT+1)); TARGET="config"; fi
+          if $HAS_CRON;    then COUNT=$((COUNT+1)); TARGET="cron"; fi
+          if $HAS_SKILLS;  then COUNT=$((COUNT+1)); TARGET="skills"; fi
+          if $HAS_SOUL;    then COUNT=$((COUNT+1)); TARGET="soul"; fi
+
+          # Multiple categories or unknown files → deploy all
+          if [ "$COUNT" -ne 1 ] || $HAS_OTHER; then
+            TARGET="all"
+          fi
+
+          echo "target=${TARGET}" >> "$GITHUB_OUTPUT"
+          echo "Analyzed diff → target=${TARGET}"
+
+      - name: Extract PR number from merge commit
+        id: extract_pr
+        if: github.event_name == 'push'
+        run: |
+          MSG=$(git log -1 --format=%s)
+          PR_NUM=$(echo "$MSG" | grep -oE '#[0-9]+' | head -1 | tr -d '#' || echo "")
+          echo "pr_number=${PR_NUM}" >> "$GITHUB_OUTPUT"
+          echo "Extracted PR number: ${PR_NUM:-none}"
+
+      - name: Deploy
+        id: deploy
+        env:
+          SSHPASS: ${{ secrets.REMOTE_PASSWORD }}
+          SSHPASS_STANDBY: ${{ secrets.STANDBY_PASSWORD }}
+        run: |
+          TARGET="${{ steps.analyze.outputs.target || github.event.inputs.target || 'all' }}"
+          SERVER="${{ github.event.inputs.server || 'both' }}"
+          bash scripts/deploy.sh --${TARGET} --target ${SERVER}
+
+      - name: Health Check
+        id: healthcheck
+        if: always()
+        env:
+          SSHPASS: ${{ secrets.REMOTE_PASSWORD }}
+          SSHPASS_STANDBY: ${{ secrets.STANDBY_PASSWORD }}
+        run: |
+          SERVER="${{ github.event.inputs.server || 'both' }}"
+          REMOTE_USER="${{ secrets.REMOTE_USER }}"
+          REMOTE_HOST="${{ secrets.REMOTE_HOST }}"
+          STANDBY_USER="${{ secrets.STANDBY_USER }}"
+          STANDBY_HOST="${{ secrets.STANDBY_HOST }}"
+          RESTARTED="${{ steps.deploy.outputs.restarted }}"
+
+          PRIMARY_OK="skip"
+          STANDBY_OK="skip"
+
+          check_health() {
+            local label="$1" user="$2" host="$3" pass="$4"
+            echo "Checking ${label} (${host})..." >&2
+            local result
+            result=$(SSHPASS="$pass" sshpass -e ssh -o StrictHostKeyChecking=no "${user}@${host}" \
+              'if systemctl --user is-active openclaw-gateway.service >/dev/null 2>&1; then echo "GATEWAY_ACTIVE"; elif pgrep -f "openclaw.*gateway" >/dev/null 2>&1; then echo "GATEWAY_ACTIVE"; else echo "GATEWAY_INACTIVE"; fi' 2>/dev/null) || result="SSH_FAILED"
+            echo "  -> ${result}" >&2
+            echo "$result"
+          }
+
+          check_health_poll() {
+            local label="$1" user="$2" host="$3" pass="$4"
+            local max_wait=30
+            local interval=5
+            local elapsed=0
+            local result=""
+
+            echo "Polling ${label} (${host}) for gateway health (max ${max_wait}s)..." >&2
+            while [ $elapsed -lt $max_wait ]; do
+              result=$(SSHPASS="$pass" sshpass -e ssh -o StrictHostKeyChecking=no "${user}@${host}" \
+                'if systemctl --user is-active openclaw-gateway.service >/dev/null 2>&1; then echo "GATEWAY_ACTIVE"; elif pgrep -f "openclaw.*gateway" >/dev/null 2>&1; then echo "GATEWAY_ACTIVE"; else echo "GATEWAY_INACTIVE"; fi' 2>/dev/null) || result="SSH_FAILED"
+              echo "  [${elapsed}s] ${result}" >&2
+              if [ "$result" = "GATEWAY_ACTIVE" ]; then
+                echo "$result"
+                return 0
+              fi
+              sleep $interval
+              elapsed=$((elapsed + interval))
+            done
+
+            echo "  Timeout after ${max_wait}s" >&2
+            echo "$result"
+          }
+
+          if [ "$SERVER" = "primary" ] || [ "$SERVER" = "both" ]; then
+            if [ "$RESTARTED" = "true" ]; then
+              PRIMARY_OK=$(check_health_poll "primary" "$REMOTE_USER" "$REMOTE_HOST" "$SSHPASS")
+            else
+              PRIMARY_OK=$(check_health "primary" "$REMOTE_USER" "$REMOTE_HOST" "$SSHPASS")
+            fi
+          fi
+
+          if [ "$SERVER" = "standby" ] || [ "$SERVER" = "both" ]; then
+            if [ -n "$STANDBY_HOST" ]; then
+              if [ "$RESTARTED" = "true" ]; then
+                STANDBY_OK=$(check_health_poll "standby" "$STANDBY_USER" "$STANDBY_HOST" "${SSHPASS_STANDBY:-}")
+              else
+                STANDBY_OK=$(check_health "standby" "$STANDBY_USER" "$STANDBY_HOST" "${SSHPASS_STANDBY:-}")
+              fi
+            fi
+          fi
+
+          echo "primary_status=${PRIMARY_OK}" >> "$GITHUB_OUTPUT"
+          echo "standby_status=${STANDBY_OK}" >> "$GITHUB_OUTPUT"
+
+          # Fail if any checked server is unhealthy
+          if echo "$PRIMARY_OK" | grep -q "GATEWAY_ACTIVE\|skip"; then PRIMARY_PASS=true; else PRIMARY_PASS=false; fi
+          if echo "$STANDBY_OK" | grep -q "GATEWAY_ACTIVE\|skip"; then STANDBY_PASS=true; else STANDBY_PASS=false; fi
+
+          if $PRIMARY_PASS && $STANDBY_PASS; then
+            echo "all_healthy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "all_healthy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: PR Tracking (Tag + Labels)
+        id: pr_tracking
+        if: steps.deploy.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 1. Find PRs included in this deploy (before creating tag)
+          PREV_TAG=$(git tag -l 'deploy-*' --sort=-creatordate | head -1)
+          if [ -n "$PREV_TAG" ]; then
+            PRS=$(git log ${PREV_TAG}..HEAD --merges --oneline | grep -oE '#[0-9]+' | grep -oE '[0-9]+' | sort -u)
+          else
+            PRS=""
+          fi
+
+          # Also include manually specified PR
+          MANUAL_PR="${{ steps.extract_pr.outputs.pr_number || github.event.inputs.pr_number }}"
+          if [ -n "$MANUAL_PR" ]; then
+            PRS=$(printf "%s\n%s" "$PRS" "$MANUAL_PR" | sort -u | grep -v '^$')
+          fi
+
+          # 2. Create deploy tag
+          TAG="deploy-$(date -u +%Y%m%d-%H%M%S)"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "deploy_tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          # 3. Update PR labels
+          for pr in $PRS; do
+            gh pr edit "$pr" --add-label "deployed" --add-label "awaiting-verification" --remove-label "approved" 2>/dev/null || true
+          done
+
+          # HTML escape helper for Telegram parse_mode=HTML
+          html_escape() { echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'; }
+
+          # 4. Collect verification items for Telegram (write directly to file)
+          > /tmp/verify_msg.txt
+          for pr in $PRS; do
+            PR_TITLE_RAW=$(gh pr view "$pr" --json title --jq '.title' 2>/dev/null || echo "")
+            PR_TITLE=$(html_escape "$PR_TITLE_RAW")
+            PR_BODY=$(gh pr view "$pr" --json body --jq '.body' 2>/dev/null || echo "")
+
+            # Extract Post-Deploy verification section (try both old and new names)
+            CHECKLIST=$(echo "$PR_BODY" | awk '/^## Post-Deploy 驗證/{found=1;next} /^## /{found=0} found')
+            if [ -z "$CHECKLIST" ]; then
+              CHECKLIST=$(echo "$PR_BODY" | awk '/^## 測試確認/{found=1;next} /^## /{found=0} found')
+            fi
+
+            # Convert markdown checklist to bullet points for Telegram (with HTML escaping)
+            if [ -n "$CHECKLIST" ]; then
+              ITEMS=$(echo "$CHECKLIST" | grep -E '^\s*-\s*\[' | sed 's/^\s*-\s*\[.\]\s*/  • /' | while read -r line; do html_escape "$line"; done)
+            else
+              ITEMS="  • 無驗證項目"
+            fi
+
+            printf '<b>#%s</b> %s\n📋 驗證項目：\n%s\n\n' "$pr" "$PR_TITLE" "$ITEMS" >> /tmp/verify_msg.txt
+          done
+
+          # Use heredoc for multiline GITHUB_OUTPUT
+          echo "included_prs<<EOF" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$PRS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Notify Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          CHAT_ID="-5190882894"  # Oenclaw_OP_代碼審查
+          PR_NUMBER="${{ steps.extract_pr.outputs.pr_number || github.event.inputs.pr_number }}"
+          TARGET="${{ steps.analyze.outputs.target || github.event.inputs.target || 'all' }}"
+          SERVER="${{ github.event.inputs.server || 'both' }}"
+          DEPLOY_STATUS="${{ steps.deploy.outcome }}"
+          HC_STATUS="${{ steps.healthcheck.outputs.all_healthy }}"
+          PRIMARY="${{ steps.healthcheck.outputs.primary_status }}"
+          STANDBY="${{ steps.healthcheck.outputs.standby_status }}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Build status emoji
+          if [ "$DEPLOY_STATUS" = "success" ] && [ "$HC_STATUS" = "true" ]; then
+            EMOJI="✅"
+            TITLE="部署成功"
+          elif [ "$DEPLOY_STATUS" = "success" ] && [ "$HC_STATUS" != "true" ]; then
+            EMOJI="⚠️"
+            TITLE="部署完成但健康檢查異常"
+          else
+            EMOJI="❌"
+            TITLE="部署失敗"
+          fi
+
+          # PR context line
+          if [ -n "$PR_NUMBER" ]; then
+            PR_LINE="<b>PR:</b> <a href=\"https://github.com/sitruc-workshop/openclaw_op/pull/${PR_NUMBER}\">#${PR_NUMBER}</a>"
+          else
+            PR_LINE="<b>PR:</b> 手動觸發"
+          fi
+
+          # Health check details
+          HC_LINES=""
+          if echo "$PRIMARY" | grep -q "GATEWAY_ACTIVE"; then
+            HC_LINES="${HC_LINES}\n  Primary: ✅ 運行中"
+          elif [ "$PRIMARY" != "skip" ]; then
+            HC_LINES="${HC_LINES}\n  Primary: ❌ ${PRIMARY}"
+          fi
+          if echo "$STANDBY" | grep -q "GATEWAY_ACTIVE"; then
+            HC_LINES="${HC_LINES}\n  Standby: ✅ 運行中"
+          elif [ "$STANDBY" != "skip" ]; then
+            HC_LINES="${HC_LINES}\n  Standby: ❌ ${STANDBY}"
+          fi
+
+          MSG=$(printf "%s <b>%s</b>\n%s\n<b>目標:</b> --%s --target %s\n<b>部署:</b> %s\n<b>健康檢查:</b>%b\n<a href=\"%s\">查看 workflow run</a>" \
+            "$EMOJI" "$TITLE" "$PR_LINE" "$TARGET" "$SERVER" "$DEPLOY_STATUS" "$HC_LINES" "$RUN_URL")
+
+          # Append verification items if deploy succeeded
+          if [ "$DEPLOY_STATUS" = "success" ] && [ -f /tmp/verify_msg.txt ]; then
+            VERIFY_ITEMS=$(cat /tmp/verify_msg.txt)
+            if [ -n "$VERIFY_ITEMS" ]; then
+              TAG="${{ steps.pr_tracking.outputs.deploy_tag }}"
+              MSG=$(printf '%s\n\n🏷️ <b>Tag:</b> %s\n\n<b>包含的 PR：</b>\n%s⏳ 請使用 <code>/verify-pr</code> 進行驗證' "$MSG" "$TAG" "$VERIFY_ITEMS")
+            fi
+          fi
+
+          # Send via Telegram Bot API
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="$CHAT_ID" \
+            -d parse_mode="HTML" \
+            --data-urlencode "text=${MSG}" \
+            -o /dev/null -w "Telegram HTTP %{http_code}\n"

@@ -1,0 +1,197 @@
+name: PR Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  trigger-review:
+    runs-on: ubuntu-latest
+    # Skip draft PRs and bot-created PRs
+    if: github.event.pull_request.draft == false && github.actor != 'openclaw-reviewer[bot]'
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Wait for gateway reachability
+        env:
+          GATEWAY_HOST: ${{ secrets.REMOTE_HOST }}
+        run: |
+          for i in $(seq 1 5); do
+            if tailscale ping --c 1 "$GATEWAY_HOST" 2>/dev/null; then
+              echo "✅ Gateway reachable"
+              exit 0
+            fi
+            echo "⏳ Attempt $i/5 - waiting for route..."
+            sleep 2
+          done
+          echo "⚠️ Gateway not reachable after 10s, proceeding anyway"
+
+      - name: Install ws module
+        run: npm install ws
+
+      - name: Trigger codereview agent via WebSocket
+        env:
+          GATEWAY_HOST: ${{ secrets.REMOTE_HOST }}
+          GATEWAY_TOKEN: ${{ secrets.GATEWAY_AUTH_TOKEN }}
+          DEVICE_ID: ${{ secrets.DEVICE_ID }}
+          DEVICE_PRIVATE_KEY: ${{ secrets.DEVICE_PRIVATE_KEY }}
+          DEVICE_PUBLIC_KEY: ${{ secrets.DEVICE_PUBLIC_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_SOURCE: ${{ github.event.pull_request.head.ref }}
+          PR_TARGET: ${{ github.event.pull_request.base.ref }}
+        run: |
+          node << 'SCRIPT'
+          const crypto = require('crypto');
+          const WebSocket = require('ws');
+
+          const {
+            GATEWAY_HOST, GATEWAY_TOKEN, DEVICE_ID, DEVICE_PRIVATE_KEY, DEVICE_PUBLIC_KEY,
+            PR_NUMBER, PR_TITLE, PR_AUTHOR, PR_ACTION, PR_HEAD_SHA, PR_SOURCE, PR_TARGET
+          } = process.env;
+
+          // Fail fast if required secrets are missing
+          for (const [name, val] of [['GATEWAY_HOST', GATEWAY_HOST], ['GATEWAY_TOKEN', GATEWAY_TOKEN],
+            ['DEVICE_ID', DEVICE_ID], ['DEVICE_PRIVATE_KEY', DEVICE_PRIVATE_KEY], ['DEVICE_PUBLIC_KEY', DEVICE_PUBLIC_KEY]]) {
+            if (!val) { console.error(`❌ Missing required secret: ${name}`); process.exit(1); }
+          }
+
+          const WS_URL = `ws://${GATEWAY_HOST}:18789?token=${GATEWAY_TOKEN}`;
+          const TELEGRAM_GROUP = "-5190882894";
+          const AGENT_ID = "openclaw-coderevie-ol";
+          const IDEMPOTENCY_KEY = `cr-openclaw_op-pr-${PR_NUMBER}-${PR_HEAD_SHA.slice(0, 8)}`;
+          const MAX_RETRIES = 3;
+          const RETRY_DELAY_MS = 3000;
+          const CONNECT_TIMEOUT_MS = 10000;
+
+          function base64UrlEncode(buf) {
+            return buf.toString('base64').replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/g, '');
+          }
+
+          const message = [
+            `PR #${PR_NUMBER} 需要審查（觸發事件：${PR_ACTION}）。`,
+            ``,
+            `標題：${PR_TITLE}`,
+            `作者：${PR_AUTHOR}`,
+            `Source: ${PR_SOURCE}`,
+            `Target: ${PR_TARGET}`,
+            `Commit: ${PR_HEAD_SHA.slice(0, 8)}`,
+            ``,
+            `請執行完整的四面向代碼審查（程式碼品質、OpenClaw 規範、安全性、部署一致性）。`,
+            `審查完成後在 PR 上留下結構化報告，並根據結果自動 approve 或 request changes。`
+          ].join('\n');
+
+          function attempt(retryCount) {
+            console.log(`🔄 Attempt ${retryCount + 1}/${MAX_RETRIES}`);
+            const ws = new WebSocket(WS_URL);
+            let timer;
+
+            function send(obj) {
+              const data = JSON.stringify(obj);
+              console.log('→', data.slice(0, 200));
+              ws.send(data);
+            }
+
+            function done(code, msg) {
+              clearTimeout(timer);
+              console.log(msg);
+              ws.close();
+              process.exit(code);
+            }
+
+            function retry(reason) {
+              clearTimeout(timer);
+              ws.removeAllListeners();
+              ws.close();
+              if (retryCount + 1 < MAX_RETRIES) {
+                console.log(`⏳ ${reason}, retrying in ${RETRY_DELAY_MS / 1000}s...`);
+                setTimeout(() => attempt(retryCount + 1), RETRY_DELAY_MS);
+              } else {
+                done(1, `❌ Failed after ${MAX_RETRIES} attempts: ${reason}`);
+              }
+            }
+
+            timer = setTimeout(() => retry('Connection timeout'), CONNECT_TIMEOUT_MS);
+
+            ws.on('open', () => console.log('🔗 Connected to gateway'));
+
+            ws.on('message', (raw) => {
+              const msg = JSON.parse(raw.toString());
+              console.log('←', JSON.stringify(msg).slice(0, 200));
+
+              // Step 1: Respond to challenge with device auth (Ed25519 signed V3 payload)
+              if (msg.type === 'event' && msg.event === 'connect.challenge') {
+                const nonce = msg.payload.nonce;
+                const signedAtMs = Date.now();
+                const role = 'operator';
+                const scopes = ['operator.admin'];
+
+                // V3 payload: v3|deviceId|clientId|clientMode|role|scopes|signedAtMs|token|nonce|platform|deviceFamily
+                const payloadStr = ['v3', DEVICE_ID, 'gateway-client', 'backend', role,
+                  scopes.join(','), String(signedAtMs), GATEWAY_TOKEN, nonce, 'linux', ''].join('|');
+
+                const key = crypto.createPrivateKey(DEVICE_PRIVATE_KEY);
+                const signature = base64UrlEncode(crypto.sign(null, Buffer.from(payloadStr, 'utf8'), key));
+                const publicKey = base64UrlEncode(
+                  crypto.createPublicKey(DEVICE_PUBLIC_KEY).export({ type: 'spki', format: 'der' }).subarray(-32)
+                );
+
+                send({
+                  type: 'req',
+                  id: '1',
+                  method: 'connect',
+                  params: {
+                    minProtocol: 3,
+                    maxProtocol: 3,
+                    client: { id: 'gateway-client', version: '1.0.0', platform: 'linux', mode: 'backend' },
+                    caps: [],
+                    auth: { token: GATEWAY_TOKEN },
+                    device: { id: DEVICE_ID, publicKey, nonce, signedAt: signedAtMs, signature },
+                    role,
+                    scopes
+                  }
+                });
+                return;
+              }
+
+              // Step 2: After connect ok, send agent request
+              if (msg.type === 'res' && msg.id === '1' && (msg.ok || msg.result?.ok)) {
+                send({
+                  type: 'req',
+                  id: '2',
+                  method: 'agent',
+                  params: {
+                    agentId: AGENT_ID,
+                    idempotencyKey: IDEMPOTENCY_KEY,
+                    message: message,
+                    to: TELEGRAM_GROUP,
+                    channel: 'telegram',
+                    deliver: true
+                  }
+                });
+                return;
+              }
+
+              // Step 3: Agent request result
+              if (msg.type === 'res' && msg.id === '2') {
+                if (msg.ok || msg.result?.status === 'accepted' || msg.result?.ok) {
+                  done(0, `✅ Codereview agent triggered for PR #${PR_NUMBER} (key: ${IDEMPOTENCY_KEY})`);
+                } else {
+                  done(1, `❌ Agent request rejected: ${JSON.stringify(msg)}`);
+                }
+                return;
+              }
+            });
+
+            ws.on('error', (err) => retry(`WebSocket error: ${err.message}`));
+            ws.on('close', () => console.log('🔌 Connection closed'));
+          }
+
+          attempt(0);
+          SCRIPT

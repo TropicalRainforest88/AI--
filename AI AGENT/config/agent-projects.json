@@ -1,0 +1,11 @@
+{
+  "projects": [
+    { "agent": "main", "projectId": "proj_QVFS0jiJzXDJf7vM859K0CuI", "label": "Main" },
+    { "agent": "cams-cryp-pre", "projectId": "proj_ufsiGY2lc5UzGt5TTUkAoSV6", "label": "CAMS/CRYP" },
+    { "agent": "cams-cryp-ol", "projectId": "proj_ufsiGY2lc5UzGt5TTUkAoSV6", "label": "CAMS/CRYP" },
+    { "agent": "onepay", "projectId": "proj_I9G36J3h09U1PFx2EWaWw9N1", "label": "OnePay" },
+    { "agent": "gb-ol", "projectId": "proj_4NEqvRylaTlxVHNAWj3C8mX7", "label": "GB" },
+    { "agent": "settlement", "projectId": "proj_IvS2lxV2BOTZuqBvDqWpgref", "label": "Settlement" },
+    { "agent": "openclaw-coderevie-ol", "projectId": "proj_QZ9xihc2WP61YAGUiynXRbrn", "label": "CodeReview" }
+  ]
+}

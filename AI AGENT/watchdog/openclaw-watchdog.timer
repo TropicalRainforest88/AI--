@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Watchdog Timer (every 30s)
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=30s
+Persistent=true
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

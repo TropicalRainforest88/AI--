@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "31daa9b3-2812-4ad3-96f5-ad365fc5d89a",
+      "agentId": "main",
+      "sessionKey": "agent:main:main",
+      "name": "Daily Jira CAMS/CRYP In-Progress Digest (UTC+8 10:00)",
+      "enabled": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "tz": "Asia/Taipei"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Generate the daily Jira report using EXEC (not web_fetch), because Authorization header is required.\n\nUse this token:\n__JIRA_TOKEN__\n\nRun curl with Bearer auth to Jira search API:\nGET https://jira.1-pay.co/rest/api/2/search\nJQL: project in (CAMS, CRYP) AND statusCategory != Done ORDER BY updated DESC\nfields: summary,status,created,updated,progress,fixVersions,duedate\n\nIf CAMS/CRYP key query fails, auto-fallback:\n1) call /rest/api/2/project with same auth\n2) detect available project keys related to CAMS/CRYP by name/key contains cams/cryp (case-insensitive)\n3) rerun search with discovered keys\n\nOutput in Traditional Chinese with clear separators:\n--------------------\n(one blank line between issues)\nFor each issue include:\n單號、標題、狀態、最新進度、建單時間、更新時間、預計上版時間\nReport timestamp in UTC+8.\nIf still no data, include exact API error and what was tried."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "957924055"
+      }
+    },
+    {
+      "id": "daily-agent-digest-2100",
+      "agentId": "main",
+      "sessionKey": "agent:main:daily-digest",
+      "name": "Daily Agent Digest (21:00 UTC+8) [DEPRECATED]",
+      "enabled": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 21 * * *",
+        "tz": "Asia/Taipei"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "deprecated — replaced by daily-ops-report-0900"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "957924055"
+      }
+    },
+    {
+      "id": "daily-ops-report-0900",
+      "agentId": "main",
+      "sessionKey": "agent:main:daily-ops-report",
+      "name": "Daily Ops Report (09:00 UTC+8) [DISABLED - moved to local Claude Code]",
+      "enabled": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * *",
+        "tz": "Asia/Taipei"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "你是 OpenClaw 每日營運報告助手。\n\n請執行 daily-digest.sh 取得昨日的結構化資料：\nEXEC bash ~/.openclaw/scripts/daily-digest.sh\n\n拿到 JSON 結果後，請分析並撰寫報告：\n\n⚠️ 重要原則：所有分析和建議必須基於資料中實際存在的證據。\n- 若某 project 有用量成本但無 session 對話紀錄，歸入【異常警示】說明「有用量但無對話紀錄可分析」，不要推測其具體使用行為\n- 案件分析只能基於實際的 session 對話內容，不能根據 project 名稱或 token 數量推測行為\n- 改善建議必須引用具體的對話內容或數據作為依據\n\n1. 用量分析：\n   - 各 project 的 token 用量和成本，與前日比較\n   - 標記異常（增減超過 30% 的 project）\n\n2. 案件分析：\n   - 僅分析有 session 對話紀錄的案件\n   - 從對話內容判斷每個 session 的案件類型和處理結果\n   - 不要硬套分類，根據實際對話內容歸類\n   - 特別關注失敗案件的原因和可改善之處\n\n3. 改善建議：\n   - 基於失敗場景提出流程改善建議\n   - 基於用量異常提出成本優化建議\n   - 每條建議須標明依據來源（session ID、對話摘要、或用量數據）\n\n用繁體中文輸出，格式如下：\n\n📊 每日營運報告 — {日期}\n\n【用量摘要】\n表格：Agent | Tokens | 成本(USD) | 較前日\n\n【案件統計】\n按類型和結果統計（僅含有對話紀錄的案件）\n\n【重點案件】\n值得注意的案件，每個 1-2 行\n\n【異常警示】\n用量或案件的異常模式（含有用量但無紀錄的 project）\n\n【改善建議】\n具體可行的改善方向（須附依據）\n\n如果腳本執行失敗或回傳 error JSON，回覆錯誤訊息即可。"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "957924055"
+      }
+    },
+    {
+      "id": "codereview-pr-fallback",
+      "agentId": "openclaw-coderevie-ol",
+      "sessionKey": "agent:openclaw-coderevie-ol:pr-review-fallback",
+      "name": "PR Code Review Fallback (Weekday 10:00 & 15:00)",
+      "enabled": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10,15 * * 1-5",
+        "tz": "Asia/Taipei"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "（低頻兜底檢查）檢查 sitruc-workshop/openclaw_op repo 是否有尚未審查的 open PR（沒有 openclaw-reviewer[bot] 留言的）。若有，進行完整的四面向代碼審查並在 PR 上留下結構化報告。若所有 open PR 都已審查過，回覆「所有 PR 已審查」即可。"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "group:-5190882894"
+      }
+    }
+  ]
+}
