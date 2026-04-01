@@ -385,6 +385,20 @@
             transform: translateX(20px);
         }
 
+        .new-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            background: #f5222d;
+            border-radius: 3px;
+            padding: 1px 4px;
+            margin-left: 4px;
+            vertical-align: middle;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+        }
+
         /* 表头 checkbox 样式 */
         .th-check {
             display: inline-flex;
@@ -627,9 +641,9 @@
                                 <th>STF</th>
                                 <th>SOC IP</th>
                                 <th>PC IP</th>
-                                <th>微信版本</th>
-                                <th>金寶版本</th>
-                                <th>設備版本</th>
+                                <th>微信版本<span class="new-badge">NEW</span></th>
+                                <th>金寶版本<span class="new-badge">NEW</span></th>
+                                <th>設備版本<span class="new-badge">NEW</span></th>
                                 <th><label class="th-check"><input type="checkbox" checked>預警設定</label></th>
                                 <th><label class="th-check"><input type="checkbox" checked>內嵌 SSR</label></th>
                                 <th>初始化 SSR</th>
