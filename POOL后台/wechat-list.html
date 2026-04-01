@@ -63,6 +63,41 @@
             font-size: 10px;
             color: #999;
         }
+        .nav-menu-item.has-dropdown {
+            position: relative;
+        }
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            z-index: 200;
+            padding: 4px 0;
+        }
+        .nav-menu-item.has-dropdown:hover .nav-dropdown {
+            display: block;
+        }
+        .nav-dropdown a {
+            display: block;
+            padding: 9px 16px;
+            font-size: 13px;
+            color: #555;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .nav-dropdown a:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .nav-dropdown a.active {
+            color: #1890ff;
+            background: #e6f7ff;
+        }
         .nav-right {
             display: flex;
             align-items: center;
@@ -674,7 +709,12 @@
             <div class="nav-menu-item">管理 <span class="caret">&#9662;</span></div>
             <div class="nav-menu-item">渠道 <span class="caret">&#9662;</span></div>
             <div class="nav-menu-item">日誌 <span class="caret">&#9662;</span></div>
-            <div class="nav-menu-item">簡訊 <span class="caret">&#9662;</span></div>
+            <div class="nav-menu-item has-dropdown">簡訊 <span class="caret">&#9662;</span>
+                <div class="nav-dropdown">
+                    <a href="connection-settings.html">金寶連線設定</a>
+                    <a href="wechat-list.html" class="active">金寶微信銀行列表</a>
+                </div>
+            </div>
         </div>
         <div class="nav-right">
             <div class="nav-notify">
@@ -743,7 +783,7 @@
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
                         </span>
                         篩選停用
-                        <span class="filter-count" id="filterCount">8</span>
+                        <span class="filter-count" id="filterCount">7</span>
                     </div>
                     <div class="toolbar-right">
                         <button class="btn btn-info">匯出</button>
@@ -759,6 +799,7 @@
                             <tr>
                                 <th>微信</th>
                                 <th>IP</th>
+                                <th>版本信息</th>
                                 <th>銀行名稱</th>
                                 <th>銀行代碼</th>
                                 <th>微信銀行名稱</th>
@@ -781,11 +822,18 @@
                                         <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">8.0.50</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">v2.0.20260327</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">Android 10</span>
+                                    </div>
+                                </td>
                                 <td class="bank-name bank-cell">行動吉林省農村信用社聯合社</td>
                                 <td class="bank-code bank-cell">JLRC_P</td>
                                 <td class="wechat-bank-name bank-cell">吉林農商銀行 吉林農信</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1017-吉林農信-00015</span></td>
-                                <td class="check-col bank-cell"><input type="checkbox" checked></td>
+                                <td class="check-col bank-cell"><input type="checkbox"></td>
                                 <td class="check-col"><input type="radio" name="layer-227"></td>
                                 <td class="check-col"><input type="radio" name="layer-227"></td>
                             </tr>
@@ -800,6 +848,13 @@
                                         <span class="ip-label">PC IP: </span><span class="ip-text">-</span><br>
                                         <span class="ip-label">SSR IP: </span><span class="ip-text">59.110.159.138</span>
                                         <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">8.0.58</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">v2.0.20260326</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">Android 7</span>
                                     </div>
                                 </td>
                                 <td class="bank-name bank-cell" rowspan="2">行動華夏銀行</td>
@@ -833,6 +888,13 @@
                                         <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                     </div>
                                 </td>
+                                <td rowspan="3">
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">8.0.50</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">v2.0.20260327</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">Android 10</span>
+                                    </div>
+                                </td>
                                 <td class="bank-name bank-cell" rowspan="2">行動中國銀行</td>
                                 <td class="bank-code bank-cell" rowspan="2">BOC_P</td>
                                 <td class="wechat-bank-name bank-cell" rowspan="2">中國銀行微信銀行</td>
@@ -852,6 +914,71 @@
                                 <td class="check-col bank-cell"><input type="checkbox" checked></td>
                             </tr>
 
+                            <!-- ===== VX-00250: PC IP only × 1 card ===== -->
+                            <tr class="account-first" data-bank-stopped="false" data-pc-group="true">
+                                <td class="wechat-id">VX-00250</td>
+                                <td>
+                                    <div class="ip-info">
+                                        <span class="ip-label">SOC IP: </span><span class="ip-text">-</span><br>
+                                        <span class="ip-label">PC IP: </span><span class="ip-link">10.61.80.92</span>
+                                        <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><br>
+                                        <span class="ip-label">SSR IP: </span><span class="ip-text">47.102.133.58</span>
+                                        <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">3.9.12</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">V.0.7.2</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">-</span>
+                                    </div>
+                                </td>
+                                <td class="bank-name bank-cell">行動華夏銀行</td>
+                                <td class="bank-code bank-cell">HXB_P</td>
+                                <td class="wechat-bank-name bank-cell">華夏銀行</td>
+                                <td class="bank-cell"><span class="bank-code-link">GB1033-華夏-00021</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                                <td class="check-col bank-cell"><input type="checkbox"></td>
+                                <td class="check-col"><input type="radio" name="layer-250"></td>
+                                <td class="check-col"><input type="radio" name="layer-250"></td>
+                            </tr>
+
+                            <!-- ===== VX-00253: PC IP only × 中國銀行 × 2 cards + 農業 × 1 card ===== -->
+                            <tr class="account-first" data-bank-stopped="false" data-pc-group="true">
+                                <td class="wechat-id" rowspan="3">VX-00253</td>
+                                <td rowspan="3">
+                                    <div class="ip-info">
+                                        <span class="ip-label">SOC IP: </span><span class="ip-text">-</span><br>
+                                        <span class="ip-label">PC IP: </span><span class="ip-link">10.61.80.144</span>
+                                        <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><br>
+                                        <span class="ip-label">SSR IP: </span><span class="ip-text">-</span>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">3.9.12</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">V.0.7.2</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">-</span>
+                                    </div>
+                                </td>
+                                <td class="bank-name bank-cell" rowspan="2">行動中國銀行</td>
+                                <td class="bank-code bank-cell" rowspan="2">BOC_P</td>
+                                <td class="wechat-bank-name bank-cell" rowspan="2">中國銀行微信銀行</td>
+                                <td class="bank-cell"><span class="bank-code-link">GB1011-中國-00055</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox"></td>
+                                <td class="check-col" rowspan="3"><input type="radio" name="layer-253"></td>
+                                <td class="check-col" rowspan="3"><input type="radio" name="layer-253"></td>
+                            </tr>
+                            <tr data-bank-stopped="false">
+                                <td class="bank-cell"><span class="bank-code-link">GB1011-中國-00058</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            </tr>
+                            <tr data-bank-stopped="false">
+                                <td class="bank-name bank-cell">行動農業銀行</td>
+                                <td class="bank-code bank-cell">ABC_P</td>
+                                <td class="wechat-bank-name bank-cell">中國農業銀行微信銀行</td>
+                                <td class="bank-cell"><span class="bank-code-link">GB0978-農業-00012</span></td>
+                                <td class="check-col bank-cell"><input type="checkbox"></td>
+                            </tr>
+
                             <!-- ===== VX-00240: 中國銀行 × 1 card ＋ 華夏 × 2 cards ＋ 吉林農信 × 1 card (停用) ===== -->
                             <tr class="account-first" data-bank-stopped="false">
                                 <td class="wechat-id" rowspan="4">VX-00240</td>
@@ -862,6 +989,13 @@
                                         <span class="ip-label">PC IP: </span><span class="ip-text">-</span><br>
                                         <span class="ip-label">SSR IP: </span><span class="ip-text">122.9.161.140</span>
                                         <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                    </div>
+                                </td>
+                                <td rowspan="4">
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">8.0.58</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">v2.0.20260326</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">Android 7</span>
                                     </div>
                                 </td>
                                 <td class="bank-name bank-cell">行動中國銀行</td>
@@ -900,6 +1034,13 @@
                                         <span class="ip-label">PC IP: </span><span class="ip-text">-</span><br>
                                         <span class="ip-label">SSR IP: </span><span class="ip-text">121.36.90.91</span>
                                         <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                    </div>
+                                </td>
+                                <td rowspan="4">
+                                    <div class="ip-info">
+                                        <span class="ip-label">微信: </span><span class="ip-text">8.0.50</span><br>
+                                        <span class="ip-label">金寶: </span><span class="ip-text">v2.0.20260327</span><br>
+                                        <span class="ip-label">設備: </span><span class="ip-text">Android 10</span>
                                     </div>
                                 </td>
                                 <td class="bank-name bank-cell">行動農業銀行</td>
@@ -1196,16 +1337,20 @@
                 accountGroups.push(currentGroup);
             }
 
-            // 将账号分为警告组和非警告组
+            // 将账号分为警告组、PC组和正常组
             var alertGroups = [];
+            var pcGroups = [];
             var normalGroups = [];
 
             accountGroups.forEach(function(group) {
                 var hasAlert = group.some(function(row) {
                     return row.classList.contains('alert-row');
                 });
+                var isPc = group[0].getAttribute('data-pc-group') === 'true';
                 if (hasAlert) {
                     alertGroups.push(group);
+                } else if (isPc) {
+                    pcGroups.push(group);
                 } else {
                     normalGroups.push(group);
                 }
@@ -1214,8 +1359,8 @@
             // 清空 tbody
             tbody.innerHTML = '';
 
-            // 先添加警告组，再添加正常组
-            alertGroups.concat(normalGroups).forEach(function(group) {
+            // 先添加警告组，再添加PC组，最後正常组
+            alertGroups.concat(pcGroups).concat(normalGroups).forEach(function(group) {
                 group.forEach(function(row) {
                     tbody.appendChild(row);
                 });

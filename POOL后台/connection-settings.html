@@ -63,6 +63,41 @@
             font-size: 10px;
             color: #999;
         }
+        .nav-menu-item.has-dropdown {
+            position: relative;
+        }
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            z-index: 200;
+            padding: 4px 0;
+        }
+        .nav-menu-item.has-dropdown:hover .nav-dropdown {
+            display: block;
+        }
+        .nav-dropdown a {
+            display: block;
+            padding: 9px 16px;
+            font-size: 13px;
+            color: #555;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .nav-dropdown a:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .nav-dropdown a.active {
+            color: #1890ff;
+            background: #e6f7ff;
+        }
         .nav-right {
             display: flex;
             align-items: center;
@@ -472,7 +507,12 @@
             <div class="nav-menu-item">管理 <span class="caret">&#9662;</span></div>
             <div class="nav-menu-item">渠道 <span class="caret">&#9662;</span></div>
             <div class="nav-menu-item">日誌 <span class="caret">&#9662;</span></div>
-            <div class="nav-menu-item">簡訊 <span class="caret">&#9662;</span></div>
+            <div class="nav-menu-item has-dropdown">簡訊 <span class="caret">&#9662;</span>
+                <div class="nav-dropdown">
+                    <a href="connection-settings.html" class="active">金寶連線設定</a>
+                    <a href="wechat-list.html">金寶微信銀行列表</a>
+                </div>
+            </div>
         </div>
         <div class="nav-right">
             <div class="nav-notify">
@@ -587,6 +627,9 @@
                                 <th>STF</th>
                                 <th>SOC IP</th>
                                 <th>PC IP</th>
+                                <th>微信版本</th>
+                                <th>金寶版本</th>
+                                <th>設備版本</th>
                                 <th><label class="th-check"><input type="checkbox" checked>預警設定</label></th>
                                 <th><label class="th-check"><input type="checkbox" checked>內嵌 SSR</label></th>
                                 <th>初始化 SSR</th>
@@ -608,6 +651,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -626,6 +672,102 @@
                                 <td class="operator">ConnectionManager</td>
                             </tr>
 
+                            <!-- VX-00182（SOC IP + PC IP） -->
+                            <tr>
+                                <td><span class="wechat-link">VX-00182</span></td>
+                                <td>1</td>
+                                <td>
+                                    <span class="ip-link">10.61.80.91</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>
+                                    <span class="ip-link">10.61.80.92</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>3.9.12</td>
+                                <td>V.0.7.2</td>
+                                <td>-</td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </td>
+                                <td><span class="ssr-ip normal">47.102.133.58</span></td>
+                                <td><span class="region-badge"><span class="count">1</span>上海</span></td>
+                                <td><button class="btn-release">釋放</button></td>
+                                <td>
+                                    <span class="ssr-ip-text">47.102.133.58</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td class="cloud-name">阿里云</td>
+                                <td class="datetime">2026/03/28 09:14:22</td>
+                                <td class="operator">ConnectionManager</td>
+                            </tr>
+
+                            <!-- VX-00185（SOC IP + PC IP） -->
+                            <tr>
+                                <td><span class="wechat-link">VX-00185</span></td>
+                                <td>1</td>
+                                <td>
+                                    <span class="ip-link">10.61.80.143</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>
+                                    <span class="ip-link">10.61.80.144</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>3.9.12</td>
+                                <td>V.0.7.2</td>
+                                <td>-</td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                                </td>
+                                <td><select class="ssr-select"><option>選擇</option></select></td>
+                                <td><span class="region-badge"><span class="count">1</span>北京</span></td>
+                                <td><button class="btn-release">釋放</button></td>
+                                <td></td>
+                                <td></td>
+                                <td class="datetime">2026/03/29 14:08:55</td>
+                                <td class="operator">lewis</td>
+                            </tr>
+
+                            <!-- VX-00191（SOC IP + PC IP，内嵌SSR开启） -->
+                            <tr>
+                                <td><span class="wechat-link">VX-00191</span></td>
+                                <td>1</td>
+                                <td>
+                                    <span class="ip-link">10.61.150.52</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>
+                                    <span class="ip-link">10.61.150.53</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td>3.9.12</td>
+                                <td>V.0.7.2</td>
+                                <td>-</td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </td>
+                                <td>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                </td>
+                                <td><span class="ssr-ip warning">120.46.80.33</span></td>
+                                <td><span class="region-badge"><span class="count">1</span>北京</span></td>
+                                <td><button class="btn-release">釋放</button></td>
+                                <td>
+                                    <span class="ssr-ip-text">120.46.80.33</span>
+                                    <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
+                                </td>
+                                <td class="cloud-name">华为云</td>
+                                <td class="datetime">2026/03/31 08:52:17</td>
+                                <td class="operator">ConnectionManager</td>
+                            </tr>
+
                             <!-- VX-00153 -->
                             <tr>
                                 <td><span class="wechat-link">VX-00153</span></td>
@@ -635,6 +777,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -662,6 +807,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.58</td>
+                                <td>v2.0.20260326</td>
+                                <td>Android 7</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -689,6 +837,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -716,6 +867,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.58</td>
+                                <td>v2.0.20260326</td>
+                                <td>Android 7</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -743,6 +897,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -767,6 +924,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -794,6 +954,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.50</td>
+                                <td>v2.0.20260327</td>
+                                <td>Android 10</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -818,6 +981,9 @@
                                     <span class="ip-copy" title="複製"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
                                 </td>
                                 <td></td>
+                                <td>8.0.58</td>
+                                <td>v2.0.20260326</td>
+                                <td>Android 7</td>
                                 <td>
                                     <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                                 </td>
@@ -835,6 +1001,7 @@
                                 <td class="datetime">2026/03/15 00:35:10</td>
                                 <td class="operator">ConnectionManager</td>
                             </tr>
+
                         </tbody>
                     </table>
                 </div>
