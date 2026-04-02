@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信簡訊查詢 - Cashpool</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 14px;
+            color: #333;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* ========== 顶部导航栏 ========== */
+        .top-nav {
+            background: #fff;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e8e8e8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-logo {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 26px;
+            font-weight: 400;
+            color: #333;
+            letter-spacing: 1px;
+            margin-right: 32px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+        .nav-menu-item {
+            padding: 8px 14px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .nav-menu-item:hover { background: #f5f5f5; color: #333; }
+        .nav-menu-item .caret { font-size: 10px; color: #999; }
+        .nav-menu-item.has-dropdown { position: relative; }
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            z-index: 200;
+            padding: 4px 0;
+        }
+        .nav-menu-item.has-dropdown:hover .nav-dropdown { display: block; }
+        .nav-dropdown a {
+            display: block;
+            padding: 9px 16px;
+            font-size: 13px;
+            color: #555;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .nav-dropdown a:hover { background: #f5f5f5; color: #333; }
+        .nav-dropdown a.active { color: #1890ff; background: #e6f7ff; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-left: auto;
+        }
+        .nav-notify {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .nav-notify .bell-icon { font-size: 18px; color: #666; }
+        .nav-notify .badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #ff4d4f;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 20px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+        }
+        .nav-user .caret { font-size: 10px; color: #999; }
+        .nav-version { font-size: 13px; color: #999; white-space: nowrap; }
+
+        /* ========== 页面内容 ========== */
+        .page-body { padding: 24px; }
+        .page-card {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .page-card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        .page-card-body { padding: 20px; }
+
+        /* ========== 搜索筛选 ========== */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px 20px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+        .filter-group input,
+        .filter-group select {
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #40a9ff;
+            box-shadow: 0 0 0 2px rgba(24,144,255,0.1);
+        }
+        .filter-group select { cursor: pointer; }
+
+        /* 时间范围 */
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .date-range input { width: 0; flex: 1; }
+        .date-range .sep { color: #999; font-size: 13px; flex-shrink: 0; }
+
+        /* 筛选按钮行 */
+        .filter-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+        .btn-primary:hover { background: #40a9ff; border-color: #40a9ff; }
+        .btn-default { background: #fff; color: #555; border-color: #d9d9d9; }
+        .btn-default:hover { border-color: #40a9ff; color: #40a9ff; }
+        .btn-info { background: #6c757d; color: #fff; border-color: #6c757d; }
+        .btn-info:hover { background: #7c858d; }
+        .btn-icon {
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            color: #555;
+            padding: 0 10px;
+        }
+        .btn-icon:hover { border-color: #40a9ff; color: #40a9ff; }
+
+        /* ========== 工具栏 ========== */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        .toolbar-right { display: flex; gap: 8px; }
+
+        /* ========== 分页 ========== */
+        .pagination { display: flex; align-items: center; gap: 0; }
+        .page-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border: 1px solid #d9d9d9;
+            background: #fff;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            margin-left: -1px;
+        }
+        .page-btn:first-child { border-radius: 4px 0 0 4px; margin-left: 0; }
+        .page-btn:last-child { border-radius: 0 4px 4px 0; }
+        .page-btn:hover { color: #1890ff; border-color: #1890ff; z-index: 1; }
+        .page-btn.active { background: #1890ff; border-color: #1890ff; color: #fff; z-index: 2; }
+        .page-btn.text-btn { padding: 0 12px; }
+
+        /* ========== 数据表格 ========== */
+        .table-container { overflow-x: auto; }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .data-table thead th {
+            background: #fafafa;
+            padding: 11px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid #e8e8e8;
+            white-space: nowrap;
+        }
+        .data-table tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            vertical-align: top;
+        }
+        .data-table tbody tr:hover > td { background: #fafafa; }
+
+        /* 链接 */
+        .link-blue {
+            color: #1890ff;
+            cursor: pointer;
+        }
+        .link-blue:hover { text-decoration: underline; }
+
+        /* 类型标签 */
+        .type-tag {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .type-in { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+        .type-out { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+        .type-transfer { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+
+        /* 解析状态 */
+        .parse-tag {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .parse-ok { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+        .parse-fail { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+        .parse-none { background: #fafafa; color: #999; border: 1px solid #d9d9d9; }
+
+        /* 订单编号 */
+        .order-no {
+            font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            color: #1890ff;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .order-no:hover { text-decoration: underline; }
+
+        /* 银行卡代码 */
+        .bank-code-text {
+            font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        /* 金额 */
+        .amount-in { color: #52c41a; font-weight: 600; }
+        .amount-out { color: #ff4d4f; font-weight: 600; }
+
+        /* 讯息内容 */
+        .sms-body {
+            max-width: 300px;
+            line-height: 1.5;
+            color: #333;
+            word-break: break-all;
+        }
+
+        /* 时间 */
+        .time-text { white-space: nowrap; font-size: 12px; color: #555; }
+
+        /* 来源标签 */
+        .source-tag {
+            display: inline-block;
+            padding: 1px 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* 刷取时长 */
+        .duration-text { font-size: 12px; color: #888; white-space: nowrap; }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+            color: #bbb;
+            font-size: 14px;
+        }
+
+        /* NEW badge */
+        .new-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            background: #f5222d;
+            border-radius: 3px;
+            padding: 1px 4px;
+            margin-left: 4px;
+            vertical-align: middle;
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== 顶部导航栏 ========== -->
+<nav class="top-nav">
+    <div class="nav-logo">Cashpool</div>
+    <div class="nav-menu">
+        <div class="nav-menu-item">監控 <span class="caret">&#9662;</span></div>
+        <div class="nav-menu-item">管理 <span class="caret">&#9662;</span></div>
+        <div class="nav-menu-item">渠道 <span class="caret">&#9662;</span></div>
+        <div class="nav-menu-item">日誌 <span class="caret">&#9662;</span></div>
+        <div class="nav-menu-item has-dropdown">簡訊 <span class="caret">&#9662;</span>
+            <div class="nav-dropdown">
+                <a href="connection-settings.html">金寶連線設定</a>
+                <a href="wechat-list.html">金寶微信銀行列表</a>
+                <a href="wechat-sms-query.html" class="active">微信簡訊查詢</a>
+            </div>
+        </div>
+    </div>
+    <div class="nav-right">
+        <div class="nav-notify">
+            <span class="bell-icon">🔔</span>
+            <span class="badge">35</span>
+        </div>
+        <div class="nav-user">coco <span class="caret">&#9662;</span></div>
+        <div class="nav-version">v3.2.18</div>
+    </div>
+</nav>
+
+<!-- ========== 页面内容 ========== -->
+<div class="page-body">
+    <div class="page-card">
+        <div class="page-card-header">微信簡訊查詢</div>
+        <div class="page-card-body">
+
+            <!-- 搜索筛选 -->
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>微信簡訊 ID</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>微信帳號</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>訊息</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>銀行卡代碼</label>
+                    <input type="text" placeholder="">
+                </div>
+
+                <div class="filter-group" style="grid-column: span 2;">
+                    <label>時間範圍</label>
+                    <div class="date-range">
+                        <input type="text" value="2026/01/02 12:11">
+                        <span class="sep">～</span>
+                        <input type="text" value="2026/04/02 23:59">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>收款姓名</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>收款帳號後四碼</label>
+                    <input type="text" placeholder="">
+                </div>
+
+                <div class="filter-group">
+                    <label>出款帳號後四碼</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>出款姓名</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>金額</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>解析狀態</label>
+                    <select>
+                        <option>全部狀態</option>
+                        <option>已解析</option>
+                        <option>解析失敗</option>
+                        <option>未解析</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>異常關鍵字</label>
+                    <select>
+                        <option>全部</option>
+                        <option>有異常</option>
+                        <option>無異常</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>配對訂單</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>銀行卡代碼</label>
+                    <input type="text" placeholder="">
+                </div>
+                <div class="filter-group">
+                    <label>類型</label>
+                    <select>
+                        <option>全部</option>
+                        <option>收款</option>
+                        <option>出款</option>
+                        <option>轉帳</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>上傳來源</label>
+                    <select>
+                        <option>全部</option>
+                        <option>金寶 APP</option>
+                        <option>手動</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn btn-primary">確定</button>
+            </div>
+
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <div class="pagination">
+                    <button class="page-btn text-btn">上一頁</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">6</button>
+                    <button class="page-btn">7</button>
+                    <button class="page-btn">8</button>
+                    <button class="page-btn">9</button>
+                    <button class="page-btn">10</button>
+                    <button class="page-btn text-btn">下一頁</button>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-info">匯出</button>
+                    <button class="btn btn-icon">⚙️</button>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>微信簡訊 ID</th>
+                            <th>微信帳號</th>
+                            <th>訊息</th>
+                            <th>銀行卡代碼<br>操作時間</th>
+                            <th>收款<br>銀行</th>
+                            <th>收款<br>姓名</th>
+                            <th>收款帳號<br>後四碼</th>
+                            <th>出款<br>姓名</th>
+                            <th>出款帳號<br>後四碼</th>
+                            <th>金額</th>
+                            <th>帳號餘額</th>
+                            <th>附言</th>
+                            <th>類型</th>
+                            <th>訂單類型<br>訂單編號</th>
+                            <th>操作人</th>
+                            <th>接收時間</th>
+                            <th>建立時間</th>
+                            <th>上傳<br>來源</th>
+                            <th>刷取<br>時長</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="link-blue">1985454</span></td>
+                            <td>VX-00225</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 2590) 2026-04-02 120333 轉入 ¥3,000.00 匯兌 王智超 對方戶名: 王智超 對方賬號: 6217 8553 0004 1153 580 交易機構: 吉林農村商業銀行長春紅旗街支行 余額: 12,343.52 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB1030-吉林農信-00012</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>12:03:33</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>2590</td>
+                            <td>王<br>智<br>超</td>
+                            <td>---</td>
+                            <td class="amount-in">3,000.00</td>
+                            <td>12,343.52</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355598</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>12:06:38</td>
+                            <td class="time-text">2026/04/02<br>12:06:39</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">185</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985453</span></td>
+                            <td>VX-00161</td>
+                            <td class="sms-body">【龍江銀行微銀行】網銀收款 +¥ 1900.00 2026-04-02 12:02:54 余額：24820.52 對方名稱 張棋 對方賬號 622876030101 5627600 開戶行 江蘇銀行股份有限公司</td>
+                            <td>
+                                <div class="bank-code-text">GB0977-龍江-00006</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>12:02:54</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>張<br>棋</td>
+                            <td>---</td>
+                            <td class="amount-in">1,900.00</td>
+                            <td>24,820.52</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355601</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>12:05:14</td>
+                            <td class="time-text">2026/04/02<br>12:05:09</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">140</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985452</span></td>
+                            <td>VX-00270</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 7204) 2026-04-02 115533 轉入 ¥3,000.00 轉賬;匯兌 王子鵬 對方戶名: 王子鵬 對方賬號:...</td>
+                            <td>
+                                <div class="bank-code-text">GB1083-吉林農信-00002</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:55:33</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>7204</td>
+                            <td>王<br>子<br>鵬</td>
+                            <td>---</td>
+                            <td class="amount-in">3,000.00</td>
+                            <td>4,909.81</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355580</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:58:26</td>
+                            <td class="time-text">2026/04/02<br>11:58:27</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">173</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985442</span></td>
+                            <td>VX-00225</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 2590) 2026-04-02 113733 轉入 ¥3,000.00 匯兌 王智超 對方戶名: 王智超 對方賬號: 6217 8553 0004 1153 580 交易機構: 吉林農村商業銀行長春紅旗街支行 余額: 9,343.52 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB1030-吉林農信-00012</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:37:33</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>2590</td>
+                            <td>王<br>智<br>超</td>
+                            <td>---</td>
+                            <td class="amount-in">3,000.00</td>
+                            <td>9,343.52</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355496</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:41:53</td>
+                            <td class="time-text">2026/04/02<br>11:41:53</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">260</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985441</span></td>
+                            <td>VX-00199</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 6462) 2026-04-02 113710 轉入 ¥3,000.00 陳兆堅支付寶轉賬 對方戶名: 對方賬號: 2088 7122 3552 6560 0156 交易機構: 吉林雙陽農村商業銀行金泰支行 余額: 11,236.90 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB1029-吉林農信-00017</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:37:10</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>6462</td>
+                            <td>陳<br>兆<br>堅</td>
+                            <td>---</td>
+                            <td class="amount-in">3,000.00</td>
+                            <td>11,236.90</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355519</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:38:43</td>
+                            <td class="time-text">2026/04/02<br>11:38:42</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">93</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985440</span></td>
+                            <td>VX-00161</td>
+                            <td class="sms-body">【龍江銀行微銀行】網銀收款 +¥ 2000.00 2026-04-02 11:37:01 余額：21420.52 對方名稱 張保田 對方賬號 622848172917 3526677 開戶行 中國農業銀行</td>
+                            <td>
+                                <div class="bank-code-text">GB0977-龍江-00006</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:37:01</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>張<br>保<br>田</td>
+                            <td>---</td>
+                            <td class="amount-in">2,000.00</td>
+                            <td>21,420.52</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355520</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:38:12</td>
+                            <td class="time-text">2026/04/02<br>11:38:08</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">71</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985439</span></td>
+                            <td>VX-00111</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 1170) 2026-04-02 113055 轉入 ¥500.00 楊文勇支付寶轉賬 對方戶名: 對方賬號: 2088 4326 8419 4375 0156 交易機構: 吉林農村商業銀行長春中東支行 余額: 6,992.00 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB1089-吉林農信-00001</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:30:55</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>1170</td>
+                            <td>楊<br>文<br>勇</td>
+                            <td>---</td>
+                            <td class="amount-in">500.00</td>
+                            <td>6,992.00</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355486</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:34:56</td>
+                            <td class="time-text">2026/04/02<br>11:34:59</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">241</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985438</span></td>
+                            <td>VX-00100</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 6421) 2026-04-02 113043 轉出 ¥3,400.00 智能設備本行取款 對方戶名: 對方賬號: 交易機構: 吉林九台農村商業銀行東岭街支行 余額: 73.32 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB0955-吉林農信-00015</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:30:43</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>6421</td>
+                            <td>---</td>
+                            <td class="amount-out">3,400.00</td>
+                            <td>73.32</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-out">出款</span></td>
+                            <td>---</td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:34:02</td>
+                            <td class="time-text">2026/04/02<br>11:33:54</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">199</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985437</span></td>
+                            <td>VX-00204</td>
+                            <td class="sms-body">【吉林農商銀行 吉林農信】(卡號: 1571) 2026-04-02 113024 轉入 ¥100.00 王大鵬支付寶轉賬 對方戶名: 對方賬號: 2088 1225 1153 2165 0156 交易機構: 白城農村商業銀行股份有限公司商貿支行 余額: 1,055.78 備注:</td>
+                            <td>
+                                <div class="bank-code-text">GB0884-吉林農信-00016</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:30:24</div>
+                            </td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td>1571</td>
+                            <td>王<br>大<br>鵬</td>
+                            <td>---</td>
+                            <td class="amount-in">100.00</td>
+                            <td>1,055.78</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-in">收款</span></td>
+                            <td>
+                                <div>充值單</div>
+                                <div class="order-no">23355482</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:32:58</td>
+                            <td class="time-text">2026/04/02<br>11:33:00</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">154</td>
+                        </tr>
+                        <tr>
+                            <td><span class="link-blue">1985435</span></td>
+                            <td>VX-00070</td>
+                            <td class="sms-body">【龍江銀行微銀行】客戶端對外匯款 -¥ 20000.00 2026-04-02 11:31:39 余額：1915.60 對方名稱 王洋洋 對方賬號 621799471001 9272521 開戶行 中國郵政儲蓄銀行有限責...</td>
+                            <td>
+                                <div class="bank-code-text">GB0977-龍江-00007</div>
+                                <div class="time-text" style="margin-top:4px;">2026/04/02<br>11:31:39</div>
+                            </td>
+                            <td>---</td>
+                            <td>王<br>洋<br>洋</td>
+                            <td>2521</td>
+                            <td>---</td>
+                            <td>---</td>
+                            <td class="amount-out">20,000.00</td>
+                            <td>1,915.60</td>
+                            <td>---</td>
+                            <td><span class="type-tag type-transfer">轉帳單</span></td>
+                            <td>
+                                <div>轉帳單</div>
+                                <div class="order-no">18693515</div>
+                            </td>
+                            <td></td>
+                            <td class="time-text">2026/04/02<br>11:32:55</td>
+                            <td class="time-text">2026/04/02<br>11:32:48</td>
+                            <td><span class="source-tag">金寶 APP</span></td>
+                            <td class="duration-text">76</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
