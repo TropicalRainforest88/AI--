@@ -142,30 +142,33 @@
         .filter-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px 20px;
+            gap: 8px 16px;
         }
         .filter-group {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            gap: 6px;
         }
         .filter-group label {
-            font-size: 13px;
+            font-size: 12px;
             color: #555;
             font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .filter-group input,
         .filter-group select {
-            height: 32px;
-            padding: 0 10px;
+            height: 28px;
+            padding: 0 8px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 12px;
             color: #333;
             background: #fff;
             outline: none;
             transition: border-color 0.2s;
-            width: 100%;
+            flex: 1;
+            min-width: 0;
         }
         .filter-group input:focus,
         .filter-group select:focus {
@@ -178,10 +181,12 @@
         .date-range {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
         }
-        .date-range input { width: 0; flex: 1; }
-        .date-range .sep { color: #999; font-size: 13px; flex-shrink: 0; }
+        .date-range input { flex: 1; min-width: 0; }
+        .date-range .sep { color: #999; font-size: 12px; flex-shrink: 0; }
 
         /* 筛选按钮行 */
         .filter-actions {
@@ -189,7 +194,7 @@
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
-            margin-top: 14px;
+            margin-top: 10px;
         }
 
         .btn {
@@ -448,7 +453,7 @@
                     <input type="text" placeholder="">
                 </div>
                 <div class="filter-group">
-                    <label>收款帳號後四碼</label>
+                    <label>收款後四碼</label>
                     <input type="text" placeholder="">
                 </div>
 
