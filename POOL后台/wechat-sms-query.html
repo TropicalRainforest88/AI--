@@ -298,7 +298,11 @@
         .page-btn.text-btn { padding: 0 12px; }
 
         /* ========== 数据表格 ========== */
-        .table-container { overflow-x: auto; }
+        .table-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: calc(100vh - 260px);
+        }
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -306,7 +310,7 @@
         }
         .data-table thead {
             position: sticky;
-            top: 56px;
+            top: 0;
             z-index: 10;
         }
         .data-table thead th {
