@@ -225,6 +225,45 @@
         }
         .btn-icon:hover { border-color: #40a9ff; color: #40a9ff; }
 
+        /* ========== 欄位控制面板 ========== */
+        .col-picker-wrap {
+            position: relative;
+        }
+        .col-picker-panel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            width: 180px;
+            max-height: 420px;
+            overflow-y: auto;
+            z-index: 300;
+            padding: 6px 0;
+        }
+        .col-picker-panel.open { display: block; }
+        .col-picker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .col-picker-item:hover { background: #f5f5f5; }
+        .col-picker-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: #1890ff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
         /* ========== 工具栏 ========== */
         .toolbar {
             display: flex;
@@ -537,7 +576,30 @@
                 </div>
                 <div class="toolbar-right">
                     <button class="btn btn-info">匯出</button>
-                    <button class="btn btn-icon">⚙️</button>
+                    <div class="col-picker-wrap">
+                        <button class="btn btn-icon" id="colPickerBtn" onclick="toggleColPicker()">⚙️ ▾</button>
+                        <div class="col-picker-panel" id="colPickerPanel">
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-id" checked>微信簡訊 ID</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-wechat" checked>微信帳號</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-msg" checked>訊息</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-bank" checked>銀行卡代碼 / 操作時間</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-recv-bank" checked>收款銀行</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-recv-name" checked>收款姓名</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-recv-acc" checked>收款帳號後四碼</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-send-name" checked>出款姓名</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-send-acc" checked>出款帳號後四碼</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-amount" checked>金額</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-balance" checked>帳號餘額</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-note" checked>附言</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-type" checked>類型</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-order" checked>訂單類型 / 訂單編號</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-operator" checked>操作人</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-recv-time" checked>接收時間</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-create-time" checked>建立時間</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-source" checked>上傳來源</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-duration" checked>刷取時長</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -546,25 +608,25 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>微信簡訊 ID</th>
-                            <th>微信帳號</th>
-                            <th>訊息</th>
-                            <th>銀行卡代碼<br>操作時間</th>
-                            <th>收款<br>銀行</th>
-                            <th>收款<br>姓名</th>
-                            <th>收款帳號<br>後四碼</th>
-                            <th>出款<br>姓名</th>
-                            <th>出款帳號<br>後四碼</th>
-                            <th>金額</th>
-                            <th>帳號餘額</th>
-                            <th>附言</th>
-                            <th>類型</th>
-                            <th>訂單類型<br>訂單編號</th>
-                            <th>操作人</th>
-                            <th>接收時間</th>
-                            <th>建立時間</th>
-                            <th>上傳<br>來源</th>
-                            <th>刷取<br>時長</th>
+                            <th data-col="col-id">微信簡訊 ID</th>
+                            <th data-col="col-wechat">微信帳號</th>
+                            <th data-col="col-msg">訊息</th>
+                            <th data-col="col-bank">銀行卡代碼<br>操作時間</th>
+                            <th data-col="col-recv-bank">收款<br>銀行</th>
+                            <th data-col="col-recv-name">收款<br>姓名</th>
+                            <th data-col="col-recv-acc">收款帳號<br>後四碼</th>
+                            <th data-col="col-send-name">出款<br>姓名</th>
+                            <th data-col="col-send-acc">出款帳號<br>後四碼</th>
+                            <th data-col="col-amount">金額</th>
+                            <th data-col="col-balance">帳號餘額</th>
+                            <th data-col="col-note">附言</th>
+                            <th data-col="col-type">類型</th>
+                            <th data-col="col-order">訂單類型<br>訂單編號</th>
+                            <th data-col="col-operator">操作人</th>
+                            <th data-col="col-recv-time">接收時間</th>
+                            <th data-col="col-create-time">建立時間</th>
+                            <th data-col="col-source">上傳<br>來源</th>
+                            <th data-col="col-duration">刷取<br>時長</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -843,5 +905,52 @@
     </div>
 </div>
 
+<script>
+    // 欄位順序對應 data-col
+    var COL_KEYS = [
+        'col-id','col-wechat','col-msg','col-bank',
+        'col-recv-bank','col-recv-name','col-recv-acc',
+        'col-send-name','col-send-acc',
+        'col-amount','col-balance','col-note','col-type','col-order',
+        'col-operator','col-recv-time','col-create-time','col-source','col-duration'
+    ];
+
+    // 初始化：為 tbody 每行 td 標記 data-col
+    document.addEventListener('DOMContentLoaded', function() {
+        var rows = document.querySelectorAll('.data-table tbody tr');
+        rows.forEach(function(row) {
+            var cells = row.querySelectorAll('td');
+            cells.forEach(function(td, i) {
+                if (COL_KEYS[i]) td.setAttribute('data-col', COL_KEYS[i]);
+            });
+        });
+
+        // 監聽勾選變更
+        document.querySelectorAll('#colPickerPanel input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                toggleCol(this.getAttribute('data-col'), this.checked);
+            });
+        });
+
+        // 點擊面板外關閉
+        document.addEventListener('click', function(e) {
+            var wrap = document.querySelector('.col-picker-wrap');
+            if (!wrap.contains(e.target)) {
+                document.getElementById('colPickerPanel').classList.remove('open');
+            }
+        });
+    });
+
+    function toggleColPicker() {
+        document.getElementById('colPickerPanel').classList.toggle('open');
+    }
+
+    function toggleCol(colKey, visible) {
+        var display = visible ? '' : 'none';
+        document.querySelectorAll('[data-col="' + colKey + '"]').forEach(function(el) {
+            el.style.display = display;
+        });
+    }
+</script>
 </body>
 </html>
