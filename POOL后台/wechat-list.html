@@ -169,6 +169,11 @@
         }
 
         /* ========== 搜索筛选 ========== */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px 16px;
+        }
         .filter-row {
             display: flex;
             flex-wrap: wrap;
@@ -178,16 +183,17 @@
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
         .filter-group label {
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
             font-weight: 500;
+            white-space: nowrap;
         }
-        .filter-group input {
-            width: 155px;
-            height: 32px;
+        .filter-group input,
+        .filter-group select {
+            height: 30px;
             padding: 0 10px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
@@ -196,10 +202,18 @@
             background: #fff;
             outline: none;
             transition: border-color 0.2s;
+            width: 100%;
         }
-        .filter-group input:focus {
+        .filter-group input:focus,
+        .filter-group select:focus {
             border-color: #40a9ff;
             box-shadow: 0 0 0 2px rgba(24,144,255,0.1);
+        }
+        .filter-group select { cursor: pointer; }
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
         }
         .btn {
             display: inline-flex;
@@ -752,34 +766,63 @@
             <div class="page-card-body">
 
                 <!-- 搜索筛选 -->
-                <div class="filter-row">
+                <div class="filter-grid">
                     <div class="filter-group">
                         <label>微信帳號</label>
-                        <input type="text">
+                        <input type="text" placeholder="請輸入微信帳號">
+                    </div>
+                    <div class="filter-group">
+                        <label>SOC IP</label>
+                        <input type="text" placeholder="請輸入 SOC IP">
+                    </div>
+                    <div class="filter-group">
+                        <label>PC IP</label>
+                        <input type="text" placeholder="請輸入 PC IP">
+                    </div>
+                    <div class="filter-group">
+                        <label>SSR IP</label>
+                        <input type="text" placeholder="請輸入 SSR IP">
                     </div>
                     <div class="filter-group">
                         <label>銀行卡代碼</label>
-                        <input type="text">
+                        <input type="text" placeholder="請輸入銀行卡代碼">
                     </div>
                     <div class="filter-group">
                         <label>銀行名稱</label>
-                        <input type="text">
+                        <input type="text" placeholder="請輸入銀行名稱">
                     </div>
                     <div class="filter-group">
                         <label>銀行代碼</label>
-                        <input type="text">
+                        <input type="text" placeholder="請輸入銀行代碼">
                     </div>
                     <div class="filter-group">
                         <label>微信銀行名稱</label>
-                        <input type="text">
+                        <input type="text" placeholder="請輸入微信銀行名稱">
                     </div>
                     <div class="filter-group">
-                        <label>IP</label>
-                        <input type="text">
+                        <label>微信版本<span class="new-badge">NEW</span></label>
+                        <input type="text" placeholder="例：3.9.12">
                     </div>
-                    <div class="filter-group" style="justify-content: flex-end;">
-                        <button class="btn btn-primary">查詢</button>
+                    <div class="filter-group">
+                        <label>金寶版本<span class="new-badge">NEW</span></label>
+                        <input type="text" placeholder="例：2.1.0">
                     </div>
+                    <div class="filter-group">
+                        <label>設備版本<span class="new-badge">NEW</span></label>
+                        <input type="text" placeholder="例：Android 13">
+                    </div>
+                    <div class="filter-group">
+                        <label>停用狀態<span class="new-badge">NEW</span></label>
+                        <select>
+                            <option value="">全部</option>
+                            <option value="0">啟用中</option>
+                            <option value="1">已停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-primary">查詢</button>
+                </div>
                 </div>
 
                 <!-- 工具栏：分页 + 操作按钮 -->
@@ -813,7 +856,7 @@
                             <tr>
                                 <th>微信</th>
                                 <th>IP</th>
-                                <th>版本信息<span class="new-badge">NEW</span></th>
+                                <th>版本信息</th>
                                 <th>銀行名稱</th>
                                 <th>銀行代碼</th>
                                 <th>微信銀行名稱</th>
