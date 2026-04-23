@@ -649,50 +649,6 @@
             color: #ff4d4f;
         }
 
-        /* ========== 篩選停用 ========== */
-        .filter-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            height: 32px;
-            padding: 0 14px;
-            border: 1px solid #d9d9d9;
-            border-radius: 16px;
-            font-size: 13px;
-            color: #666;
-            cursor: pointer;
-            transition: all 0.25s;
-            user-select: none;
-            background: #fff;
-        }
-        .filter-chip:hover {
-            border-color: #fa8c16;
-            color: #d48806;
-        }
-        .filter-chip.active {
-            background: #fff7e6;
-            border-color: #fa8c16;
-            color: #d48806;
-            font-weight: 500;
-        }
-        .filter-chip .filter-icon { display: flex; align-items: center; }
-        .filter-chip .filter-count {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
-            background: #f0f0f0;
-            border-radius: 9px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #999;
-        }
-        .filter-chip.active .filter-count {
-            background: #fa8c16;
-            color: #fff;
-        }
         .new-badge {
             display: inline-block;
             font-size: 10px;
@@ -834,13 +790,6 @@
                         <button class="page-btn">3</button>
                         <button class="page-btn">4</button>
                         <button class="page-btn text-btn">下一頁</button>
-                    </div>
-                    <div class="filter-chip" id="filterStoppedChip" onclick="toggleFilter()">
-                        <span class="filter-icon">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
-                        </span>
-                        篩選停用
-                        <span class="filter-count" id="filterCount">7</span>
                     </div>
                     <div class="toolbar-right">
                         <button class="btn btn-info">匯出</button>
@@ -1265,14 +1214,6 @@
     </div>
 
     <script>
-        /* ===== 篩選停用 ===== */
-        var filterActive = false;
-        function toggleFilter() {
-            filterActive = !filterActive;
-            document.getElementById('filterStoppedChip').classList.toggle('active', filterActive);
-            document.querySelector('.data-table').classList.toggle('filter-active', filterActive);
-        }
-
         /* ===== 彈窗 ===== */
         var currentTableCheckbox = null;
         var modalDisableCheckbox = document.getElementById('modalDisableCheckbox');
