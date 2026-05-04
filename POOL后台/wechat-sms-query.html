@@ -561,6 +561,14 @@
                         <option>手動</option>
                     </select>
                 </div>
+                <div class="filter-group">
+                    <label>明細層級<span class="new-badge">NEW</span></label>
+                    <select>
+                        <option value="">全部</option>
+                        <option value="1">一層</option>
+                        <option value="2">二層</option>
+                    </select>
+                </div>
             </div>
 
             <div class="filter-actions">
@@ -613,6 +621,7 @@
                             <label class="col-picker-item"><input type="checkbox" data-col="col-ssr-region" checked>SSR地區</label>
                             <label class="col-picker-item"><input type="checkbox" data-col="col-ssr-speed" checked>SSR速度</label>
                             <label class="col-picker-item"><input type="checkbox" data-col="col-ssr-time" checked>SSR測速時間</label>
+                            <label class="col-picker-item"><input type="checkbox" data-col="col-level" checked>明細層級</label>
                         </div>
                     </div>
                 </div>
@@ -648,6 +657,7 @@
                             <th data-col="col-ssr-region">SSR<br>地區</th>
                             <th data-col="col-ssr-speed">SSR<br>速度</th>
                             <th data-col="col-ssr-time">SSR<br>測速時間</th>
+                            <th data-col="col-level">明細<br>層級<span class="new-badge">NEW</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -683,6 +693,7 @@
                             <td>上海</td>
                             <td>106</td>
                             <td class="time-text">2026/04/02<br>15:54:12</td>
+                            <td>一層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985453</span></td>
@@ -716,6 +727,7 @@
                             <td>深圳</td>
                             <td>145</td>
                             <td class="time-text">2026/04/02<br>15:52:10</td>
+                            <td>二層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985452</span></td>
@@ -749,6 +761,7 @@
                             <td>廣州</td>
                             <td>469</td>
                             <td class="time-text">2026/01/16<br>18:21:43</td>
+                            <td>一層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985442</span></td>
@@ -782,6 +795,7 @@
                             <td>上海</td>
                             <td>106</td>
                             <td class="time-text">2026/04/02<br>15:54:12</td>
+                            <td>二層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985441</span></td>
@@ -815,6 +829,7 @@
                             <td>呼和浩特</td>
                             <td>244</td>
                             <td class="time-text">2026/04/02<br>15:58:55</td>
+                            <td>一層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985440</span></td>
@@ -848,6 +863,7 @@
                             <td>深圳</td>
                             <td>145</td>
                             <td class="time-text">2026/04/02<br>15:52:10</td>
+                            <td>二層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985439</span></td>
@@ -881,6 +897,7 @@
                             <td>上海</td>
                             <td>106</td>
                             <td class="time-text">2026/04/02<br>15:54:12</td>
+                            <td>一層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985438</span></td>
@@ -911,6 +928,7 @@
                             <td>廣州</td>
                             <td>312</td>
                             <td class="time-text">2026/04/02<br>15:50:33</td>
+                            <td>一層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985437</span></td>
@@ -944,6 +962,7 @@
                             <td>呼和浩特</td>
                             <td>244</td>
                             <td class="time-text">2026/04/02<br>15:58:55</td>
+                            <td>二層</td>
                         </tr>
                         <tr>
                             <td><span class="link-blue">1985435</span></td>
@@ -977,6 +996,7 @@
                             <td>深圳</td>
                             <td>188</td>
                             <td class="time-text">2026/04/02<br>15:52:10</td>
+                            <td>二層</td>
                         </tr>
                     </tbody>
                 </table>
@@ -994,7 +1014,7 @@
         'col-send-name','col-send-acc',
         'col-amount','col-balance','col-note','col-type','col-order',
         'col-operator','col-recv-time','col-create-time','col-source','col-duration',
-        'col-bank-code','col-ssr-ip','col-ssr-conn','col-ssr-region','col-ssr-speed','col-ssr-time'
+        'col-bank-code','col-ssr-ip','col-ssr-conn','col-ssr-region','col-ssr-speed','col-ssr-time','col-level'
     ];
 
     // 初始化：為 tbody 每行 td 標記 data-col
