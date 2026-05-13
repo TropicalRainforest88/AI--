@@ -793,7 +793,7 @@
                     </div>
                 </div>
                 <div class="filter-actions">
-                    <button class="btn btn-default">重置</button>
+                    <button class="btn btn-default" onclick="resetFilters()">重置</button>
                     <button class="btn btn-primary" style="margin-left:8px;">查詢</button>
                 </div>
                 </div>
@@ -810,7 +810,7 @@
                     </div>
                     <div class="toolbar-right">
                         <label class="toolbar-checkbox">
-                            <input type="checkbox"> 啟用中銀行卡
+                            <input type="checkbox" id="activeCardFilter" onchange="filterActiveCards(this.checked)"> 啟用中銀行卡
                         </label>
                         <button class="btn btn-info">匯出</button>
                         <button class="btn btn-warning">編輯</button>
@@ -1427,6 +1427,29 @@
                 openModal(disableCheckbox);
             });
         });
+
+        /* ===== 重置篩選 ===== */
+        function resetFilters() {
+            document.querySelectorAll('.filter-grid input').forEach(function(el) {
+                el.value = '';
+            });
+            document.querySelectorAll('.filter-grid select').forEach(function(el) {
+                el.selectedIndex = 0;
+            });
+        }
+
+        /* ===== 啟用中銀行卡篩選 ===== */
+        function filterActiveCards(active) {
+            var rows = document.querySelectorAll('.data-table tbody tr');
+            rows.forEach(function(row) {
+                var bankCell = row.querySelector('.bank-cell');
+                if (!bankCell) { row.style.display = ''; return; }
+                if (!active) { row.style.display = ''; return; }
+                var hasLock   = bankCell.querySelector('.bank-icon.lock');
+                var hasRemove = bankCell.querySelector('.bank-icon.remove');
+                row.style.display = (hasLock || hasRemove) ? 'none' : '';
+            });
+        }
 
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
