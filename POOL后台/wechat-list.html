@@ -256,6 +256,22 @@
             border-color: #67c23a;
         }
         .btn-success:hover { background: #85ce61; border-color: #85ce61; }
+        .btn-default {
+            background: #fff;
+            color: #555;
+            border-color: #d9d9d9;
+        }
+        .btn-default:hover { border-color: #40a9ff; color: #40a9ff; }
+        .toolbar-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toolbar-checkbox input[type="checkbox"] { cursor: pointer; }
 
         /* ========== 工具栏（分页+按钮） ========== */
         .toolbar {
@@ -777,7 +793,8 @@
                     </div>
                 </div>
                 <div class="filter-actions">
-                    <button class="btn btn-primary">查詢</button>
+                    <button class="btn btn-default">重置</button>
+                    <button class="btn btn-primary" style="margin-left:8px;">查詢</button>
                 </div>
                 </div>
 
@@ -792,6 +809,9 @@
                         <button class="page-btn text-btn">下一頁</button>
                     </div>
                     <div class="toolbar-right">
+                        <label class="toolbar-checkbox">
+                            <input type="checkbox"> 啟用中銀行卡
+                        </label>
                         <button class="btn btn-info">匯出</button>
                         <button class="btn btn-warning">編輯</button>
                         <button class="btn btn-success">儲存</button>
