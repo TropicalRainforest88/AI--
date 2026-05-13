@@ -691,6 +691,10 @@
             opacity: 0.5;
         }
 
+        /* 啟用中銀行卡篩選：account-first 非啟用卡標記（不動 layout） */
+        tr.card-inactive .bank-cell { opacity: 0.35; }
+        tr.card-inactive .bank-code-link { color: #bbb !important; text-decoration: line-through; }
+
         /* 警告：停用但没有锁头、没有X标识 */
         tr.alert-row .bank-code-link {
             color: #f5222d !important;
@@ -1476,7 +1480,10 @@
             var allRows = Array.from(document.querySelectorAll('.data-table tbody tr'));
 
             // 重置
-            allRows.forEach(function(r) { r.style.display = ''; });
+            allRows.forEach(function(r) {
+                r.style.display = '';
+                r.classList.remove('card-inactive');
+            });
             if (!active) return;
 
             // 收集帳號組
@@ -1501,11 +1508,8 @@
                     if (!isInactiveCard(row)) return; // 啟用中，保留
 
                     if (row.classList.contains('account-first')) {
-                        // account-first 行有 wechat-id/IP/layer 的 rowspan，不能整行隱藏
-                        // 改為隱藏該行的銀行專屬欄位，保留帳號欄位
-                        row.querySelectorAll('.bank-cell').forEach(function(td) {
-                            td.style.visibility = 'hidden';
-                        });
+                        // account-first 行有 rowspan，不能整行隱藏；改用 CSS class 標記
+                        row.classList.add('card-inactive');
                     } else {
                         // 非首行可完整隱藏（銀行專屬欄位已無 rowspan）
                         row.style.display = 'none';
@@ -1515,12 +1519,9 @@
         }
 
         function resetActiveCardFilter() {
-            // 取消過濾時清除 visibility
             document.querySelectorAll('.data-table tbody tr').forEach(function(r) {
                 r.style.display = '';
-                r.querySelectorAll('.bank-cell').forEach(function(td) {
-                    td.style.visibility = '';
-                });
+                r.classList.remove('card-inactive');
             });
         }
 
