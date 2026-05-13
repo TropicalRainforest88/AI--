@@ -772,19 +772,19 @@
                         <input type="text" placeholder="請輸入微信銀行名稱">
                     </div>
                     <div class="filter-group">
-                        <label>微信版本<span class="new-badge">NEW</span></label>
+                        <label>微信版本</label>
                         <input type="text" placeholder="例：3.9.12">
                     </div>
                     <div class="filter-group">
-                        <label>金寶版本<span class="new-badge">NEW</span></label>
+                        <label>金寶版本</label>
                         <input type="text" placeholder="例：2.1.0">
                     </div>
                     <div class="filter-group">
-                        <label>設備版本<span class="new-badge">NEW</span></label>
+                        <label>設備版本</label>
                         <input type="text" placeholder="例：Android 13">
                     </div>
                     <div class="filter-group">
-                        <label>停用狀態<span class="new-badge">NEW</span></label>
+                        <label>停用狀態</label>
                         <select>
                             <option value="">全部</option>
                             <option value="0">啟用中</option>
@@ -1438,16 +1438,34 @@
             });
         }
 
-        /* ===== 啟用中銀行卡篩選 ===== */
+        /* ===== 啟用中銀行卡篩選（以帳號組為單位，避免破壞 rowspan） ===== */
         function filterActiveCards(active) {
-            var rows = document.querySelectorAll('.data-table tbody tr');
-            rows.forEach(function(row) {
-                var bankCell = row.querySelector('.bank-cell');
-                if (!bankCell) { row.style.display = ''; return; }
-                if (!active) { row.style.display = ''; return; }
-                var hasLock   = bankCell.querySelector('.bank-icon.lock');
-                var hasRemove = bankCell.querySelector('.bank-icon.remove');
-                row.style.display = (hasLock || hasRemove) ? 'none' : '';
+            // 收集帳號組：每個 account-first 開始到下一個 account-first 為止
+            var allRows = Array.from(document.querySelectorAll('.data-table tbody tr'));
+            var groups = [];
+            var current = null;
+            allRows.forEach(function(row) {
+                if (row.classList.contains('account-first')) {
+                    current = [row];
+                    groups.push(current);
+                } else if (current) {
+                    current.push(row);
+                }
+            });
+
+            groups.forEach(function(group) {
+                if (!active) {
+                    group.forEach(function(r) { r.style.display = ''; });
+                    return;
+                }
+                // 整組中，只要有任一 bank-cell 沒有 lock 也沒有 remove，就顯示整組
+                var hasActiveCard = group.some(function(row) {
+                    var bankCell = row.querySelector('.bank-cell');
+                    if (!bankCell) return false;
+                    return !bankCell.querySelector('.bank-icon.lock') &&
+                           !bankCell.querySelector('.bank-icon.remove');
+                });
+                group.forEach(function(r) { r.style.display = hasActiveCard ? '' : 'none'; });
             });
         }
 
