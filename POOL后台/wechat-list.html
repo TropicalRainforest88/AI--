@@ -810,7 +810,7 @@
                     </div>
                     <div class="toolbar-right">
                         <label class="toolbar-checkbox">
-                            <input type="checkbox" id="activeCardFilter" onchange="filterActiveCards(this.checked)"> 啟用中銀行卡
+                            <input type="checkbox" id="activeCardFilter" onchange="this.checked ? filterActiveCards(true) : resetActiveCardFilter()"> 啟用中銀行卡
                         </label>
                         <button class="btn btn-info">匯出</button>
                         <button class="btn btn-warning">編輯</button>
@@ -883,16 +883,21 @@
                                         <span class="ip-label">設備: </span><span class="ip-text">Android 7</span>
                                     </div>
                                 </td>
-                                <td class="bank-name bank-cell" rowspan="2">行動華夏銀行</td>
-                                <td class="bank-code bank-cell" rowspan="2">HXB_P</td>
-                                <td class="wechat-bank-name bank-cell" rowspan="2">華夏銀行</td>
+                                <td class="bank-name bank-cell" >行動華夏銀行</td>
+                                <td class="bank-code bank-cell" >HXB_P</td>
+                                <td class="wechat-bank-name bank-cell" >華夏銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1042-華夏-00003</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
-                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox" checked></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-229"></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-229"></td>
+                                <td class="check-col bank-cell" ><input type="checkbox" checked></td>
+                                <td class="check-col" ><input type="radio" name="layer-229"></td>
+                                <td class="check-col" ><input type="radio" name="layer-229"></td>
                             </tr>
                             <tr data-bank-stopped="true">
+                                <td class="bank-name bank-cell">行動華夏銀行</td>
+                                <td class="bank-code bank-cell">HXB_P</td>
+                                <td class="wechat-bank-name bank-cell">華夏銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1042-華夏-00007</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            
+                                <td class="check-col bank-cell"><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="false">
                                 <td class="bank-name bank-cell">行動吉林省農村信用社聯合社</td>
@@ -921,16 +926,21 @@
                                         <span class="ip-label">設備: </span><span class="ip-text">Android 10</span>
                                     </div>
                                 </td>
-                                <td class="bank-name bank-cell" rowspan="2">行動中國銀行</td>
-                                <td class="bank-code bank-cell" rowspan="2">BOC_P</td>
-                                <td class="wechat-bank-name bank-cell" rowspan="2">中國銀行微信銀行</td>
+                                <td class="bank-name bank-cell" >行動中國銀行</td>
+                                <td class="bank-code bank-cell" >BOC_P</td>
+                                <td class="wechat-bank-name bank-cell" >中國銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1006-中國-00040</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
-                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox" checked></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-231"></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-231"></td>
+                                <td class="check-col bank-cell" ><input type="checkbox" checked></td>
+                                <td class="check-col" ><input type="radio" name="layer-231"></td>
+                                <td class="check-col" ><input type="radio" name="layer-231"></td>
                             </tr>
                             <tr data-bank-stopped="true">
+                                <td class="bank-name bank-cell">行動中國銀行</td>
+                                <td class="bank-code bank-cell">BOC_P</td>
+                                <td class="wechat-bank-name bank-cell">中國銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0998-中國-00035</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            
+                                <td class="check-col bank-cell"><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="false">
                                 <td class="bank-name bank-cell">行動吉林省農村信用社聯合社</td>
@@ -986,16 +996,21 @@
                                         <span class="ip-label">設備: </span><span class="ip-text">-</span>
                                     </div>
                                 </td>
-                                <td class="bank-name bank-cell" rowspan="2">行動中國銀行</td>
-                                <td class="bank-code bank-cell" rowspan="2">BOC_P</td>
-                                <td class="wechat-bank-name bank-cell" rowspan="2">中國銀行微信銀行</td>
+                                <td class="bank-name bank-cell" >行動中國銀行</td>
+                                <td class="bank-code bank-cell" >BOC_P</td>
+                                <td class="wechat-bank-name bank-cell" >中國銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1011-中國-00055</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
-                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox"></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-253"></td>
-                                <td class="check-col" rowspan="3"><input type="radio" name="layer-253"></td>
+                                <td class="check-col bank-cell" ><input type="checkbox"></td>
+                                <td class="check-col" ><input type="radio" name="layer-253"></td>
+                                <td class="check-col" ><input type="radio" name="layer-253"></td>
                             </tr>
                             <tr data-bank-stopped="false">
+                                <td class="bank-name bank-cell">行動中國銀行</td>
+                                <td class="bank-code bank-cell">BOC_P</td>
+                                <td class="wechat-bank-name bank-cell">中國銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1011-中國-00058</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            
+                                <td class="check-col bank-cell"><input type="checkbox"></td>
                             </tr>
                             <tr data-bank-stopped="false">
                                 <td class="bank-name bank-cell">行動農業銀行</td>
@@ -1029,18 +1044,23 @@
                                 <td class="wechat-bank-name bank-cell">中國銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0993-中國-00031</span><span class="bank-icon lock">&#x1f512;</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
                                 <td class="check-col bank-cell"><input type="checkbox"></td>
-                                <td class="check-col" rowspan="4"><input type="radio" name="layer-240"></td>
-                                <td class="check-col" rowspan="4"><input type="radio" name="layer-240"></td>
+                                <td class="check-col" ><input type="radio" name="layer-240"></td>
+                                <td class="check-col" ><input type="radio" name="layer-240"></td>
                             </tr>
                             <tr data-bank-stopped="true">
-                                <td class="bank-name bank-cell" rowspan="2">行動華夏銀行</td>
-                                <td class="bank-code bank-cell" rowspan="2">HXB_P</td>
-                                <td class="wechat-bank-name bank-cell" rowspan="2">華夏銀行</td>
+                                <td class="bank-name bank-cell" >行動華夏銀行</td>
+                                <td class="bank-code bank-cell" >HXB_P</td>
+                                <td class="wechat-bank-name bank-cell" >華夏銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0812-華夏-00006</span></td>
-                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox" checked></td>
+                                <td class="check-col bank-cell" ><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="true">
+                                <td class="bank-name bank-cell">行動華夏銀行</td>
+                                <td class="bank-code bank-cell">HXB_P</td>
+                                <td class="wechat-bank-name bank-cell">華夏銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0850-華夏-00011</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            
+                                <td class="check-col bank-cell"><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="true">
                                 <td class="bank-name bank-cell">行動吉林省農村信用社聯合社</td>
@@ -1074,18 +1094,23 @@
                                 <td class="wechat-bank-name bank-cell">中國農業銀行微信銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB1006-農業-00009</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
                                 <td class="check-col bank-cell"><input type="checkbox"></td>
-                                <td class="check-col" rowspan="4"><input type="radio" name="layer-241"></td>
-                                <td class="check-col" rowspan="4"><input type="radio" name="layer-241"></td>
+                                <td class="check-col" ><input type="radio" name="layer-241"></td>
+                                <td class="check-col" ><input type="radio" name="layer-241"></td>
                             </tr>
                             <tr data-bank-stopped="true">
-                                <td class="bank-name bank-cell" rowspan="2">行動民生銀行</td>
-                                <td class="bank-code bank-cell" rowspan="2">CMBC_P</td>
-                                <td class="wechat-bank-name bank-cell" rowspan="2">中國民生銀行</td>
+                                <td class="bank-name bank-cell" >行動民生銀行</td>
+                                <td class="bank-code bank-cell" >CMBC_P</td>
+                                <td class="wechat-bank-name bank-cell" >中國民生銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0962-民生-00001</span></td>
-                                <td class="check-col bank-cell" rowspan="2"><input type="checkbox" checked></td>
+                                <td class="check-col bank-cell" ><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="true">
+                                <td class="bank-name bank-cell">行動民生銀行</td>
+                                <td class="bank-code bank-cell">CMBC_P</td>
+                                <td class="wechat-bank-name bank-cell">中國民生銀行</td>
                                 <td class="bank-cell"><span class="bank-code-link">GB0975-民生-00003</span><span class="bank-icon remove"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg></span></td>
+                            
+                                <td class="check-col bank-cell"><input type="checkbox" checked></td>
                             </tr>
                             <tr data-bank-stopped="true">
                                 <td class="bank-name bank-cell">行動長春經開融豐村鎮銀行</td>
@@ -1438,36 +1463,64 @@
             });
         }
 
-        /* ===== 啟用中銀行卡篩選（以帳號組為單位，避免破壞 rowspan） ===== */
-        function isActiveCardCell(td) {
-            // 只看含 .bank-code-link 的格子，才是真正的銀行卡代碼格
-            if (!td.querySelector('.bank-code-link')) return false;
-            return !td.querySelector('.bank-icon.lock') && !td.querySelector('.bank-icon.remove');
+        /* ===== 啟用中銀行卡篩選（銀行卡維度，HTML 已無 bank-specific rowspan） ===== */
+        function isInactiveCard(row) {
+            var cardTd = Array.from(row.querySelectorAll('.bank-cell')).find(function(td) {
+                return td.querySelector('.bank-code-link');
+            });
+            if (!cardTd) return false;
+            return !!(cardTd.querySelector('.bank-icon.lock') || cardTd.querySelector('.bank-icon.remove'));
         }
 
         function filterActiveCards(active) {
             var allRows = Array.from(document.querySelectorAll('.data-table tbody tr'));
+
+            // 重置
+            allRows.forEach(function(r) { r.style.display = ''; });
+            if (!active) return;
+
+            // 收集帳號組
             var groups = [];
-            var current = null;
+            var cur = null;
             allRows.forEach(function(row) {
-                if (row.classList.contains('account-first')) {
-                    current = [row];
-                    groups.push(current);
-                } else if (current) {
-                    current.push(row);
-                }
+                if (row.classList.contains('account-first')) { cur = [row]; groups.push(cur); }
+                else if (cur) cur.push(row);
             });
 
             groups.forEach(function(group) {
-                if (!active) {
-                    group.forEach(function(r) { r.style.display = ''; });
+                var hasActive = group.some(function(r) { return !isInactiveCard(r); });
+
+                if (!hasActive) {
+                    // 整組全是 lock/remove：整組隱藏
+                    group.forEach(function(r) { r.style.display = 'none'; });
                     return;
                 }
-                // 整組中，只要有任一真正的銀行卡格沒有 lock 也沒有 remove，就顯示整組
-                var hasActiveCard = group.some(function(row) {
-                    return Array.from(row.querySelectorAll('.bank-cell')).some(isActiveCardCell);
+
+                // 有啟用中的卡：逐行判斷
+                group.forEach(function(row) {
+                    if (!isInactiveCard(row)) return; // 啟用中，保留
+
+                    if (row.classList.contains('account-first')) {
+                        // account-first 行有 wechat-id/IP/layer 的 rowspan，不能整行隱藏
+                        // 改為隱藏該行的銀行專屬欄位，保留帳號欄位
+                        row.querySelectorAll('.bank-cell').forEach(function(td) {
+                            td.style.visibility = 'hidden';
+                        });
+                    } else {
+                        // 非首行可完整隱藏（銀行專屬欄位已無 rowspan）
+                        row.style.display = 'none';
+                    }
                 });
-                group.forEach(function(r) { r.style.display = hasActiveCard ? '' : 'none'; });
+            });
+        }
+
+        function resetActiveCardFilter() {
+            // 取消過濾時清除 visibility
+            document.querySelectorAll('.data-table tbody tr').forEach(function(r) {
+                r.style.display = '';
+                r.querySelectorAll('.bank-cell').forEach(function(td) {
+                    td.style.visibility = '';
+                });
             });
         }
 
