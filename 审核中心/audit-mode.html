@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 審核模式 - 審核中心</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* 分段切換（AI 自動放行 / 全部人工確認） */
+        .seg {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--bg-white);
+        }
+        .seg button {
+            border: none;
+            background: transparent;
+            padding: 7px 16px;
+            font-size: 13px;
+            color: var(--text-regular);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+            font-family: inherit;
+        }
+        .seg button + button {
+            border-left: 1px solid var(--border-color);
+        }
+        .seg button .seg-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.35;
+        }
+        .seg button.on {
+            color: #fff;
+        }
+        .seg button[data-v="auto"].on {
+            background: var(--success-color);
+        }
+        .seg button[data-v="manual"].on {
+            background: var(--warning-color);
+        }
+        .seg button.on .seg-dot {
+            opacity: 1;
+            background: #fff;
+        }
+        .seg.lg button {
+            padding: 9px 20px;
+            font-size: 14px;
+        }
+        .seg.sm button {
+            padding: 6px 12px;
+            font-size: 12.5px;
+        }
+
+        /* 全域預設卡片 */
+        .default-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .default-row .default-txt {
+            flex: 1;
+            min-width: 220px;
+        }
+        .default-row .default-txt .t {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .default-row .default-txt .d {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* 工具列 */
+        .mode-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .mode-search {
+            position: relative;
+            min-width: 240px;
+        }
+        .mode-search input {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px 0 34px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .mode-search input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .mode-search svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-placeholder);
+        }
+        .mode-filter {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .mode-filter button {
+            border: none;
+            background: var(--bg-white);
+            padding: 7px 14px;
+            font-size: 13px;
+            color: var(--text-regular);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .mode-filter button + button {
+            border-left: 1px solid var(--border-color);
+        }
+        .mode-filter button.on {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .mode-count {
+            margin-left: auto;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .src-plain {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            transform: translateX(-50%) translateY(14px);
+            opacity: 0;
+            background: var(--text-primary);
+            color: var(--bg-white);
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .info-tip {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            margin-top: 16px;
+            padding: 12px 14px;
+            background: var(--primary-light);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-regular);
+            line-height: 1.6;
+        }
+        .info-tip strong { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">審核中心<span class="pending-badge-wrap"><span class="pending-badge">12</span><i class="badge-info-icon">?</i><div class="badge-tooltip"><div class="tooltip-title"><span class="tooltip-new">NEW</span>待審核工單數</div><strong>定義：</strong>顯示當前登入帳號，待審核的工單總數量。<br><strong>數據來源：</strong>篩選條件為 <code>審核狀態 = 待審核</code> 且 <code>審核人 = 當前帳號</code> 的工單。<br><strong>更新頻率：</strong>即時更新，每次進入頁面或操作審核後自動刷新。<br><strong>顯示規則：</strong>數量為 0 時隱藏徽標；數量 &gt; 99 時顯示 <code>99+</code>。</div></span></div></div>
+            <nav class="sidebar-menu">
+                <div class="menu-item"><a href="index.html" class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">首頁</span></a></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span><span class="menu-text">審核管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="pending-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>待審核列表</a></li><li class="submenu-item"><a href="reviewed-list.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>已審核列表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg></span><span class="menu-text">數據報表</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="daily-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>日報表</a></li><li class="submenu-item"><a href="weekly-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>週報表</a></li><li class="submenu-item"><a href="rejection-report.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>駁回分析報表</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span><span class="menu-text">商戶管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="merchant-settings.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span>商戶設定</a></li><li class="submenu-item"><a href="merchant-group.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></span>商戶群組設定</a></li></ul></div>
+                <div class="menu-item active open"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="menu-text">配置管理</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="quick-config.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>審核中心快捷配置</a></li><li class="submenu-item"><a href="auto-notify.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>自動通知審核中心結果</a></li><li class="submenu-item active"><a href="audit-mode.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>AI 審核模式</a></li></ul></div>
+                <div class="menu-item"><div class="menu-title"><span class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="menu-text">後台權限設定</span><span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><ul class="submenu"><li class="submenu-item"><a href="account-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>帳號管理</a></li><li class="submenu-item"><a href="permission-manage.html"><span class="submenu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>權限管理</a></li></ul></div>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-left"><div class="breadcrumb"><span class="breadcrumb-item"><a href="index.html">首頁</a></span><span class="breadcrumb-item"><a href="#">配置管理</a></span><span class="breadcrumb-item active">AI 審核模式</span></div></div>
+                <div class="header-right"><button class="theme-toggle" onclick="toggleTheme()" title="切換深色/淺色模式"><svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><div class="header-user"><div class="user-avatar">A</div><span class="user-name">Admin</span></div></div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h1 class="page-title">AI 審核模式</h1>
+                    <p class="page-desc">設定各商戶的單據進入審核平台後，由 <strong>AI 自動放行</strong>，或 <strong>全部轉人工確認</strong>。此設定 by 商戶，變更後即時生效、無需重新上線。</p>
+                </div>
+
+                <!-- 全域預設 -->
+                <div class="card">
+                    <div class="card-header"><span class="card-title">全域預設模式</span></div>
+                    <div class="card-body">
+                        <div class="default-row">
+                            <div class="default-txt">
+                                <div class="t">新商戶 / 未單獨設定的商戶，套用此預設</div>
+                                <div class="d">單獨設定過的商戶，以其自身設定為準（見下方列表「來源」欄）。</div>
+                            </div>
+                            <div class="seg lg" data-scope="global" role="group" aria-label="全域預設模式">
+                                <button type="button" data-v="auto" class="on"><span class="seg-dot"></span>AI 自動放行</button>
+                                <button type="button" data-v="manual"><span class="seg-dot"></span>全部人工確認</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 商戶列表 -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header"><span class="card-title">商戶審核模式</span></div>
+                    <div class="card-body">
+                        <div class="mode-toolbar">
+                            <div class="mode-search">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" id="q" placeholder="搜尋商戶名稱 / 代碼">
+                            </div>
+                            <div class="mode-filter" id="filter" role="group" aria-label="篩選模式">
+                                <button type="button" data-f="all" class="on">全部</button>
+                                <button type="button" data-f="auto">自動放行</button>
+                                <button type="button" data-f="manual">人工確認</button>
+                            </div>
+                            <span class="mode-count" id="count"></span>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 90px;">商戶ID</th>
+                                    <th style="width: 90px;">商戶代碼</th>
+                                    <th style="width: 130px;">商戶名稱</th>
+                                    <th style="width: 260px;">目前審核模式</th>
+                                    <th style="width: 110px;">來源</th>
+                                    <th style="width: 160px;">最後更新</th>
+                                    <th style="width: 90px;">操作人</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rows"></tbody>
+                        </table>
+
+                        <div class="info-tip">
+                            <span>ⓘ</span>
+                            <span><strong>說明：</strong>切換即時生效。「來源」欄標示該商戶是<em>沿用全域預設</em>，還是<em>已單獨設定</em>（override）。此頁為原型，切換為前端演示，不會真正寫入。</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"></polyline></svg><span id="toast-msg">已儲存 · 即時生效</span></div>
+
+    <script>
+        // 主題
+        function toggleTheme() {
+            const html = document.documentElement;
+            const cur = html.getAttribute('data-theme');
+            const next = cur === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+        (function () {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                document.documentElement.setAttribute('data-theme', 'dark');
+        })();
+        // 菜單展開/收起
+        document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
+            if (title.querySelector('.menu-arrow')) {
+                title.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    this.parentElement.classList.toggle('open');
+                });
+            }
+        });
+
+        // 商戶資料
+        var DATA = [
+            { id: '1001', code: 'GS', name: 'GS平台', mode: 'auto',   override: true,  at: '2024-01-20 15:30', by: 'coco' },
+            { id: '1002', code: 'GE', name: 'GE平台', mode: 'manual', override: true,  at: '2024-01-19 10:22', by: 'felix' },
+            { id: '1003', code: 'MY', name: 'MY平台', mode: 'auto',   override: false, at: '—', by: '—' },
+            { id: '1004', code: 'MN', name: 'MN平台', mode: 'auto',   override: false, at: '—', by: '—' },
+            { id: '1005', code: 'MJ', name: 'MJ平台', mode: 'manual', override: true,  at: '2024-01-15 16:28', by: 'josh' },
+            { id: '1006', code: 'SG', name: 'SG平台', mode: 'auto',   override: false, at: '—', by: '—' },
+            { id: '1007', code: 'TH', name: 'TH平台', mode: 'manual', override: true,  at: '2024-01-12 09:05', by: 'elmo' },
+            { id: '1008', code: 'VN', name: 'VN平台', mode: 'auto',   override: true,  at: '2024-01-10 11:40', by: 'coco' }
+        ];
+        var filter = 'all';
+        var rowsEl = document.getElementById('rows');
+        var countEl = document.getElementById('count');
+        var qEl = document.getElementById('q');
+
+        function segHtml(i, mode) {
+            return '<div class="seg sm" data-scope="row" data-i="' + i + '" role="group" aria-label="審核模式">'
+                + '<button type="button" data-v="auto" class="' + (mode === 'auto' ? 'on' : '') + '"><span class="seg-dot"></span>AI 自動放行</button>'
+                + '<button type="button" data-v="manual" class="' + (mode === 'manual' ? 'on' : '') + '"><span class="seg-dot"></span>全部人工確認</button>'
+                + '</div>';
+        }
+        function srcHtml(d) {
+            return d.override
+                ? '<span class="tag tag-primary">單獨設定</span>'
+                : '<span class="src-plain">沿用預設</span>';
+        }
+        function render() {
+            var kw = (qEl.value || '').trim().toLowerCase();
+            var shown = 0;
+            rowsEl.innerHTML = '';
+            DATA.forEach(function (d, i) {
+                if (filter !== 'all' && d.mode !== filter) return;
+                if (kw && d.name.toLowerCase().indexOf(kw) < 0 && d.code.toLowerCase().indexOf(kw) < 0) return;
+                shown++;
+                var tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td>' + d.id + '</td>' +
+                    '<td>' + d.code + '</td>' +
+                    '<td>' + d.name + '</td>' +
+                    '<td>' + segHtml(i, d.mode) + '</td>' +
+                    '<td data-src>' + srcHtml(d) + '</td>' +
+                    '<td data-at>' + d.at + '</td>' +
+                    '<td data-by>' + d.by + '</td>';
+                rowsEl.appendChild(tr);
+            });
+            countEl.textContent = shown + ' / ' + DATA.length + ' 個商戶';
+        }
+        render();
+
+        // Toast
+        var toast = document.getElementById('toast'), tmsg = document.getElementById('toast-msg'), tt;
+        function showToast(msg) {
+            tmsg.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(tt);
+            tt = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+        }
+
+        // 切換
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('.seg button');
+            if (!btn) return;
+            var group = btn.closest('.seg');
+            if (btn.classList.contains('on')) return;
+            group.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+            var v = btn.getAttribute('data-v');
+
+            if (group.getAttribute('data-scope') === 'global') {
+                showToast('全域預設已更新為「' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + '」· 即時生效');
+                return;
+            }
+            var i = +group.getAttribute('data-i');
+            var d = DATA[i];
+            d.mode = v; d.override = true;
+            var now = new Date();
+            function p(n) { return ('0' + n).slice(-2); }
+            d.at = now.getFullYear() + '-' + p(now.getMonth() + 1) + '-' + p(now.getDate()) + ' ' + p(now.getHours()) + ':' + p(now.getMinutes());
+            d.by = 'coco';
+            var tr = btn.closest('tr');
+            tr.querySelector('[data-src]').innerHTML = srcHtml(d);
+            tr.querySelector('[data-at]').textContent = d.at;
+            tr.querySelector('[data-by]').textContent = d.by;
+            showToast(d.name + ' → ' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + ' · 即時生效');
+        });
+
+        qEl.addEventListener('input', render);
+        document.getElementById('filter').addEventListener('click', function (e) {
+            var b = e.target.closest('button');
+            if (!b) return;
+            this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+            filter = b.getAttribute('data-f');
+            render();
+        });
+    </script>
+</body>
+</html>
