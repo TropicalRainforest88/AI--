@@ -6,186 +6,49 @@
     <title>AI 審核模式 - 審核中心</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        /* 分段切換（AI 自動放行 / 全部人工確認） */
-        .seg {
-            display: inline-flex;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-            background: var(--bg-white);
-        }
-        .seg button {
-            border: none;
-            background: transparent;
-            padding: 7px 16px;
-            font-size: 13px;
-            color: var(--text-regular);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            white-space: nowrap;
-            transition: background 0.2s, color 0.2s;
-            font-family: inherit;
-        }
-        .seg button + button {
-            border-left: 1px solid var(--border-color);
-        }
-        .seg button .seg-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: currentColor;
-            opacity: 0.35;
-        }
-        .seg button.on {
-            color: #fff;
-        }
-        .seg button[data-v="auto"].on {
-            background: var(--success-color);
-        }
-        .seg button[data-v="manual"].on {
-            background: var(--warning-color);
-        }
-        .seg button.on .seg-dot {
-            opacity: 1;
-            background: #fff;
-        }
-        .seg.lg button {
-            padding: 9px 20px;
-            font-size: 14px;
-        }
-        .seg.sm button {
-            padding: 6px 12px;
-            font-size: 12.5px;
-        }
+        /* 分段切換 */
+        .seg { display: inline-flex; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-white); }
+        .seg button { border: none; background: transparent; padding: 6px 13px; font-size: 12.5px; color: var(--text-regular); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .2s, color .2s; font-family: inherit; }
+        .seg button + button { border-left: 1px solid var(--border-color); }
+        .seg button .seg-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .35; }
+        .seg button.on { color: #fff; }
+        .seg button[data-v="auto"].on { background: var(--success-color); }
+        .seg button[data-v="manual"].on { background: var(--warning-color); }
+        .seg button.on .seg-dot { opacity: 1; background: #fff; }
+        .seg button:disabled { opacity: .4; cursor: not-allowed; }
+        .seg.lg button { padding: 9px 20px; font-size: 14px; }
 
-        /* 全域預設卡片 */
-        .default-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .default-row .default-txt {
-            flex: 1;
-            min-width: 220px;
-        }
-        .default-row .default-txt .t {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .default-row .default-txt .d {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
+        /* 全域預設 */
+        .default-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .default-row .default-txt { flex: 1; min-width: 220px; }
+        .default-row .default-txt .t { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+        .default-row .default-txt .d { font-size: 13px; color: var(--text-secondary); }
 
-        /* 工具列 */
-        .mode-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .mode-search {
-            position: relative;
-            min-width: 240px;
-        }
-        .mode-search input {
-            width: 100%;
-            height: 36px;
-            padding: 0 12px 0 34px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            color: var(--text-primary);
-            background: var(--bg-white);
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-        .mode-search input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        .mode-search svg {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-placeholder);
-        }
-        .mode-filter {
-            display: inline-flex;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .mode-filter button {
-            border: none;
-            background: var(--bg-white);
-            padding: 7px 14px;
-            font-size: 13px;
-            color: var(--text-regular);
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .mode-filter button + button {
-            border-left: 1px solid var(--border-color);
-        }
-        .mode-filter button.on {
-            background: var(--primary-color);
-            color: #fff;
-        }
-        .mode-count {
-            margin-left: auto;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .src-plain {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
+        /* 模式矩陣：審核類型 × 商戶組 */
+        .matrix-wrap { overflow-x: auto; }
+        .mode-matrix { width: 100%; border-collapse: collapse; min-width: 560px; }
+        .mode-matrix thead th { background: var(--bg-color); padding: 12px 16px; border-bottom: 1px solid var(--border-light); vertical-align: bottom; }
+        .mode-matrix thead th.type-col { text-align: left; font-size: 12px; letter-spacing: .04em; color: var(--text-secondary); font-weight: 600; }
+        .mode-matrix thead th.gcol { text-align: center; border-left: 1px solid var(--border-lighter); white-space: nowrap; }
+        .mode-matrix thead th.gcol .gcode { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+        .mode-matrix thead th.gcol .gcode .sep { color: var(--text-placeholder); font-weight: 400; margin: 0 1px; }
+        .mode-matrix thead th.gcol .gcount { font-size: 11.5px; color: var(--text-secondary); font-weight: 500; margin-top: 3px; }
+        .mode-matrix thead th.gcol .gcount b { color: var(--success-color); font-weight: 700; }
+        .mode-matrix tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border-lighter); }
+        .mode-matrix tbody tr:last-child td { border-bottom: none; }
+        .mode-matrix tbody tr:hover { background: var(--bg-color); }
+        .mode-matrix td.type-col { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; }
+        .mode-matrix td.cell { text-align: center; border-left: 1px solid var(--border-lighter); }
+        .mode-matrix td.cell.on { background: var(--success-light); }
+        .mode-matrix td.cell input { width: 18px; height: 18px; accent-color: var(--success-color); cursor: pointer; margin: 0; vertical-align: middle; }
+
+        .chk-legend { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+        .chk-legend b { color: var(--text-regular); font-weight: 600; }
 
         /* Toast */
-        .toast {
-            position: fixed;
-            left: 50%;
-            bottom: 28px;
-            transform: translateX(-50%) translateY(14px);
-            opacity: 0;
-            background: var(--text-primary);
-            color: var(--bg-white);
-            padding: 11px 18px;
-            border-radius: 8px;
-            font-size: 13.5px;
-            font-weight: 500;
-            box-shadow: var(--shadow-lg);
-            pointer-events: none;
-            transition: opacity 0.2s, transform 0.2s;
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-        .info-tip {
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-            margin-top: 16px;
-            padding: 12px 14px;
-            background: var(--primary-light);
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--text-regular);
-            line-height: 1.6;
-        }
+        .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(14px); opacity: 0; background: var(--text-primary); color: var(--bg-white); padding: 11px 18px; border-radius: 8px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-lg); pointer-events: none; transition: opacity .2s, transform .2s; z-index: 2000; display: flex; align-items: center; gap: 8px; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .info-tip { display: flex; gap: 8px; align-items: flex-start; margin-top: 16px; padding: 12px 14px; background: var(--primary-light); border-radius: 6px; font-size: 13px; color: var(--text-regular); line-height: 1.6; }
         .info-tip strong { color: var(--text-primary); }
     </style>
 </head>
@@ -212,7 +75,7 @@
             <div class="content">
                 <div class="page-header">
                     <h1 class="page-title">AI 審核模式</h1>
-                    <p class="page-desc">設定各商戶的單據進入審核平台後，由 <strong>AI 自動放行</strong>，或 <strong>全部轉人工確認</strong>。此設定 by 商戶，變更後即時生效、無需重新上線。</p>
+                    <p class="page-desc">設定各商戶組下每個審核類型：由 AI 自動放行，或人工確認。設定套用至該組全部商戶，即時生效。</p>
                 </div>
 
                 <!-- 全域預設 -->
@@ -221,8 +84,8 @@
                     <div class="card-body">
                         <div class="default-row">
                             <div class="default-txt">
-                                <div class="t">新商戶 / 未單獨設定的商戶，套用此預設</div>
-                                <div class="d">單獨設定過的商戶，以其自身設定為準（見下方列表「來源」欄）。</div>
+                                <div class="t">未單獨設定的類型，套用此預設</div>
+                                <div class="d">各商戶組可於下方單獨調整。</div>
                             </div>
                             <div class="seg lg" data-scope="global" role="group" aria-label="全域預設模式">
                                 <button type="button" data-v="auto" class="on"><span class="seg-dot"></span>AI 自動放行</button>
@@ -232,41 +95,15 @@
                     </div>
                 </div>
 
-                <!-- 商戶列表 -->
+                <!-- 商戶組 × 審核類型 -->
                 <div class="card" style="margin-top: 20px;">
-                    <div class="card-header"><span class="card-title">商戶審核模式</span></div>
+                    <div class="card-header"><span class="card-title">商戶組審核模式</span><span style="margin-left:auto;font-size:12.5px;color:var(--text-secondary);" id="totalSummary"></span></div>
                     <div class="card-body">
-                        <div class="mode-toolbar">
-                            <div class="mode-search">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                <input type="text" id="q" placeholder="搜尋商戶名稱 / 代碼">
-                            </div>
-                            <div class="mode-filter" id="filter" role="group" aria-label="篩選模式">
-                                <button type="button" data-f="all" class="on">全部</button>
-                                <button type="button" data-f="auto">自動放行</button>
-                                <button type="button" data-f="manual">人工確認</button>
-                            </div>
-                            <span class="mode-count" id="count"></span>
-                        </div>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 90px;">商戶ID</th>
-                                    <th style="width: 90px;">商戶代碼</th>
-                                    <th style="width: 130px;">商戶名稱</th>
-                                    <th style="width: 260px;">目前審核模式</th>
-                                    <th style="width: 110px;">來源</th>
-                                    <th style="width: 160px;">最後更新</th>
-                                    <th style="width: 90px;">操作人</th>
-                                </tr>
-                            </thead>
-                            <tbody id="rows"></tbody>
-                        </table>
-
+                        <div class="chk-legend"><b>勾選</b> = AI 自動放行　·　<b>未勾選</b> = 人工確認</div>
+                        <div id="groups"></div>
                         <div class="info-tip">
                             <span>ⓘ</span>
-                            <span><strong>說明：</strong>切換即時生效。「來源」欄標示該商戶是<em>沿用全域預設</em>，還是<em>已單獨設定</em>（override）。此頁為原型，切換為前端演示，不會真正寫入。</span>
+                            <span><strong>說明：</strong>切換即時生效，設定套用至該組全部商戶。此頁為原型演示，不會真正寫入。</span>
                         </div>
                     </div>
                 </div>
@@ -280,8 +117,7 @@
         // 主題
         function toggleTheme() {
             const html = document.documentElement;
-            const cur = html.getAttribute('data-theme');
-            const next = cur === 'dark' ? 'light' : 'dark';
+            const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
         }
@@ -291,109 +127,84 @@
             else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
                 document.documentElement.setAttribute('data-theme', 'dark');
         })();
-        // 菜單展開/收起
         document.querySelectorAll('.menu-item > .menu-title').forEach(title => {
             if (title.querySelector('.menu-arrow')) {
-                title.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    this.parentElement.classList.toggle('open');
-                });
+                title.addEventListener('click', function (e) { e.preventDefault(); this.parentElement.classList.toggle('open'); });
             }
         });
 
-        // 商戶資料
-        var DATA = [
-            { id: '1001', code: 'GS', name: 'GS平台', mode: 'auto',   override: true,  at: '2024-01-20 15:30', by: 'coco' },
-            { id: '1002', code: 'GE', name: 'GE平台', mode: 'manual', override: true,  at: '2024-01-19 10:22', by: 'felix' },
-            { id: '1003', code: 'MY', name: 'MY平台', mode: 'auto',   override: false, at: '—', by: '—' },
-            { id: '1004', code: 'MN', name: 'MN平台', mode: 'auto',   override: false, at: '—', by: '—' },
-            { id: '1005', code: 'MJ', name: 'MJ平台', mode: 'manual', override: true,  at: '2024-01-15 16:28', by: 'josh' },
-            { id: '1006', code: 'SG', name: 'SG平台', mode: 'auto',   override: false, at: '—', by: '—' },
-            { id: '1007', code: 'TH', name: 'TH平台', mode: 'manual', override: true,  at: '2024-01-12 09:05', by: 'elmo' },
-            { id: '1008', code: 'VN', name: 'VN平台', mode: 'auto',   override: true,  at: '2024-01-10 11:40', by: 'coco' }
+        // 審核類型（9）
+        var TYPES = ['人工充值', '人工提現', '人工轉帳', '線下優惠活動', '修改帳戶訊息', '商戶優惠活動', '帳戶安全審核', '資金審核', '修改資訊'];
+        // 商戶組（含已確認規則的類型）
+        var GROUPS = [
+            { id: 'g1', name: '組一', members: ['GS', 'GE', 'H5', 'HC3'], confirmed: ['人工提現', '線下優惠活動', '商戶優惠活動'] },
+            { id: 'g2', name: '組二', members: ['XC', 'XY', 'EON'], confirmed: ['人工提現'] },
+            { id: 'g3', name: '組三', members: ['MC', 'MD', 'MJ', 'YN'], confirmed: ['人工提現'] }
         ];
-        var filter = 'all';
-        var rowsEl = document.getElementById('rows');
-        var countEl = document.getElementById('count');
-        var qEl = document.getElementById('q');
+        // 狀態：已確認→預設 auto；未確認→鎖定 manual
+        var STATE = {};
+        GROUPS.forEach(function (g) {
+            STATE[g.id] = {};
+            TYPES.forEach(function (t) { STATE[g.id][t] = g.confirmed.indexOf(t) >= 0 ? 'auto' : 'manual'; });
+        });
 
-        function segHtml(i, mode) {
-            return '<div class="seg sm" data-scope="row" data-i="' + i + '" role="group" aria-label="審核模式">'
-                + '<button type="button" data-v="auto" class="' + (mode === 'auto' ? 'on' : '') + '"><span class="seg-dot"></span>AI 自動放行</button>'
-                + '<button type="button" data-v="manual" class="' + (mode === 'manual' ? 'on' : '') + '"><span class="seg-dot"></span>全部人工確認</button>'
-                + '</div>';
+        function summaryAuto(g) {
+            var ai = 0; TYPES.forEach(function (t) { if (STATE[g.id][t] === 'auto') ai++; });
+            return ai;
         }
-        function srcHtml(d) {
-            return d.override
-                ? '<span class="tag tag-primary">單獨設定</span>'
-                : '<span class="src-plain">沿用預設</span>';
+        function grpTitle(members) {
+            return members.join('<span class="sep">/</span>');
         }
-        function render() {
-            var kw = (qEl.value || '').trim().toLowerCase();
-            var shown = 0;
-            rowsEl.innerHTML = '';
-            DATA.forEach(function (d, i) {
-                if (filter !== 'all' && d.mode !== filter) return;
-                if (kw && d.name.toLowerCase().indexOf(kw) < 0 && d.code.toLowerCase().indexOf(kw) < 0) return;
-                shown++;
-                var tr = document.createElement('tr');
-                tr.innerHTML =
-                    '<td>' + d.id + '</td>' +
-                    '<td>' + d.code + '</td>' +
-                    '<td>' + d.name + '</td>' +
-                    '<td>' + segHtml(i, d.mode) + '</td>' +
-                    '<td data-src>' + srcHtml(d) + '</td>' +
-                    '<td data-at>' + d.at + '</td>' +
-                    '<td data-by>' + d.by + '</td>';
-                rowsEl.appendChild(tr);
-            });
-            countEl.textContent = shown + ' / ' + DATA.length + ' 個商戶';
+        function refreshTotal() {
+            var totalAI = 0;
+            GROUPS.forEach(function (x) { totalAI += summaryAuto(x); });
+            document.getElementById('totalSummary').textContent = '共 ' + totalAI + ' 個「組×類型」走 AI';
         }
-        render();
+        function renderMatrix() {
+            var head = '<tr><th class="type-col">審核類型</th>' + GROUPS.map(function (g) {
+                return '<th class="gcol"><div class="gcode">' + grpTitle(g.members) + '</div>'
+                    + '<div class="gcount"><b data-ai="' + g.id + '">' + summaryAuto(g) + '</b> 項 AI</div></th>';
+            }).join('') + '</tr>';
+            var body = TYPES.map(function (t) {
+                var cells = GROUPS.map(function (g) {
+                    var on = STATE[g.id][t] === 'auto';
+                    return '<td class="cell' + (on ? ' on' : '') + '"><input type="checkbox" data-g="' + g.id + '" data-t="' + t + '"' + (on ? ' checked' : '') + ' aria-label="' + g.members.join('/') + ' ' + t + '"></td>';
+                }).join('');
+                return '<tr><td class="type-col">' + t + '</td>' + cells + '</tr>';
+            }).join('');
+            document.getElementById('groups').innerHTML =
+                '<div class="matrix-wrap"><table class="mode-matrix"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
+            refreshTotal();
+        }
+        renderMatrix();
 
         // Toast
         var toast = document.getElementById('toast'), tmsg = document.getElementById('toast-msg'), tt;
-        function showToast(msg) {
-            tmsg.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(tt);
-            tt = setTimeout(function () { toast.classList.remove('show'); }, 1800);
-        }
+        function showToast(msg) { tmsg.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('show'); }, 1900); }
 
-        // 切換
+        // 全域預設（分段控制）
         document.addEventListener('click', function (e) {
-            var btn = e.target.closest('.seg button');
-            if (!btn) return;
+            var btn = e.target.closest('.seg[data-scope="global"] button');
+            if (!btn || btn.classList.contains('on')) return;
             var group = btn.closest('.seg');
-            if (btn.classList.contains('on')) return;
             group.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
             var v = btn.getAttribute('data-v');
-
-            if (group.getAttribute('data-scope') === 'global') {
-                showToast('全域預設已更新為「' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + '」· 即時生效');
-                return;
-            }
-            var i = +group.getAttribute('data-i');
-            var d = DATA[i];
-            d.mode = v; d.override = true;
-            var now = new Date();
-            function p(n) { return ('0' + n).slice(-2); }
-            d.at = now.getFullYear() + '-' + p(now.getMonth() + 1) + '-' + p(now.getDate()) + ' ' + p(now.getHours()) + ':' + p(now.getMinutes());
-            d.by = 'coco';
-            var tr = btn.closest('tr');
-            tr.querySelector('[data-src]').innerHTML = srcHtml(d);
-            tr.querySelector('[data-at]').textContent = d.at;
-            tr.querySelector('[data-by]').textContent = d.by;
-            showToast(d.name + ' → ' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + ' · 即時生效');
+            showToast('全域預設已更新為「' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + '」· 即時生效');
         });
 
-        qEl.addEventListener('input', render);
-        document.getElementById('filter').addEventListener('click', function (e) {
-            var b = e.target.closest('button');
-            if (!b) return;
-            this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
-            filter = b.getAttribute('data-f');
-            render();
+        // 審核類型（勾選 = AI）
+        document.addEventListener('change', function (e) {
+            var cb = e.target.closest('.mode-matrix input[type="checkbox"]');
+            if (!cb) return;
+            var gid = cb.getAttribute('data-g'), t = cb.getAttribute('data-t');
+            var v = cb.checked ? 'auto' : 'manual';
+            STATE[gid][t] = v;
+            cb.closest('td').classList.toggle('on', cb.checked);
+            var g = GROUPS.filter(function (x) { return x.id === gid; })[0];
+            var cnt = document.querySelector('[data-ai="' + gid + '"]');
+            if (cnt) cnt.textContent = summaryAuto(g);
+            refreshTotal();
+            showToast(g.members.join('/') + ' · ' + t + ' → ' + (v === 'auto' ? 'AI 自動放行' : '人工確認') + ' · 即時生效');
         });
     </script>
 </body>
