@@ -95,6 +95,23 @@
                     </div>
                 </div>
 
+                <!-- AUTO 提交單 · AI 自動審核（全域開關） -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header"><span class="card-title">AUTO 提交單 · AI 自動審核</span></div>
+                    <div class="card-body">
+                        <div class="default-row">
+                            <div class="default-txt">
+                                <div class="t">提交審核人員 = AUTO 的單據</div>
+                                <div class="d">開 = AI 審核並自動通過；關 = 不推 AI、人工審核。全域生效。</div>
+                            </div>
+                            <div class="seg lg" data-scope="auto" role="group" aria-label="AUTO 單自動審核">
+                                <button type="button" data-v="manual" class="on"><span class="seg-dot"></span>關（人工）</button>
+                                <button type="button" data-v="auto"><span class="seg-dot"></span>開（AI 自動通過）</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 商戶組 × 審核類型 -->
                 <div class="card" style="margin-top: 20px;">
                     <div class="card-header"><span class="card-title">商戶組審核模式</span><span style="margin-left:auto;font-size:12.5px;color:var(--text-secondary);" id="totalSummary"></span></div>
@@ -182,14 +199,18 @@
         var toast = document.getElementById('toast'), tmsg = document.getElementById('toast-msg'), tt;
         function showToast(msg) { tmsg.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('show'); }, 1900); }
 
-        // 全域預設（分段控制）
+        // 分段控制：全域預設 + AUTO 開關
         document.addEventListener('click', function (e) {
-            var btn = e.target.closest('.seg[data-scope="global"] button');
+            var btn = e.target.closest('.seg[data-scope="global"] button, .seg[data-scope="auto"] button');
             if (!btn || btn.classList.contains('on')) return;
             var group = btn.closest('.seg');
             group.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
             var v = btn.getAttribute('data-v');
-            showToast('全域預設已更新為「' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + '」· 即時生效');
+            if (group.getAttribute('data-scope') === 'auto') {
+                showToast('AUTO 單自動審核已' + (v === 'auto' ? '開啟（AI 自動通過）' : '關閉（轉人工）') + ' · 即時生效');
+            } else {
+                showToast('全域預設已更新為「' + (v === 'auto' ? 'AI 自動放行' : '全部人工確認') + '」· 即時生效');
+            }
         });
 
         // 審核類型（勾選 = AI）
