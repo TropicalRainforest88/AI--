@@ -762,7 +762,7 @@
                                                 </div>
                                                 <div class="param-row">
                                                     <span class="param-label">相關截圖:</span>
-                                                    <span class="param-value link">查看截圖(2張)</span>
+                                                    <span class="param-value link" style="cursor:pointer" onclick="openShots(2)">查看截圖(2張)</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -819,7 +819,7 @@
                                                 </div>
                                                 <div class="param-row">
                                                     <span class="param-label">相關截圖:</span>
-                                                    <span class="param-value link">查看截圖(5張)</span>
+                                                    <span class="param-value link" style="cursor:pointer" onclick="openShots(3)">查看截圖(3張)</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -872,7 +872,7 @@
                                                 </div>
                                                 <div class="param-row">
                                                     <span class="param-label">相關截圖:</span>
-                                                    <span class="param-value link">查看截圖(1張)</span>
+                                                    <span class="param-value link" style="cursor:pointer" onclick="openShots(1)">查看截圖(1張)</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -986,7 +986,7 @@
                                                 </div>
                                                 <div class="param-row">
                                                     <span class="param-label">相關截圖:</span>
-                                                    <span class="param-value link">查看截圖(3張)</span>
+                                                    <span class="param-value link" style="cursor:pointer" onclick="openShots(3)">查看截圖(3張)</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -1043,7 +1043,7 @@
                                                 </div>
                                                 <div class="param-row">
                                                     <span class="param-label">相關截圖:</span>
-                                                    <span class="param-value link">查看截圖(8張)</span>
+                                                    <span class="param-value link" style="cursor:pointer" onclick="openShots(2)">查看截圖(2張)</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -1271,6 +1271,52 @@
         // 每頁條數變更
         document.querySelector('.page-size select').addEventListener('change', function() {
             alert('每頁顯示 ' + this.value + ' 條，正在重新加載...');
+        });
+    </script>
+
+    <!-- 截圖查看器（最多 3 張，可前後翻頁） -->
+    <style>
+        .sv-overlay{position:fixed;inset:0;background:rgba(15,20,26,.82);z-index:3000;display:none;align-items:center;justify-content:center;gap:10px}
+        .sv-overlay.show{display:flex}
+        .sv-stage{display:flex;flex-direction:column;align-items:center;gap:14px}
+        .sv-img{width:min(80vw,360px);height:min(70vh,500px);border-radius:12px;overflow:hidden;box-shadow:0 14px 44px rgba(0,0,0,.5);background:#fff}
+        .sv-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#eef2f7,#dbe3ec);color:#61707e}
+        .sv-ph .ico{font-size:54px}
+        .sv-ph .t{font-size:14px;letter-spacing:3px}
+        .sv-ph .n{font-size:46px;font-weight:800;color:#2b3a48;line-height:1}
+        .sv-counter{color:#fff;font-size:13.5px;letter-spacing:1px;background:rgba(0,0,0,.4);padding:4px 13px;border-radius:99px;font-variant-numeric:tabular-nums}
+        .sv-nav{width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:28px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s;flex:0 0 auto}
+        .sv-nav:hover{background:rgba(255,255,255,.3)}
+        .sv-nav:disabled{opacity:.22;cursor:not-allowed}
+        .sv-close{position:absolute;top:20px;right:26px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .sv-close:hover{background:rgba(255,255,255,.3)}
+    </style>
+    <div class="sv-overlay" id="svOverlay">
+        <button class="sv-close" onclick="closeShots()" aria-label="關閉">✕</button>
+        <button class="sv-nav" id="svPrev" onclick="shotStep(-1)" aria-label="上一張">‹</button>
+        <div class="sv-stage">
+            <div class="sv-img"><div class="sv-ph"><div class="ico">🧾</div><div class="t">審核截圖</div><div class="n" id="svNum">1</div></div></div>
+            <div class="sv-counter" id="svCounter">1 / 1</div>
+        </div>
+        <button class="sv-nav" id="svNext" onclick="shotStep(1)" aria-label="下一張">›</button>
+    </div>
+    <script>
+        var svCount = 0, svIdx = 0;
+        function openShots(n){ svCount = Math.min(n, 3); svIdx = 0; renderShot(); document.getElementById('svOverlay').classList.add('show'); }
+        function closeShots(){ document.getElementById('svOverlay').classList.remove('show'); }
+        function shotStep(d){ var ni = svIdx + d; if(ni < 0 || ni >= svCount) return; svIdx = ni; renderShot(); }
+        function renderShot(){
+            document.getElementById('svNum').textContent = (svIdx + 1);
+            document.getElementById('svCounter').textContent = (svIdx + 1) + ' / ' + svCount;
+            document.getElementById('svPrev').disabled = (svIdx === 0);
+            document.getElementById('svNext').disabled = (svIdx === svCount - 1);
+        }
+        document.getElementById('svOverlay').addEventListener('click', function(e){ if(e.target === this) closeShots(); });
+        document.addEventListener('keydown', function(e){
+            if(!document.getElementById('svOverlay').classList.contains('show')) return;
+            if(e.key === 'ArrowRight') shotStep(1);
+            else if(e.key === 'ArrowLeft') shotStep(-1);
+            else if(e.key === 'Escape') closeShots();
         });
     </script>
 </body>
