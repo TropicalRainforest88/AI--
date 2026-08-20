@@ -41,6 +41,11 @@
         .mode-matrix td.cell { text-align: center; border-left: 1px solid var(--border-lighter); }
         .mode-matrix td.cell.on { background: var(--success-light); }
         .mode-matrix td.cell input { width: 18px; height: 18px; accent-color: var(--success-color); cursor: pointer; margin: 0; vertical-align: middle; }
+        .mode-matrix tr.na-row td { background: var(--bg-color); }
+        .mode-matrix tr.na-row:hover td { background: var(--bg-color); }
+        .mode-matrix td.type-col.na-label { color: var(--text-placeholder); font-weight: 400; }
+        .mode-matrix td.type-col.na-label small { color: var(--text-placeholder); font-size: 11px; margin-left: 6px; }
+        .mode-matrix td.cell .na-dash { color: var(--text-placeholder); }
 
         .chk-legend { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
         .chk-legend b { color: var(--text-regular); font-weight: 600; }
@@ -152,6 +157,8 @@
 
         // 審核類型（9）
         var TYPES = ['人工充值', '人工提現', '人工轉帳', '線下優惠活動', '修改帳戶訊息', '商戶優惠活動', '帳戶安全審核', '資金審核', '修改資訊'];
+        // 目前僅這 4 類涉及 AI 審核（人工提現 + 3 個 FILECASE 類）；其餘靜態置灰
+        var AI_TYPES = ['人工提現', '人工充值', '線下優惠活動', '商戶優惠活動'];
         // 商戶組（含已確認規則的類型）
         var GROUPS = [
             { id: 'g1', name: '組一', members: ['GS', 'GE', 'H5', 'HC3'], confirmed: ['人工提現', '線下優惠活動', '商戶優惠活動'] },
@@ -183,11 +190,14 @@
                     + '<div class="gcount"><b data-ai="' + g.id + '">' + summaryAuto(g) + '</b> 項 AI</div></th>';
             }).join('') + '</tr>';
             var body = TYPES.map(function (t) {
+                var isAI = AI_TYPES.indexOf(t) >= 0;
                 var cells = GROUPS.map(function (g) {
+                    if (!isAI) return '<td class="cell na"><span class="na-dash">—</span></td>';
                     var on = STATE[g.id][t] === 'auto';
                     return '<td class="cell' + (on ? ' on' : '') + '"><input type="checkbox" data-g="' + g.id + '" data-t="' + t + '"' + (on ? ' checked' : '') + ' aria-label="' + g.members.join('/') + ' ' + t + '"></td>';
                 }).join('');
-                return '<tr><td class="type-col">' + t + '</td>' + cells + '</tr>';
+                if (isAI) return '<tr><td class="type-col">' + t + '</td>' + cells + '</tr>';
+                return '<tr class="na-row"><td class="type-col na-label">' + t + '<small>不涉及 AI</small></td>' + cells + '</tr>';
             }).join('');
             document.getElementById('groups').innerHTML =
                 '<div class="matrix-wrap"><table class="mode-matrix"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
